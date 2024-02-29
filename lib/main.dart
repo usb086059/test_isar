@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/home_screen.dart';
+import 'package:flutter_application_1/app_router.dart';
+//import 'package:flutter_application_1/home_screen.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,6 +17,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: HomeScreen());
+    return MaterialApp.router(
+      routerConfig: appRouter,
+    );
   }
 }
