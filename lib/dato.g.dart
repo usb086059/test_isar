@@ -17,8 +17,13 @@ const DatoSchema = CollectionSchema(
   name: r'Dato',
   id: 3396897977404374168,
   properties: {
-    r'name': PropertySchema(
+    r'click': PropertySchema(
       id: 0,
+      name: r'click',
+      type: IsarType.long,
+    ),
+    r'name': PropertySchema(
+      id: 1,
       name: r'name',
       type: IsarType.string,
     )
@@ -53,7 +58,8 @@ void _datoSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.name);
+  writer.writeLong(offsets[0], object.click);
+  writer.writeString(offsets[1], object.name);
 }
 
 Dato _datoDeserialize(
@@ -63,7 +69,8 @@ Dato _datoDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Dato(
-    name: reader.readString(offsets[0]),
+    click: reader.readLongOrNull(offsets[0]) ?? 0,
+    name: reader.readString(offsets[1]),
   );
   object.id = id;
   return object;
@@ -77,6 +84,8 @@ P _datoDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readLongOrNull(offset) ?? 0) as P;
+    case 1:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -171,6 +180,58 @@ extension DatoQueryWhere on QueryBuilder<Dato, Dato, QWhereClause> {
 }
 
 extension DatoQueryFilter on QueryBuilder<Dato, Dato, QFilterCondition> {
+  QueryBuilder<Dato, Dato, QAfterFilterCondition> clickEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'click',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Dato, Dato, QAfterFilterCondition> clickGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'click',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Dato, Dato, QAfterFilterCondition> clickLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'click',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Dato, Dato, QAfterFilterCondition> clickBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'click',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Dato, Dato, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -357,6 +418,18 @@ extension DatoQueryObject on QueryBuilder<Dato, Dato, QFilterCondition> {}
 extension DatoQueryLinks on QueryBuilder<Dato, Dato, QFilterCondition> {}
 
 extension DatoQuerySortBy on QueryBuilder<Dato, Dato, QSortBy> {
+  QueryBuilder<Dato, Dato, QAfterSortBy> sortByClick() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'click', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Dato, Dato, QAfterSortBy> sortByClickDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'click', Sort.desc);
+    });
+  }
+
   QueryBuilder<Dato, Dato, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -371,6 +444,18 @@ extension DatoQuerySortBy on QueryBuilder<Dato, Dato, QSortBy> {
 }
 
 extension DatoQuerySortThenBy on QueryBuilder<Dato, Dato, QSortThenBy> {
+  QueryBuilder<Dato, Dato, QAfterSortBy> thenByClick() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'click', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Dato, Dato, QAfterSortBy> thenByClickDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'click', Sort.desc);
+    });
+  }
+
   QueryBuilder<Dato, Dato, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -397,6 +482,12 @@ extension DatoQuerySortThenBy on QueryBuilder<Dato, Dato, QSortThenBy> {
 }
 
 extension DatoQueryWhereDistinct on QueryBuilder<Dato, Dato, QDistinct> {
+  QueryBuilder<Dato, Dato, QDistinct> distinctByClick() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'click');
+    });
+  }
+
   QueryBuilder<Dato, Dato, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -409,6 +500,12 @@ extension DatoQueryProperty on QueryBuilder<Dato, Dato, QQueryProperty> {
   QueryBuilder<Dato, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Dato, int, QQueryOperations> clickProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'click');
     });
   }
 

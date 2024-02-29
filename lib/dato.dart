@@ -7,6 +7,7 @@ class Dato {
   Id id = Isar.autoIncrement;
 
   late String name;
+  int click;
 
-  Dato({required this.name});
+  Dato({required this.name, this.click = 0});
 }
