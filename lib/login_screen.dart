@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/firebase_services.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: Text('Login Screen'),
-        ),
-      ),
+          body: FutureBuilder(
+              future: getUsers(),
+              builder: ((context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                      itemCount: snapshot.data?.length,
+                      itemBuilder: (context, index) {
+                        return Text(snapshot.data?[index]['nombre']);
+                      });
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }))),
     );
   }
 }
