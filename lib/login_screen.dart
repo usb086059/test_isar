@@ -15,7 +15,7 @@ class LoginScreen extends StatelessWidget {
                   return ListView.builder(
                       itemCount: snapshot.data?.length,
                       itemBuilder: (context, index) {
-                        return Text(snapshot.data?[index]['nombre']);
+                        return Text(snapshot.data?[index]['name']);
                       });
                 } else {
                   return const Center(
