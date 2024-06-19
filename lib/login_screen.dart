@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/auth_google_services.dart';
+import 'package:flutter_application_1/firebase_services.dart';
 import 'package:go_router/go_router.dart';
-//import 'package:flutter_application_1/firebase_services.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -18,7 +18,15 @@ class LoginScreen extends StatelessWidget {
                 onPressed: () async {
                   final user = await signInWithGoogle();
                   if (user.user != null) {
-                    context.push('/register');
+                    final List googleID = await getGoogleID();
+                    final String estaRegistrado = googleID.firstWhere(
+                        (element) => element == user.user!.uid,
+                        orElse: () => 'no existe');
+                    if (estaRegistrado == user.user!.uid) {
+                      context.push('/splash');
+                    } else {
+                      context.push('/register');
+                    }
                   }
                 },
                 icon: const Icon(Icons.login),

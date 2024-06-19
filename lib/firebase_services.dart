@@ -2,7 +2,17 @@ import "package:cloud_firestore/cloud_firestore.dart";
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
-Future<List> getUsers() async {
+Future<List> getGoogleID() async {
+  List listGoogleID = [];
+  CollectionReference collectionReferenceUsers = db.collection('usuarios');
+  QuerySnapshot queryListGoogleID = await collectionReferenceUsers.get();
+  for (var element in queryListGoogleID.docs) {
+    listGoogleID.add(element.get('googleID'));
+  }
+  return listGoogleID;
+}
+
+/* Future<List> getUsers() async {
   List users = [];
   CollectionReference collectionReferenceUsers = db.collection('usuarios');
   QuerySnapshot queryUsers = await collectionReferenceUsers.get();
@@ -10,9 +20,10 @@ Future<List> getUsers() async {
     users.add(element.data());
   }
   return users;
-}
+} */
 
 Future<void> addUser(
+  String googleID,
   String nombre,
   String apellido,
   String edad,
@@ -27,6 +38,7 @@ Future<void> addUser(
   //String confirmarClave
 ) async {
   await db.collection('usuarios').add({
+    'googleID': googleID,
     'Nombre': nombre,
     'Apellido': apellido,
     'Edad': edad,

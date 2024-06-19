@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/auth_google_services.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +17,7 @@ final paisController = TextEditingController();
 final provinciaController = TextEditingController();
 //final claveController = TextEditingController();
 //final confirmarClaveController = TextEditingController();
+String googleID = '';
 String nombre = '';
 String apellido = '';
 String edad = '';
@@ -250,6 +252,7 @@ class NewElevatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var user = FirebaseAuth.instance.currentUser;
     return ElevatedButton(
         style: ElevatedButton.styleFrom(minimumSize: const Size(150.0, 50.0)),
         onPressed: () {
@@ -257,6 +260,7 @@ class NewElevatedButton extends StatelessWidget {
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(content: Text('Bien Hecho')));
             //TODO  Tomar los datos del formulario para enviarlos a Firebase
+            googleID = user!.uid;
             nombre = nombreController.text;
             apellido = apellidoController.text;
             edad = edadController.text;
@@ -269,8 +273,8 @@ class NewElevatedButton extends StatelessWidget {
             provincia = provinciaController.text;
             //clave = claveController.text;
             //confirmarClave = confirmarClaveController.text;
-            addUser(nombre, apellido, edad, sexo, telefono1, telefono2,
-                instagram, pais, provincia);
+            addUser(googleID, nombre, apellido, edad, sexo, telefono1,
+                telefono2, instagram, pais, provincia);
           }
         },
         child: const Text('Aceptar'));
