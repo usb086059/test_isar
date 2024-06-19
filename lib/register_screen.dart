@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/firebase_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:go_router/go_router.dart';
 
 final _formKey = GlobalKey<FormState>();
 final nombreController = TextEditingController();
@@ -32,6 +34,7 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var user = FirebaseAuth.instance.currentUser;
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
@@ -213,7 +216,17 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    const NewElevatedButton()
+                    const NewElevatedButton(),
+                    const SizedBox(height: 30),
+                    FilledButton.tonalIcon(
+                        onPressed: () async {
+                          if (user != null) {
+                            await FirebaseAuth.instance.signOut();
+                            context.go('/login');
+                          }
+                        },
+                        icon: const Icon(Icons.logout),
+                        label: const Text('Cerrar Sesión'))
                   ],
                 ),
               ),
