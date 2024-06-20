@@ -1,6 +1,6 @@
 import 'package:flutter_application_1/register_screen.dart';
 import 'package:flutter_application_1/screens.dart';
-import 'package:flutter_application_1/splash_screen.dart';
+import 'package:flutter_application_1/devices_screen.dart';
 import 'package:go_router/go_router.dart';
 
 // GoRouter configuration
@@ -8,8 +8,8 @@ final appRouter = GoRouter(
   initialLocation: '/login',
   routes: [
     GoRoute(
-      path: '/splash',
-      builder: (context, state) => const SplashScreen(),
+      path: '/devices',
+      builder: (context, state) => const DevicesScreen(),
     ),
     GoRoute(
       path: '/login',

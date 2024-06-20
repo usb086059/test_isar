@@ -9,6 +9,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
           body: Center(
         child: Column(
@@ -23,7 +24,7 @@ class LoginScreen extends StatelessWidget {
                         (element) => element == user.user!.uid,
                         orElse: () => 'no existe');
                     if (estaRegistrado == user.user!.uid) {
-                      context.push('/splash');
+                      context.push('/devices');
                     } else {
                       context.push('/register');
                     }

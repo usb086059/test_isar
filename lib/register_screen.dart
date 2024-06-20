@@ -259,7 +259,6 @@ class NewElevatedButton extends StatelessWidget {
           if (_formKey.currentState!.validate()) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(content: Text('Bien Hecho')));
-            //TODO  Tomar los datos del formulario para enviarlos a Firebase
             googleID = user!.uid;
             nombre = nombreController.text;
             apellido = apellidoController.text;
@@ -275,6 +274,8 @@ class NewElevatedButton extends StatelessWidget {
             //confirmarClave = confirmarClaveController.text;
             addUser(googleID, nombre, apellido, edad, sexo, telefono1,
                 telefono2, instagram, pais, provincia);
+
+            context.push('/devices');
           }
         },
         child: const Text('Aceptar'));
