@@ -43,193 +43,196 @@ class RegisterScreen extends StatelessWidget {
               centerTitle: true,
               title: const Text('Registro'),
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          child: TextFormField(
-                            controller: nombreController,
-                            keyboardType: TextInputType.text,
-                            decoration: formDecoration('Nombre'),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingrese su nombre';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          child: TextFormField(
-                            controller: apellidoController,
-                            keyboardType: TextInputType.text,
-                            decoration: formDecoration('Apellido'),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingrese su apellido';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          child: TextFormField(
-                            controller: edadController,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.always,
-                                border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16))),
-                                labelText: 'Edad',
-                                labelStyle: TextStyle(fontSize: 25)),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingrese su edad';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        DropdownMenu(
-                            controller: sexoController,
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
                             width: MediaQuery.of(context).size.width * 0.45,
-                            inputDecorationTheme: const InputDecorationTheme(
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.always,
-                                border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16))),
-                                labelStyle: TextStyle(fontSize: 25)),
-                            enableSearch: false,
-                            initialSelection: 'Woman',
-                            label: const Text('Sexo'),
-                            dropdownMenuEntries: const <DropdownMenuEntry<
-                                String>>[
-                              DropdownMenuEntry(value: 'Woman', label: 'Mujer'),
-                              DropdownMenuEntry(value: 'Man', label: 'Hombre')
-                            ]),
-                      ],
-                    ),
-                    const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          child: TextFormField(
-                            controller: telefono1Controller,
-                            keyboardType: TextInputType.phone,
-                            decoration: formDecoration('Teléfono 1'),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingrese su teléfono';
-                              }
-                              return null;
-                            },
+                            child: TextFormField(
+                              controller: nombreController,
+                              keyboardType: TextInputType.text,
+                              decoration: formDecoration('Nombre'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor ingrese su nombre';
+                                }
+                                return null;
+                              },
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          child: TextFormField(
-                            controller: telefono2Controller,
-                            keyboardType: TextInputType.phone,
-                            decoration: formDecoration('Teléfono 2'),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingrese su teléfono';
-                              }
-                              return null;
-                            },
+                          const SizedBox(
+                            width: 30,
                           ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            child: TextFormField(
+                              controller: apellidoController,
+                              keyboardType: TextInputType.text,
+                              decoration: formDecoration('Apellido'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor ingrese su apellido';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            child: TextFormField(
+                              controller: edadController,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(16))),
+                                  labelText: 'Edad',
+                                  labelStyle: TextStyle(fontSize: 25)),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor ingrese su edad';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          DropdownMenu(
+                              controller: sexoController,
+                              width: MediaQuery.of(context).size.width * 0.45,
+                              inputDecorationTheme: const InputDecorationTheme(
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(16))),
+                                  labelStyle: TextStyle(fontSize: 25)),
+                              enableSearch: false,
+                              initialSelection: 'Woman',
+                              label: const Text('Sexo'),
+                              dropdownMenuEntries: const <DropdownMenuEntry<
+                                  String>>[
+                                DropdownMenuEntry(
+                                    value: 'Woman', label: 'Mujer'),
+                                DropdownMenuEntry(value: 'Man', label: 'Hombre')
+                              ]),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            child: TextFormField(
+                              controller: telefono1Controller,
+                              keyboardType: TextInputType.phone,
+                              decoration: formDecoration('Teléfono 1'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor ingrese su teléfono';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            child: TextFormField(
+                              controller: telefono2Controller,
+                              keyboardType: TextInputType.phone,
+                              decoration: formDecoration('Teléfono 2'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor ingrese su teléfono';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.50,
+                        child: TextFormField(
+                          controller: instagramController,
+                          keyboardType: TextInputType.text,
+                          decoration: formDecoration('Instagram'),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor ingrese su instagram';
+                            }
+                            return null;
+                          },
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 30),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.50,
-                      child: TextFormField(
-                        controller: instagramController,
-                        keyboardType: TextInputType.text,
-                        decoration: formDecoration('Instagram'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese su instagram';
-                          }
-                          return null;
-                        },
                       ),
-                    ),
-                    const SizedBox(height: 30),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.50,
-                      child: TextFormField(
-                        controller: paisController,
-                        keyboardType: TextInputType.text,
-                        decoration: formDecoration('País'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese su país';
-                          }
-                          return null;
-                        },
+                      const SizedBox(height: 30),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.50,
+                        child: TextFormField(
+                          controller: paisController,
+                          keyboardType: TextInputType.text,
+                          decoration: formDecoration('País'),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor ingrese su país';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.50,
-                      child: TextFormField(
-                        controller: provinciaController,
-                        keyboardType: TextInputType.text,
-                        decoration: formDecoration('Estado / Provincia'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese su estado / provincia';
-                          }
-                          return null;
-                        },
+                      const SizedBox(
+                        height: 30,
                       ),
-                    ),
-                    const SizedBox(height: 30),
-                    const NewElevatedButton(),
-                    const SizedBox(height: 30),
-                    FilledButton.tonalIcon(
-                        onPressed: () async {
-                          if (user != null) {
-                            await FirebaseAuth.instance.signOut();
-                            context.go('/login');
-                          }
-                        },
-                        icon: const Icon(Icons.logout),
-                        label: const Text('Cerrar Sesión'))
-                  ],
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.50,
+                        child: TextFormField(
+                          controller: provinciaController,
+                          keyboardType: TextInputType.text,
+                          decoration: formDecoration('Estado / Provincia'),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor ingrese su estado / provincia';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      const NewElevatedButton(),
+                      const SizedBox(height: 30),
+                      FilledButton.tonalIcon(
+                          onPressed: () async {
+                            if (user != null) {
+                              await FirebaseAuth.instance.signOut();
+                              context.go('/login');
+                            }
+                          },
+                          icon: const Icon(Icons.logout),
+                          label: const Text('Cerrar Sesión'))
+                    ],
+                  ),
                 ),
               ),
             )));

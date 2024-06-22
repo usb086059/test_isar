@@ -20,50 +20,124 @@ class DevicesScreen extends StatelessWidget {
           centerTitle: false,
           title: Text(nameUser),
         ),
-        body: Center(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ListView(
-              shrinkWrap: true,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Card(
-                  child: ListTile(
-                    title: Text('PEDILUVIO'),
-                    textColor: Colors.white,
-                    tileColor: Colors.blue,
-                    iconColor: Colors.white,
-                    leading: Icon(Icons.person),
-                    trailing: Icon(Icons.menu),
+                Image.asset('assets/dedo_touch.png', scale: 3),
+                const SizedBox(height: 10),
+                const Text('ELIJA EL DISPOSITIVO',
+                    style: TextStyle(fontSize: 40, color: Colors.blue)),
+                const SizedBox(height: 30),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: Card(
+                    margin: const EdgeInsets.all(10),
+                    color: Colors.blue,
+                    shadowColor: Colors.black,
+                    elevation: 40,
+                    child: ListTile(
+                      onTap: () {},
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset('assets/icons/icon_circulo.png',
+                              scale: 20),
+                          const SizedBox(width: 16),
+                          const Text('PEDILUVIO',
+                              style:
+                                  TextStyle(fontSize: 25, color: Colors.white))
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                Card(
-                  child: ListTile(
-                    title: const Text('ZAPPER'),
-                    textColor: Colors.white,
-                    tileColor: Colors.blue,
-                    iconColor: Colors.white,
-                    leading: const Icon(Icons.person),
-                    trailing: const Icon(Icons.menu),
-                    onTap: () {
-                      context.push('/home');
-                    },
+                const SizedBox(height: 30),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: Card(
+                    margin: const EdgeInsets.all(10),
+                    color: Colors.blue,
+                    shadowColor: Colors.black,
+                    elevation: 40,
+                    child: ListTile(
+                      onTap: () {},
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset('assets/icons/icon_circulo.png',
+                              scale: 20),
+                          const SizedBox(width: 16),
+                          const Text('PEDILUVIO CON ZAPPER',
+                              style:
+                                  TextStyle(fontSize: 25, color: Colors.white))
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                const Card(
-                  child: ListTile(
-                    title: Text('DERMATRONIC'),
-                    textColor: Colors.white,
-                    tileColor: Colors.blue,
-                    iconColor: Colors.white,
-                    leading: Icon(Icons.person),
-                    trailing: Icon(Icons.menu),
+                const SizedBox(height: 30),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: Card(
+                    margin: const EdgeInsets.all(10),
+                    color: Colors.blue,
+                    shadowColor: Colors.black,
+                    elevation: 40,
+                    child: ListTile(
+                      onTap: () {},
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset('assets/icons/icon_circulo.png',
+                              scale: 20),
+                          const SizedBox(width: 16),
+                          const Text('ZAPPER',
+                              style:
+                                  TextStyle(fontSize: 25, color: Colors.white))
+                        ],
+                      ),
+                    ),
                   ),
                 ),
+                const SizedBox(height: 30),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: Card(
+                    margin: const EdgeInsets.all(10),
+                    color: Colors.blue,
+                    shadowColor: Colors.black,
+                    elevation: 40,
+                    child: ListTile(
+                      onTap: () {},
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset('assets/icons/icon_circulo.png',
+                              scale: 20),
+                          const SizedBox(width: 16),
+                          const Text('DERMATRONIC',
+                              style:
+                                  TextStyle(fontSize: 25, color: Colors.white))
+                        ],
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
-          ],
-        )),
+          ),
+        ),
       ),
     );
   }
