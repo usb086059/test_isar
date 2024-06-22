@@ -93,7 +93,9 @@ class DevicesScreen extends StatelessWidget {
                     shadowColor: Colors.black,
                     elevation: 40,
                     child: ListTile(
-                      onTap: () {},
+                      onTap: () {
+                        context.push('/home');
+                      },
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
