@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/app_router.dart';
 //import 'package:flutter_application_1/home_screen.dart';
 import 'package:flutter_application_1/services.dart';
@@ -14,6 +15,7 @@ void main() async {
   );
   await Services().db;
   runApp(const ProviderScope(child: MyApp()));
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 }
 
 class MyApp extends StatelessWidget {
