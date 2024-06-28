@@ -1,6 +1,8 @@
+import 'package:flutter_application_1/home_zapper_screen.dart';
 import 'package:flutter_application_1/register_screen.dart';
 import 'package:flutter_application_1/screens.dart';
 import 'package:flutter_application_1/devices_screen.dart';
+import 'package:flutter_application_1/timer_zapper_screen.dart';
 import 'package:go_router/go_router.dart';
 
 // GoRouter configuration
@@ -24,12 +26,16 @@ final appRouter = GoRouter(
       builder: (context, state) => const HomeScreen(),
     ), */
     GoRoute(
+      path: '/homeZapper',
+      builder: (context, state) => const HomeZapperScreen(),
+    ),
+    GoRoute(
       path: '/home',
       builder: (context, state) => const HomeScreen(),
     ),
-    /* GoRoute(
-      path: '/timer',
-      builder: (context, state) => const RegisterScreen(),
-    ) */
+    GoRoute(
+      path: '/timerZapper',
+      builder: (context, state) => const TimerZapperScreen(),
+    )
   ],
 );

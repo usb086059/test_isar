@@ -8,6 +8,7 @@ class DevicesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double widthScreen = MediaQuery.of(context).size.width;
+    double heightScreen = MediaQuery.of(context).size.height;
     var user = FirebaseAuth.instance.currentUser;
     final String nameUser = user!.displayName!;
     return MaterialApp(
@@ -35,11 +36,13 @@ class DevicesScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     fit: BoxFit.scaleDown,
                     child: Text('ELIJA EL DISPOSITIVO',
-                        style: TextStyle(fontSize: 40, color: Colors.blue)),
+                        style: TextStyle(
+                            fontSize: 40,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold)),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 16),
                   Container(
-                    //constraints: BoxConstraints(maxWidth: widthScreen * 0.85),
                     decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(30)),
@@ -54,7 +57,7 @@ class DevicesScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Image.asset('assets/icons/icon_circulo.png',
-                                scale: 20),
+                                scale: 40),
                             const SizedBox(width: 16),
                             const Expanded(
                               child: FittedBox(
@@ -70,7 +73,7 @@ class DevicesScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 16),
                   Container(
                     decoration: BoxDecoration(
                         color: Colors.blue,
@@ -86,7 +89,7 @@ class DevicesScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Image.asset('assets/icons/icon_circulo.png',
-                                scale: 20),
+                                scale: 40),
                             const SizedBox(width: 16),
                             const Expanded(
                               child: FittedBox(
@@ -102,7 +105,7 @@ class DevicesScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 16),
                   Container(
                     decoration: BoxDecoration(
                         color: Colors.blue,
@@ -114,13 +117,13 @@ class DevicesScreen extends StatelessWidget {
                       elevation: 40,
                       child: ListTile(
                         onTap: () {
-                          context.push('/home');
+                          context.push('/homeZapper');
                         },
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Image.asset('assets/icons/icon_circulo.png',
-                                scale: 20),
+                                scale: 40),
                             const SizedBox(width: 16),
                             const Expanded(
                               child: FittedBox(
@@ -136,7 +139,7 @@ class DevicesScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 16),
                   Container(
                     decoration: BoxDecoration(
                         color: Colors.blue,
@@ -152,7 +155,7 @@ class DevicesScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Image.asset('assets/icons/icon_circulo.png',
-                                scale: 20),
+                                scale: 40),
                             const SizedBox(width: 16),
                             const Expanded(
                               child: FittedBox(

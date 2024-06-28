@@ -26,9 +26,9 @@ class LoginScreen extends StatelessWidget {
                 const Text(
                   'BIENVENIDO',
                   style: TextStyle(
-                    fontSize: 40,
-                    color: Colors.blue,
-                  ),
+                      fontSize: 40,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
                 const Padding(

@@ -22,6 +22,16 @@ Future<List> getGoogleID() async {
   return users;
 } */
 
+Future<List> getTerapias() async {
+  List terapias = [];
+  CollectionReference collectionReferenceTerapias = db.collection('terapias');
+  QuerySnapshot queryTerapias = await collectionReferenceTerapias.get();
+  for (var element in queryTerapias.docs) {
+    terapias.add(element.data());
+  }
+  return terapias;
+}
+
 Future<void> addUser(
   String googleID,
   String nombre,

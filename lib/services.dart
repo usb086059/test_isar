@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/dato.dart';
+import 'package:flutter_application_1/firebase_services.dart';
+import 'package:flutter_application_1/terapia.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -16,10 +19,22 @@ class Services {
   Future<Isar> openDB() async {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
-      return await Isar.open([DatoSchema],
+      return await Isar.open([DatoSchema, TerapiaSchema],
           directory: dir.path, inspector: true);
     }
     return Future.value(Isar.getInstance());
+  }
+
+  Future<String> terapiasIniciales() async {
+    final isar = await db;
+    final List listTerapiasIniciales = await getTerapias();
+    String queryName = listTerapiasIniciales[0]['nombre'];
+    return queryName;
+  }
+
+  Future<void> addTerapia(Terapia newTerapia) async {
+    final isar = await db;
+    return isar.writeTxnSync(() => isar.terapias.putSync(newTerapia));
   }
 
   Future<void> addDato(Dato newDato) async {
@@ -30,6 +45,11 @@ class Services {
   Future<void> deleteDato(int idDato) async {
     final isar = await db;
     return isar.writeTxn(() => isar.datos.delete(idDato));
+  }
+
+  Future<List<Terapia>> getAllTerapia() async {
+    final isar = await db;
+    return await isar.terapias.where().findAll();
   }
 
   Future<List<Dato>> getAll() async {
