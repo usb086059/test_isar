@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/future_provider.dart';
 import 'package:flutter_application_1/services.dart';
-
+import 'package:flutter_application_1/countdown_provider.dart';
+import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,9 +15,13 @@ class HomeZapperScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final timer = ref.watch(countdownProvider);
+    final bool modoSeleccionado = ref.watch(selectModoProvider);
+    final int terapiaSeleccionada = ref.watch(indexTerapiaProvider);
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
     var user = FirebaseAuth.instance.currentUser;
+    ScrollController _scroll = ScrollController();
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -79,59 +86,76 @@ class HomeZapperScreen extends ConsumerWidget {
                             child: FittedBox(
                               //alignment: Alignment.centerLeft,
                               fit: BoxFit.scaleDown,
-                              child: Card(
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30))),
-                                elevation: 20,
-                                //color: Colors.blue,
-                                shadowColor: Colors.blue,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      const Text('POR TANDAS',
-                                          style: TextStyle(
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.bold)),
-                                      DataTable(
-                                          headingTextStyle: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
-                                          dataTextStyle:
-                                              const TextStyle(fontSize: 20),
-                                          columnSpacing: 17,
-                                          columns: const [
-                                            DataColumn(
-                                                label: Text(
-                                                  'CICLOS',
-                                                ),
-                                                numeric: true),
-                                            DataColumn(
-                                                label: Text('ON  '),
-                                                numeric: true),
-                                            DataColumn(
-                                                label: Text('OFF  '),
-                                                numeric: true),
-                                          ],
-                                          rows: const [
-                                            DataRow(cells: [
-                                              DataCell(Text('1     ')),
-                                              DataCell(Text('7 min')),
-                                              DataCell(Text('20 min')),
+                              child: GestureDetector(
+                                onTap: () {
+                                  ref.read(selectModoProvider.notifier).state =
+                                      true;
+                                },
+                                child: Card(
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(30))),
+                                  elevation: 20,
+                                  color: modoSeleccionado
+                                      ? Colors.blue
+                                      : Colors.white,
+                                  shadowColor: Colors.blue,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Text('POR TANDAS',
+                                            style: TextStyle(
+                                                fontSize: 25,
+                                                color: modoSeleccionado
+                                                    ? Colors.white
+                                                    : null,
+                                                fontWeight: FontWeight.bold)),
+                                        DataTable(
+                                            headingTextStyle: TextStyle(
+                                                fontSize: 20,
+                                                color: modoSeleccionado
+                                                    ? Colors.white
+                                                    : null,
+                                                fontWeight: FontWeight.bold),
+                                            dataTextStyle: TextStyle(
+                                                fontSize: 20,
+                                                color: modoSeleccionado
+                                                    ? Colors.white
+                                                    : null),
+                                            columnSpacing: 17,
+                                            columns: const [
+                                              DataColumn(
+                                                  label: Text(
+                                                    'CICLOS',
+                                                  ),
+                                                  numeric: true),
+                                              DataColumn(
+                                                  label: Text('ON  '),
+                                                  numeric: true),
+                                              DataColumn(
+                                                  label: Text('OFF  '),
+                                                  numeric: true),
+                                            ],
+                                            rows: const [
+                                              DataRow(cells: [
+                                                DataCell(Text('1     ')),
+                                                DataCell(Text('7 min')),
+                                                DataCell(Text('20 min')),
+                                              ]),
+                                              DataRow(cells: [
+                                                DataCell(Text('2     ')),
+                                                DataCell(Text('7 min')),
+                                                DataCell(Text('20 min')),
+                                              ]),
+                                              DataRow(cells: [
+                                                DataCell(Text('3     ')),
+                                                DataCell(Text('7 min')),
+                                                DataCell(Text('FIN  ')),
+                                              ])
                                             ]),
-                                            DataRow(cells: [
-                                              DataCell(Text('2     ')),
-                                              DataCell(Text('7 min')),
-                                              DataCell(Text('20 min')),
-                                            ]),
-                                            DataRow(cells: [
-                                              DataCell(Text('3     ')),
-                                              DataCell(Text('7 min')),
-                                              DataCell(Text('FIN  ')),
-                                            ])
-                                          ]),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -140,57 +164,74 @@ class HomeZapperScreen extends ConsumerWidget {
                           Expanded(
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
-                              child: Card(
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30))),
-                                elevation: 20,
-                                //color: Colors.blue,
-                                shadowColor: Colors.blue,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      const Text('CONTINUO',
-                                          style: TextStyle(
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.bold)),
-                                      DataTable(
-                                          headingTextStyle: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
-                                          dataTextStyle:
-                                              const TextStyle(fontSize: 20),
-                                          columnSpacing: 17,
-                                          columns: const [
-                                            DataColumn(
-                                                label: Text('CICLOS'),
-                                                numeric: true),
-                                            DataColumn(
-                                                label: Text('ON   '),
-                                                numeric: true),
-                                            DataColumn(
-                                                label: Text('OFF'),
-                                                numeric: true),
-                                          ],
-                                          rows: const [
-                                            DataRow(cells: [
-                                              DataCell(Text('1     ')),
-                                              DataCell(Text('60 min')),
-                                              DataCell(Text('FIN')),
-                                            ]),
-                                            /* DataRow(cells: [
-                                          DataCell(Text('1')),
-                                          DataCell(Text('7')),
-                                          DataCell(Text('20')),
-                                        ]),
-                                        DataRow(cells: [
-                                          DataCell(Text('1')),
-                                          DataCell(Text('7')),
-                                          DataCell(Text('20')),
-                                        ]) */
+                              child: GestureDetector(
+                                onTap: () {
+                                  ref.read(selectModoProvider.notifier).state =
+                                      false;
+                                },
+                                child: Card(
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(30))),
+                                  elevation: 20,
+                                  color: modoSeleccionado
+                                      ? Colors.white
+                                      : Colors.blue,
+                                  shadowColor: Colors.blue,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Text('CONTINUO',
+                                            style: TextStyle(
+                                                color: modoSeleccionado
+                                                    ? null
+                                                    : Colors.white,
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold)),
+                                        DataTable(
+                                            headingTextStyle: TextStyle(
+                                                color: modoSeleccionado
+                                                    ? null
+                                                    : Colors.white,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                            dataTextStyle: TextStyle(
+                                                fontSize: 20,
+                                                color: modoSeleccionado
+                                                    ? null
+                                                    : Colors.white),
+                                            columnSpacing: 17,
+                                            columns: const [
+                                              DataColumn(
+                                                  label: Text('CICLOS'),
+                                                  numeric: true),
+                                              DataColumn(
+                                                  label: Text('ON   '),
+                                                  numeric: true),
+                                              DataColumn(
+                                                  label: Text('OFF'),
+                                                  numeric: true),
+                                            ],
+                                            rows: const [
+                                              DataRow(cells: [
+                                                DataCell(Text('1     ')),
+                                                DataCell(Text('60 min')),
+                                                DataCell(Text('FIN')),
+                                              ]),
+                                              /* DataRow(cells: [
+                                            DataCell(Text('1')),
+                                            DataCell(Text('7')),
+                                            DataCell(Text('20')),
                                           ]),
-                                    ],
+                                          DataRow(cells: [
+                                            DataCell(Text('1')),
+                                            DataCell(Text('7')),
+                                            DataCell(Text('20')),
+                                          ]) */
+                                            ]),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -245,6 +286,7 @@ class HomeZapperScreen extends ConsumerWidget {
                             return ClipRRect(
                               borderRadius: BorderRadius.circular(30),
                               child: GridView.builder(
+                                  controller: _scroll,
                                   itemCount: snapshot.data?.length,
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
@@ -254,12 +296,21 @@ class HomeZapperScreen extends ConsumerWidget {
                                           mainAxisSpacing: 0,
                                           crossAxisCount: 2),
                                   itemBuilder: (context, index) {
+                                    if (ref
+                                        .watch(countdownProvider)
+                                        .volvioDeTimerZapperScreen) {
+                                      ref
+                                          .watch(countdownProvider)
+                                          .volver(false);
+                                      _scroll.jumpTo(
+                                          _scroll.position.minScrollExtent);
+                                    }
                                     return CustomTherapy(
-                                        name: snapshot.data?[index]['nombre'],
-                                        frecMin: snapshot.data?[index]
-                                            ['frecMin'],
-                                        frecMax: snapshot.data?[index]
-                                            ['frecMax']);
+                                      name: snapshot.data?[index]['nombre'],
+                                      frecMin: snapshot.data?[index]['frecMin'],
+                                      frecMax: snapshot.data?[index]['frecMax'],
+                                      terapiaSel: index,
+                                    );
                                   }),
                             );
                           } else {
@@ -355,8 +406,10 @@ class HomeZapperScreen extends ConsumerWidget {
           tooltip: 'Siguiente',
           shape: const StadiumBorder(),
           backgroundColor: Colors.blue,
-
           onPressed: () {
+            modoSeleccionado
+                ? timer.startStopTimer('Modo A')
+                : timer.startStopTimer('Modo B');
             context.push('/timerZapper');
           },
           child: const Icon(
@@ -364,7 +417,7 @@ class HomeZapperScreen extends ConsumerWidget {
             color: Colors.white,
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -384,21 +437,26 @@ class HomeZapperScreen extends ConsumerWidget {
   }
 }
 
-class CustomTherapy extends StatelessWidget {
+class CustomTherapy extends ConsumerWidget {
   final String name;
   final int frecMin;
   final int frecMax;
+  final int terapiaSel;
 
-  const CustomTherapy({
-    Key? key,
-    required this.name,
-    required this.frecMin,
-    required this.frecMax,
-  }) : super(key: key);
+  const CustomTherapy(
+      {Key? key,
+      required this.name,
+      required this.frecMin,
+      required this.frecMax,
+      required this.terapiaSel})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    //final int ter = ref.watch(indexTerapiaProvider);
     return Card(
+        color:
+            ref.watch(indexTerapiaProvider) == terapiaSel ? Colors.blue : null,
         margin: const EdgeInsets.all(4.0),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(15))),
@@ -411,8 +469,10 @@ class CustomTherapy extends StatelessWidget {
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
 
-            splashColor: Colors.blue,
-            onTap: () {},
+            //splashColor: Colors.blue,
+            onTap: () {
+              ref.read(indexTerapiaProvider.notifier).state = terapiaSel;
+            },
             //leading: const Icon(Icons.arrow_forward_ios),
             // trailing: const Icon(
             //   Icons.favorite,
@@ -420,11 +480,21 @@ class CustomTherapy extends StatelessWidget {
             // ),
             title: Text(
               name,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  color: ref.watch(indexTerapiaProvider) == terapiaSel
+                      ? Colors.white
+                      : null,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600),
             ),
             subtitle: Text(
               '$frecMin KHz - $frecMax KHz',
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  color: ref.watch(indexTerapiaProvider) == terapiaSel
+                      ? Colors.white
+                      : null,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600),
             ),
           ),
         ));
