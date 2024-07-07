@@ -35,69 +35,75 @@ class TimerZapperScreen extends ConsumerWidget {
       onPopInvoked: (didPop) {
         if (didPop) {
           return;
-        }
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  backgroundColor: Colors.blue,
-                  actionsAlignment: MainAxisAlignment.spaceEvenly,
-                  title: const Text(
-                    'AVISO',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  content: Container(
-                    constraints: BoxConstraints(
-                        maxHeight: heightScreen * 0.17,
-                        maxWidth: widthScreen * 0.95),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Intenta volver al menú de terapias. Si vuelve, se cancelará la terapia actual.',
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          '¿Quiere cancelar la terapia actual?',
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ],
+        } else if (ref.watch(countdownProvider).estado != 'FIN') {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    backgroundColor: Colors.blue,
+                    actionsAlignment: MainAxisAlignment.spaceEvenly,
+                    title: const Text(
+                      'AVISO',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  contentPadding: const EdgeInsets.all(16),
-                  actions: [
-                    TextButton(
-                        style: const ButtonStyle(
-                            side: MaterialStatePropertyAll(BorderSide(
-                          color: Colors.white,
-                        ))),
-                        onPressed: () {
-                          context.pop();
-                        },
-                        child: const Text(
-                          'No',
-                          style: TextStyle(color: Colors.white),
-                        )),
-                    TextButton(
-                        style: const ButtonStyle(
-                            side: MaterialStatePropertyAll(BorderSide(
-                          color: Colors.white,
-                        ))),
-                        onPressed: () {
-                          ref.read(selectModoProvider.notifier).state = false;
-                          ref.read(indexTerapiaProvider.notifier).state = 0;
-                          ref.watch(countdownProvider).terminarTimer();
-                          context.pop();
-                          context.pop();
-                        },
-                        child: const Text('Sí',
-                            style: TextStyle(color: Colors.white)))
-                  ],
-                ));
+                    content: Container(
+                      constraints: BoxConstraints(
+                          maxHeight: heightScreen * 0.17,
+                          maxWidth: widthScreen * 0.95),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Intenta volver al menú de terapias. Si vuelve, se cancelará la terapia actual.',
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '¿Quiere cancelar la terapia actual?',
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.all(16),
+                    actions: [
+                      TextButton(
+                          style: const ButtonStyle(
+                              side: MaterialStatePropertyAll(BorderSide(
+                            color: Colors.white,
+                          ))),
+                          onPressed: () {
+                            context.pop();
+                          },
+                          child: const Text(
+                            'No',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                      TextButton(
+                          style: const ButtonStyle(
+                              side: MaterialStatePropertyAll(BorderSide(
+                            color: Colors.white,
+                          ))),
+                          onPressed: () {
+                            ref.read(selectModoProvider.notifier).state = false;
+                            ref.read(indexTerapiaProvider.notifier).state = 0;
+                            ref.watch(countdownProvider).terminarTimer();
+                            context.pop();
+                            context.pop();
+                          },
+                          child: const Text('Sí',
+                              style: TextStyle(color: Colors.white)))
+                    ],
+                  ));
+        } else {
+          ref.read(selectModoProvider.notifier).state = false;
+          ref.read(indexTerapiaProvider.notifier).state = 0;
+          ref.watch(countdownProvider).terminarTimer();
+          context.pop();
+        }
       },
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -165,17 +171,64 @@ class TimerZapperScreen extends ConsumerWidget {
                                     disabledColor: Colors.transparent,
                                     padding: const EdgeInsets.all(0.0),
                                     iconSize: 50,
-                                    onPressed:
-                                        ref.watch(countdownProvider).estado !=
-                                                'FIN'
-                                            ? () {
-                                                timer.startStopTimer('Modo A');
-                                              }
-                                            : null,
+                                    onPressed: ref
+                                                .watch(countdownProvider)
+                                                .estado !=
+                                            'FIN'
+                                        ? () {
+                                            modoSeleccionado
+                                                ? timer.startStopTimer('Modo A')
+                                                : timer
+                                                    .startStopTimer('Modo B');
+                                          }
+                                        : null,
                                     icon: Icon(timer.isRunning
                                         ? Icons.pause
                                         : Icons.play_arrow)),
                               ],
+                            ),
+                          ),
+                          Visibility(
+                            visible:
+                                ref.watch(countdownProvider).estado == 'FIN'
+                                    ? true
+                                    : false,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const SizedBox(height: 128),
+                                  TextButton(
+                                    style: const ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.blue)),
+                                    onPressed: ref
+                                                .watch(countdownProvider)
+                                                .estado ==
+                                            'FIN'
+                                        ? () {
+                                            ref
+                                                .read(
+                                                    selectModoProvider.notifier)
+                                                .state = false;
+                                            ref
+                                                .read(indexTerapiaProvider
+                                                    .notifier)
+                                                .state = 0;
+                                            ref
+                                                .watch(countdownProvider)
+                                                .terminarTimer();
+                                            context.pop();
+                                          }
+                                        : null,
+                                    child: const Text(
+                                      'VOLVER',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Center(
@@ -213,7 +266,9 @@ class TimerZapperScreen extends ConsumerWidget {
                         IconButton(
                             iconSize: 50,
                             onPressed: () {
-                              timer.startStopTimer('Modo B');
+                              modoSeleccionado
+                                  ? timer.startStopTimer('Modo A')
+                                  : timer.startStopTimer('Modo B');
                             },
                             icon: Icon(timer.isRunning
                                 ? Icons.pause
