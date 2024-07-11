@@ -15,12 +15,17 @@ class DevicesScreen extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.blue,
           leading: Padding(
             padding: const EdgeInsets.all(4.0),
             child: CircleAvatar(backgroundImage: NetworkImage(user.photoURL!)),
           ),
           centerTitle: false,
-          title: Text(nameUser),
+          title: Text(
+            nameUser,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
         body: Container(
           constraints: BoxConstraints(maxWidth: widthScreen),

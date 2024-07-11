@@ -109,7 +109,7 @@ class TimerZapperScreen extends ConsumerWidget {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.blue,
             leading: Padding(
                 padding: const EdgeInsets.all(4),
                 child: CircleAvatar(
@@ -122,14 +122,6 @@ class TimerZapperScreen extends ConsumerWidget {
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
-            ),
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [Colors.blue, Colors.white],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0.6, 1])),
             ),
           ),
           body: SingleChildScrollView(
@@ -295,7 +287,7 @@ class TimerZapperScreen extends ConsumerWidget {
               ),
             ), 
             floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,*/
-          bottomNavigationBar: Container(
+          /*  bottomNavigationBar: Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
@@ -308,7 +300,7 @@ class TimerZapperScreen extends ConsumerWidget {
               notchMargin: 4,
               shape: const CircularNotchedRectangle(),
             ),
-          ),
+          ), */
           //
         ),
       ),

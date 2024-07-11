@@ -88,7 +88,8 @@ class CountdownProvider extends ChangeNotifier {
     if ((ciclos == 1 && estado != 'FIN') || ciclos == 3 || ciclos == 5) {
       colorCiclo = Colors.blue;
     } else {
-      colorCiclo = const Color.fromARGB(255, 142, 176, 219);
+      colorCiclo = Colors.purple;
+      //colorCiclo = const Color.fromARGB(255, 142, 176, 219);
       //colorCiclo = const Color.fromARGB(255, 189, 194, 238);
     }
     return colorCiclo;
