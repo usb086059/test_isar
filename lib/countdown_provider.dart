@@ -119,5 +119,6 @@ class CountdownProvider extends ChangeNotifier {
     modo = 'Modo B';
     duration = const Duration(seconds: 0);
     volvioDeTimerZapperScreen = true;
+    notifyListeners();
   }
 }
