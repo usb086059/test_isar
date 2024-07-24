@@ -38,7 +38,7 @@ class DevicesScreen extends ConsumerWidget {
                     radius: 5,
                     stops: [0.0, 0.5, 1])),
           ),
-          backgroundColor: Color.fromARGB(255, 50, 102, 175),
+          backgroundColor: const Color.fromARGB(255, 50, 102, 175),
           leading: Padding(
             padding: const EdgeInsets.all(4.0),
             child: CircleAvatar(backgroundImage: NetworkImage(user.photoURL!)),
@@ -58,160 +58,47 @@ class DevicesScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Image.asset('assets/dedo_touch.png', scale: 3),
+                  Image.asset(
+                    'assets/dedo_touch.png',
+                    scale: 3,
+                    color: const Color.fromARGB(255, 50, 102, 175),
+                  ),
                   const SizedBox(height: 10),
                   const FittedBox(
                     alignment: Alignment.center,
                     fit: BoxFit.scaleDown,
                     child: Text('ELIJA EL DISPOSITIVO',
                         style: TextStyle(
-                            fontSize: 40,
-                            color: Colors.blue,
+                            fontSize: 28,
+                            color: Color.fromARGB(255, 50, 102, 175),
                             fontWeight: FontWeight.bold)),
                   ),
                   const SizedBox(height: 16),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(30)),
-                    child: Card(
-                      margin: const EdgeInsets.all(10),
-                      color: Colors.blue,
-                      shadowColor: Colors.black,
-                      elevation: 40,
-                      child: ListTile(
-                        onTap: () {},
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Image.asset('assets/icons/icon_circulo.png',
-                                scale: 50),
-                            const SizedBox(width: 16),
-                            const Expanded(
-                              child: FittedBox(
-                                alignment: Alignment.centerLeft,
-                                fit: BoxFit.scaleDown,
-                                child: Text('PEDILUVIO',
-                                    style: TextStyle(
-                                        fontSize: 25, color: Colors.white)),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+                  CustomIconSelectDevice(
+                    deviceName: 'PEDILUVIO',
+                    addresImageDevice: 'assets/icons/icon_circulo.png',
+                    contextDevicesScreen: context,
+                    refDevicesScreen: ref,
                   ),
-                  const SizedBox(height: 16),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(30)),
-                    child: Card(
-                      margin: const EdgeInsets.all(10),
-                      color: Colors.blue,
-                      shadowColor: Colors.black,
-                      elevation: 40,
-                      child: ListTile(
-                        onTap: () {},
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Image.asset('assets/icons/icon_circulo.png',
-                                scale: 50),
-                            const SizedBox(width: 16),
-                            const Expanded(
-                              child: FittedBox(
-                                alignment: Alignment.centerLeft,
-                                fit: BoxFit.scaleDown,
-                                child: Text('PEDILUVIO CON ZAPPER',
-                                    style: TextStyle(
-                                        fontSize: 25, color: Colors.white)),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+                  CustomIconSelectDevice(
+                    deviceName: 'PEDILUVIO CON ZAPPER',
+                    addresImageDevice: 'assets/icons/icon_circulo.png',
+                    contextDevicesScreen: context,
+                    refDevicesScreen: ref,
                   ),
-                  const SizedBox(height: 16),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(30)),
-                    child: Card(
-                      margin: const EdgeInsets.all(10),
-                      color: Colors.blue,
-                      shadowColor: Colors.black,
-                      elevation: 40,
-                      child: ListTile(
-                        onTap: () async {
-                          await ref
-                              .watch(servicesProvider)
-                              .terapiasIniciales(); //Actualiza terapias iniciales si es necesario
-                          await ref
-                              .watch(servicesProvider)
-                              .cargarTerapiaTotal(); //Carga las terapias que se mostraran en el Gridview (terapias iniciales + personales)
-                          ref.read(origenHomeZapperProvider.notifier).state =
-                              true;
-                          ref.read(selectModoProvider.notifier).state = false;
-                          ref.read(indexTerapiaProvider.notifier).state = 0;
-                          ref.read(terapiaProvider.notifier).state = await ref
-                              .watch(servicesProvider)
-                              .getTerapiaSeleccionada(0);
-                          context.push('/homeZapper');
-                        },
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Image.asset('assets/icons/icon_circulo.png',
-                                scale: 50),
-                            const SizedBox(width: 16),
-                            const Expanded(
-                              child: FittedBox(
-                                alignment: Alignment.centerLeft,
-                                fit: BoxFit.scaleDown,
-                                child: Text('ZAPPER',
-                                    style: TextStyle(
-                                        fontSize: 25, color: Colors.white)),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+                  CustomIconSelectDevice(
+                    deviceName: 'ZAPPER',
+                    addresImageDevice: 'assets/icons/icon_circulo.png',
+                    contextDevicesScreen: context,
+                    refDevicesScreen: ref,
                   ),
-                  const SizedBox(height: 16),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(30)),
-                    child: Card(
-                      margin: const EdgeInsets.all(10),
-                      color: Colors.blue,
-                      shadowColor: Colors.black,
-                      elevation: 40,
-                      child: ListTile(
-                        onTap: () {},
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Image.asset('assets/icons/icon_circulo.png',
-                                scale: 50),
-                            const SizedBox(width: 16),
-                            const Expanded(
-                              child: FittedBox(
-                                alignment: Alignment.centerLeft,
-                                fit: BoxFit.scaleDown,
-                                child: Text('DERMATRONIC',
-                                    style: TextStyle(
-                                        fontSize: 25, color: Colors.white)),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
+                  CustomIconSelectDevice(
+                    deviceName: 'DERMATRONIC',
+                    addresImageDevice: 'assets/icons/icon_circulo.png',
+                    contextDevicesScreen: context,
+                    refDevicesScreen: ref,
+                  ),
+                  //const SizedBox(height: 16),
                 ],
               ),
             ),
@@ -219,5 +106,85 @@ class DevicesScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class CustomIconSelectDevice extends ConsumerWidget {
+  final BuildContext contextDevicesScreen;
+  final WidgetRef refDevicesScreen;
+  final String deviceName;
+  final String addresImageDevice;
+
+  const CustomIconSelectDevice({
+    super.key,
+    required this.deviceName,
+    required this.addresImageDevice,
+    required this.contextDevicesScreen,
+    required this.refDevicesScreen,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+              fit: BoxFit.fill, image: AssetImage('assets/icons/icono9.png'))),
+      child: Card(
+        margin: const EdgeInsets.only(top: 11, bottom: 29, left: 16, right: 16),
+        color: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(26))),
+        child: ListTile(
+          onTap: onTapSelectDevice(contextDevicesScreen, refDevicesScreen),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.asset(addresImageDevice, scale: 52),
+              const SizedBox(width: 16),
+              Expanded(
+                child: FittedBox(
+                  alignment: Alignment.centerLeft,
+                  fit: BoxFit.scaleDown,
+                  child: Text(deviceName,
+                      style: const TextStyle(
+                          fontSize: 25,
+                          color: Color.fromARGB(255, 50, 102, 175),
+                          fontWeight: FontWeight.bold)),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  GestureTapCallback onTapSelectDevice(BuildContext context, WidgetRef ref) {
+    if (deviceName == 'PEDILUVIO') {
+      return () {};
+    } else if (deviceName == 'PEDILUVIO CON ZAPPER') {
+      return () {};
+    } else if (deviceName == 'ZAPPER') {
+      return () async {
+        await ref
+            .watch(servicesProvider)
+            .terapiasIniciales(); //Actualiza terapias iniciales si es necesario
+        await ref
+            .watch(servicesProvider)
+            .cargarTerapiaTotal(); //Carga las terapias que se mostraran en el Gridview (terapias iniciales + personales)
+        ref.read(origenHomeZapperProvider.notifier).state = true;
+        ref.read(selectModoProvider.notifier).state = false;
+        ref.read(indexTerapiaProvider.notifier).state = 0;
+        ref.read(terapiaProvider.notifier).state =
+            await ref.watch(servicesProvider).getTerapiaSeleccionada(0);
+        context.push('/homeZapper');
+      };
+    } else if (deviceName == 'DERMATRONIC') {
+      return () {};
+    } else {
+      return () {};
+    }
   }
 }
