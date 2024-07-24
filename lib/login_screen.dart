@@ -8,160 +8,262 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double widthScreen = MediaQuery.of(context).size.width;
+    double heightScreen = MediaQuery.of(context).size.height;
+    double anchoMin = MediaQuery.of(context).size.width * 0.35;
+    double anchoMax = MediaQuery.of(context).size.width * 0.95;
+    double altoMin = MediaQuery.of(context).size.height * 0.35;
+    double altoMax = MediaQuery.of(context).size.height * 0.5;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 50),
-                Card(
-                  color: Colors.blue,
-                  child: Image.asset(
-                      'assets/avt-logo-vectorizado-en-dorado-y-blanco-02-1-600x178.png'),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'BIENVENIDO',
-                  style: TextStyle(
-                      fontSize: 40,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
-                  child: Text(
-                    'Somos AVTechnology, una empresa especializada en equipos terapéuticos y de cuidado personal.',
-                    style: TextStyle(fontSize: 20),
-                    textAlign: TextAlign.justify,
+      home: Container(
+        decoration: const BoxDecoration(
+            gradient: RadialGradient(
+                colors: [Colors.white, Color.fromARGB(255, 50, 102, 175)],
+                radius: 2.5,
+                stops: [0.14, 1])),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+          ),
+          body: SingleChildScrollView(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    'assets/logoEnBlanco.png',
+                    scale: 26,
                   ),
-                ),
-                const SizedBox(height: 150),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
-                  child: Text(
-                    'Inicie sesión con una cuenta de Google',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
+                  //const SizedBox(height: 50),
+                  /* Card(
+                    color: Colors.blue,
+                    child: Image.asset(
+                        'assets/avt-logo-vectorizado-en-dorado-y-blanco-02-1-600x178.png'),
                   ),
-                ),
-                const SizedBox(height: 10),
-                FilledButton.tonalIcon(
-                    style: const ButtonStyle(
-                        textStyle:
-                            MaterialStatePropertyAll(TextStyle(fontSize: 20)),
-                        backgroundColor: MaterialStatePropertyAll(
-                            Color.fromARGB(255, 219, 239, 255)),
-                        foregroundColor:
-                            MaterialStatePropertyAll(Colors.black)),
-                    onPressed: () async {
-                      final user = await signInWithGoogle();
-                      if (user.user != null) {
-                        final List googleID = await getGoogleID();
-                        final String estaRegistrado = googleID.firstWhere(
-                            (element) => element == user.user!.uid,
-                            orElse: () => 'no existe');
-                        if (estaRegistrado == user.user!.uid) {
-                          context.push('/devices');
-                        } else {
-                          context.push('/register');
-                        }
-                      }
-                    },
-                    icon: Image.asset(
-                      'assets/logo-google-G.png',
+                  */
+                  const SizedBox(height: 120),
+                  Container(
+                    constraints: BoxConstraints(
+                        maxHeight: heightScreen * 0.1,
+                        minHeight: heightScreen * 0.1,
+                        minWidth: widthScreen * 0.95,
+                        maxWidth: widthScreen * 0.95),
+                    //color: Colors.amber[50],
+                    child: Image.asset(
+                      'assets/8.png',
                       scale: 20,
                     ),
-                    label: const Text('Continuar con Google')),
-                //const SizedBox(height: 150),
-                /* Image.asset(
-                'assets/logo-google-G.png',
-                scale: 10,
-              ), */
-                //TextButton(onPressed: () {}, child: const Text('CONTACTANOS'))
-              ],
+                  ),
+                  //const SizedBox(height: 1),
+                  Container(
+                    //color: Colors.white,
+                    alignment: Alignment.center,
+                    constraints: BoxConstraints(
+                        maxHeight: heightScreen * 0.14,
+                        minHeight: heightScreen * 0.14,
+                        minWidth: widthScreen * 0.95,
+                        maxWidth: widthScreen * 0.95),
+                    //color: Colors.amber[50],
+                    child: Image.asset(
+                      'assets/10.png',
+                      scale: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 100),
+                  /* Text('Ancho Minimo = $anchoMin ... Ancho Maximo = $anchoMax'),
+                  Text('Alto Minimo = $altoMin ... Alto Maximo = $altoMax'),
+                  Text(
+                      'HeightScreen = $heightScreen ... WidthScreen = $widthScreen'), */
+
+                  /* const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+                    child: Text(
+                      'Inicie sesión con una cuenta de Google',
+                      style: TextStyle(
+                          fontSize: 15,
+                          //color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ), */
+                  Container(
+                    padding: const EdgeInsets.only(
+                        left: 12, right: 12, top: 5, bottom: 18),
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image: AssetImage('assets/icons/icono9.png'))),
+                    child: FilledButton.tonalIcon(
+                        style: const ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.transparent)),
+                        onPressed: () async {
+                          final user = await signInWithGoogle(context);
+                          print('${user.user!.displayName}');
+                          if (user.user != null) {
+                            final List googleID = await getGoogleID();
+                            final String estaRegistrado = googleID.firstWhere(
+                                (element) => element == user.user!.uid,
+                                orElse: () => 'no existe');
+                            if (estaRegistrado == user.user!.uid) {
+                              context.push('/devices');
+                            } else {
+                              context.push('/register');
+                            }
+                          }
+                        },
+                        icon:
+                            Image.asset('assets/logo-google-G.png', scale: 20),
+                        label: const Text(
+                          'Inicie sesión con Google',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 50, 102, 175),
+                              fontWeight: FontWeight.bold),
+                        )),
+                  ),
+                  //const SizedBox(height: 10),
+                  /* FilledButton.tonalIcon(
+                      style: const ButtonStyle(
+                          textStyle:
+                              MaterialStatePropertyAll(TextStyle(fontSize: 20)),
+                          backgroundColor: MaterialStatePropertyAll(
+                              Color.fromARGB(255, 219, 239, 255)),
+                          foregroundColor:
+                              MaterialStatePropertyAll(Colors.black)),
+                      onPressed: () async {
+                        final user = await signInWithGoogle(context);
+                        print('${user.user!.displayName}');
+                        if (user.user != null) {
+                          final List googleID = await getGoogleID();
+                          final String estaRegistrado = googleID.firstWhere(
+                              (element) => element == user.user!.uid,
+                              orElse: () => 'no existe');
+                          if (estaRegistrado == user.user!.uid) {
+                            context.push('/devices');
+                          } else {
+                            context.push('/register');
+                          }
+                        }
+                      },
+                      icon: Image.asset(
+                        'assets/logo-google-G.png',
+                        scale: 20,
+                      ),
+                      label: const Text('Continuar con Google')), */
+                  //const SizedBox(height: 150),
+                  /* Image.asset(
+                  'assets/logo-google-G.png',
+                  scale: 10,
+                ), */
+                  //TextButton(onPressed: () {}, child: const Text('CONTACTANOS'))
+                ],
+              ),
             ),
           ),
-        ),
-        bottomNavigationBar: Container(
-            height: 100,
-            decoration: const BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(400),
-                    topLeft: Radius.circular(400))),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text(
-                  'CONTÁCTANOS',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: Image.asset('assets/icons/icon_whatsapp.png',
-                          scale: 14, color: Colors.white),
-                      color: Colors.white,
-                      iconSize: 40,
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Image.asset('assets/icons/icon_instagram.png',
-                          scale: 14, color: Colors.white),
-                      color: Colors.white,
-                      iconSize: 40,
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.facebook),
-                      color: Colors.white,
-                      iconSize: 40,
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Image.asset('assets/icons/icon_youtube.png',
-                          scale: 14, color: Colors.white),
-                      color: Colors.white,
-                      iconSize: 40,
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Image.asset('assets/icons/icon_internet.png',
-                          scale: 14, color: Colors.white),
-                      color: Colors.white,
-                      iconSize: 40,
-                    ),
-                  ],
-                ),
-              ],
-            )),
+          bottomNavigationBar: Container(
+              height: 100,
+              /* decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(20))), */
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  /* const Text(
+                    'CONTÁCTANOS',
+                    style: TextStyle(
+                        //color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold),
+                  ), */
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Image.asset(
+                          'assets/icons/icono10.png',
+                          //Image.asset('assets/icons/icon_whatsapp.png',
+                          scale: 10,
+                          //color: Colors.blue
+                        ),
+                        color: Colors.red,
+                        iconSize: 40,
+                      ),
+                      /* IconButton(
+                        onPressed: () {},
+                        icon: Image.asset(
+                          'assets/icons/whatsappColor.png',
+                          //Image.asset('assets/icons/icon_whatsapp.png',
+                          scale: 14,
+                          //color: Colors.blue
+                        ),
+                        color: Colors.blue,
+                        iconSize: 40,
+                      ), */
+                      IconButton(
+                        onPressed: () {},
+                        icon: Image.asset(
+                          'assets/icons/icono11.png',
+                          //Image.asset('assets/icons/icon_instagram.png',
+                          scale: 10,
+                          //color: Colors.blue
+                        ),
+                        color: Colors.blue,
+                        iconSize: 40,
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon:
+                            Image.asset('assets/icons/icono12.png', scale: 10),
+                        //const Icon(Icons.facebook),
+                        color: Colors.blue,
+                        iconSize: 40,
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Image.asset(
+                          'assets/icons/icono13.png',
+                          //Image.asset('assets/icons/icon_youtube.png',
+                          scale: 10,
+                          //color: Colors.blue
+                        ),
+                        color: Colors.blue,
+                        iconSize: 40,
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon:
+                            Image.asset('assets/icons/icono14.png', scale: 10),
+                        color: Colors.blue,
+                        iconSize: 40,
+                      ),
+                    ],
+                  ),
+                ],
+              )),
 
-        /* FutureBuilder(
-              future: getUsers(),
-              builder: ((context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                      itemCount: snapshot.data?.length,
-                      itemBuilder: (context, index) {
-                        return Text(snapshot.data?[index]['nombre']);
-                      });
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              })) */
+          /* FutureBuilder(
+                future: getUsers(),
+                builder: ((context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        itemCount: snapshot.data?.length,
+                        itemBuilder: (context, index) {
+                          return Text(snapshot.data?[index]['nombre']);
+                        });
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                })) */
+        ),
       ),
     );
   }

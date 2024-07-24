@@ -1,10 +1,10 @@
 import 'package:isar/isar.dart';
 
-part 'terapia.g.dart';
+part 'terapia_personal.g.dart';
 
 @Collection()
-class Terapia {
-  Id id;
+class TerapiaPersonal {
+  Id id = Isar.autoIncrement;
 
   int frecMin;
   int frecMax;
@@ -12,9 +12,8 @@ class Terapia {
   late String info;
   bool editable;
 
-  Terapia(
-      {required this.id,
-      required this.nombre,
+  TerapiaPersonal(
+      {required this.nombre,
       required this.frecMin,
       required this.frecMax,
       required this.info,

@@ -5,7 +5,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/countdown_provider.dart';
+import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/state_provider.dart';
+import 'package:flutter_application_1/terapia.dart';
+import 'package:flutter_application_1/terapia_total.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -30,13 +33,16 @@ class TimerZapperScreen extends ConsumerWidget {
     double porcentajeTimerReposo =
         ((timer.duration.inSeconds.toDouble() * 100) / tiempoReposo) / 100;
 
+    final TerapiaTotal terapia = ref.watch(terapiaProvider);
+
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvoked: (didPop) async {
         if (didPop) {
           return;
         } else if (ref.watch(countdownProvider).estado != 'FIN') {
           showDialog(
+              barrierDismissible: false,
               context: context,
               builder: (context) => AlertDialog(
                     backgroundColor: Colors.blue,
@@ -87,10 +93,13 @@ class TimerZapperScreen extends ConsumerWidget {
                               side: MaterialStatePropertyAll(BorderSide(
                             color: Colors.white,
                           ))),
-                          onPressed: () {
+                          onPressed: () async {
                             ref.read(selectModoProvider.notifier).state = false;
                             ref.read(indexTerapiaProvider.notifier).state = 0;
                             ref.watch(countdownProvider).terminarTimer();
+                            ref.read(terapiaProvider.notifier).state = await ref
+                                .watch(servicesProvider)
+                                .getTerapiaSeleccionada(0);
                             context.pop();
                             context.pop();
                           },
@@ -102,6 +111,8 @@ class TimerZapperScreen extends ConsumerWidget {
           ref.read(selectModoProvider.notifier).state = false;
           ref.read(indexTerapiaProvider.notifier).state = 0;
           ref.watch(countdownProvider).terminarTimer();
+          ref.read(terapiaProvider.notifier).state =
+              await ref.watch(servicesProvider).getTerapiaSeleccionada(0);
           context.pop();
         }
       },
@@ -199,7 +210,7 @@ class TimerZapperScreen extends ConsumerWidget {
                                                 .watch(countdownProvider)
                                                 .estado ==
                                             'FIN'
-                                        ? () {
+                                        ? () async {
                                             ref
                                                 .read(
                                                     selectModoProvider.notifier)
@@ -211,6 +222,12 @@ class TimerZapperScreen extends ConsumerWidget {
                                             ref
                                                 .watch(countdownProvider)
                                                 .terminarTimer();
+                                            ref
+                                                    .read(terapiaProvider.notifier)
+                                                    .state =
+                                                await ref
+                                                    .watch(servicesProvider)
+                                                    .getTerapiaSeleccionada(0);
                                             context.pop();
                                           }
                                         : null,
@@ -239,33 +256,50 @@ class TimerZapperScreen extends ConsumerWidget {
                         ],
                       )),
                   const SizedBox(height: 8),
+                  Text(terapia.nombre,
+                      style: const TextStyle(
+                          fontSize: 25, fontWeight: FontWeight.bold)),
+                  Text(
+                      'Frecuencia: ${terapia.frecMin} KHz - ${terapia.frecMax} KHz',
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 20),
                   Container(
                     constraints: BoxConstraints(
-                        maxHeight: heightScreen * 0.5,
-                        minHeight: heightScreen * 0.5,
+                        maxHeight: heightScreen * 0.41,
+                        minHeight: heightScreen * 0.41,
                         minWidth: widthScreen * 0.95,
                         maxWidth: widthScreen * 0.95),
-                    color: Colors.grey[200],
-                    child: Column(
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              ref.watch(countdownProvider).setCountdownDuration(
-                                  Duration(seconds: tiempoClark));
-                            },
-                            icon: const Icon(Icons.restart_alt)),
-                        Text('data ${timer.isRunning}'),
-                        IconButton(
-                            iconSize: 50,
-                            onPressed: () {
-                              modoSeleccionado
-                                  ? timer.startStopTimer('Modo A')
-                                  : timer.startStopTimer('Modo B');
-                            },
-                            icon: Icon(timer.isRunning
-                                ? Icons.pause
-                                : Icons.play_arrow)),
-                      ],
+                    //color: Colors.grey[200],
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            textFromFireBase(terapia.info),
+                            textAlign: TextAlign.justify,
+                          ),
+                          const SizedBox(height: 30),
+
+                          /* IconButton(
+                              onPressed: () {
+                                ref.watch(countdownProvider).setCountdownDuration(
+                                    Duration(seconds: tiempoClark));
+                              },
+                              icon: const Icon(Icons.restart_alt)),
+                          Text('data ${timer.isRunning}'),
+                          IconButton(
+                              iconSize: 50,
+                              onPressed: () {
+                                modoSeleccionado
+                                    ? timer.startStopTimer('Modo A')
+                                    : timer.startStopTimer('Modo B');
+                              },
+                              icon: Icon(timer.isRunning
+                                  ? Icons.pause
+                                  : Icons.play_arrow)), */
+                        ],
+                      ),
                     ),
                   )
                 ],
@@ -306,9 +340,23 @@ class TimerZapperScreen extends ConsumerWidget {
       ),
     );
   }
+
+  String textFromFireBase(String info) {
+    //Este metodo se creó porque flutter no reconoce los salto de lineas '\n' que vienen de Firebase
+    final List<String> listWords = info.split(' ');
+    final List<String> listWordsConSaltoDeLinea = [];
+    for (var element in listWords) {
+      if (element != r'\n') {
+        listWordsConSaltoDeLinea.add('$element' ' ');
+      } else {
+        element == r'\n' ? listWordsConSaltoDeLinea.add('\n') : null;
+      }
+    }
+    return listWordsConSaltoDeLinea.join('');
+  }
 }
 
-class MyPainter extends CustomPainter {
+/* class MyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Rect rect = Rect.fromCenter(
@@ -333,4 +381,4 @@ class MyPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
   }
-}
+} */

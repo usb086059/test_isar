@@ -1,7 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-Future<UserCredential> signInWithGoogle() async {
+Future<UserCredential> signInWithGoogle(BuildContext context) async {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+            child: CircularProgressIndicator(
+          color: Colors.blue,
+          backgroundColor: Colors.white,
+        ));
+      });
+
   // Trigger the authentication flow
   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -14,6 +26,8 @@ Future<UserCredential> signInWithGoogle() async {
     accessToken: googleAuth?.accessToken,
     idToken: googleAuth?.idToken,
   );
+
+  context.pop();
 
   // Once signed in, return the UserCredential
   return await FirebaseAuth.instance.signInWithCredential(credential);

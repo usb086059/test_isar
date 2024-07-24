@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'terapia.dart';
+part of 'terapia_personal.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,13 @@ part of 'terapia.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetTerapiaCollection on Isar {
-  IsarCollection<Terapia> get terapias => this.collection();
+extension GetTerapiaPersonalCollection on Isar {
+  IsarCollection<TerapiaPersonal> get terapiaPersonals => this.collection();
 }
 
-const TerapiaSchema = CollectionSchema(
-  name: r'Terapia',
-  id: 6384018273203516133,
+const TerapiaPersonalSchema = CollectionSchema(
+  name: r'TerapiaPersonal',
+  id: 319119087133367004,
   properties: {
     r'editable': PropertySchema(
       id: 0,
@@ -43,22 +43,22 @@ const TerapiaSchema = CollectionSchema(
       type: IsarType.string,
     )
   },
-  estimateSize: _terapiaEstimateSize,
-  serialize: _terapiaSerialize,
-  deserialize: _terapiaDeserialize,
-  deserializeProp: _terapiaDeserializeProp,
+  estimateSize: _terapiaPersonalEstimateSize,
+  serialize: _terapiaPersonalSerialize,
+  deserialize: _terapiaPersonalDeserialize,
+  deserializeProp: _terapiaPersonalDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {},
   embeddedSchemas: {},
-  getId: _terapiaGetId,
-  getLinks: _terapiaGetLinks,
-  attach: _terapiaAttach,
+  getId: _terapiaPersonalGetId,
+  getLinks: _terapiaPersonalGetLinks,
+  attach: _terapiaPersonalAttach,
   version: '3.1.0+1',
 );
 
-int _terapiaEstimateSize(
-  Terapia object,
+int _terapiaPersonalEstimateSize(
+  TerapiaPersonal object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -68,8 +68,8 @@ int _terapiaEstimateSize(
   return bytesCount;
 }
 
-void _terapiaSerialize(
-  Terapia object,
+void _terapiaPersonalSerialize(
+  TerapiaPersonal object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -81,24 +81,24 @@ void _terapiaSerialize(
   writer.writeString(offsets[4], object.nombre);
 }
 
-Terapia _terapiaDeserialize(
+TerapiaPersonal _terapiaPersonalDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Terapia(
+  final object = TerapiaPersonal(
     editable: reader.readBool(offsets[0]),
     frecMax: reader.readLong(offsets[1]),
     frecMin: reader.readLong(offsets[2]),
-    id: id,
     info: reader.readString(offsets[3]),
     nombre: reader.readString(offsets[4]),
   );
+  object.id = id;
   return object;
 }
 
-P _terapiaDeserializeProp<P>(
+P _terapiaPersonalDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -120,28 +120,32 @@ P _terapiaDeserializeProp<P>(
   }
 }
 
-Id _terapiaGetId(Terapia object) {
+Id _terapiaPersonalGetId(TerapiaPersonal object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _terapiaGetLinks(Terapia object) {
+List<IsarLinkBase<dynamic>> _terapiaPersonalGetLinks(TerapiaPersonal object) {
   return [];
 }
 
-void _terapiaAttach(IsarCollection<dynamic> col, Id id, Terapia object) {
+void _terapiaPersonalAttach(
+    IsarCollection<dynamic> col, Id id, TerapiaPersonal object) {
   object.id = id;
 }
 
-extension TerapiaQueryWhereSort on QueryBuilder<Terapia, Terapia, QWhere> {
-  QueryBuilder<Terapia, Terapia, QAfterWhere> anyId() {
+extension TerapiaPersonalQueryWhereSort
+    on QueryBuilder<TerapiaPersonal, TerapiaPersonal, QWhere> {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension TerapiaQueryWhere on QueryBuilder<Terapia, Terapia, QWhereClause> {
-  QueryBuilder<Terapia, Terapia, QAfterWhereClause> idEqualTo(Id id) {
+extension TerapiaPersonalQueryWhere
+    on QueryBuilder<TerapiaPersonal, TerapiaPersonal, QWhereClause> {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterWhereClause> idEqualTo(
+      Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -150,7 +154,8 @@ extension TerapiaQueryWhere on QueryBuilder<Terapia, Terapia, QWhereClause> {
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterWhereClause> idNotEqualTo(Id id) {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterWhereClause>
+      idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -172,8 +177,8 @@ extension TerapiaQueryWhere on QueryBuilder<Terapia, Terapia, QWhereClause> {
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterWhereClause> idGreaterThan(Id id,
-      {bool include = false}) {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterWhereClause>
+      idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -181,7 +186,8 @@ extension TerapiaQueryWhere on QueryBuilder<Terapia, Terapia, QWhereClause> {
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterWhereClause> idLessThan(
+      Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -190,7 +196,7 @@ extension TerapiaQueryWhere on QueryBuilder<Terapia, Terapia, QWhereClause> {
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterWhereClause> idBetween(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -207,10 +213,10 @@ extension TerapiaQueryWhere on QueryBuilder<Terapia, Terapia, QWhereClause> {
   }
 }
 
-extension TerapiaQueryFilter
-    on QueryBuilder<Terapia, Terapia, QFilterCondition> {
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> editableEqualTo(
-      bool value) {
+extension TerapiaPersonalQueryFilter
+    on QueryBuilder<TerapiaPersonal, TerapiaPersonal, QFilterCondition> {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      editableEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'editable',
@@ -219,8 +225,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> frecMaxEqualTo(
-      int value) {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      frecMaxEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'frecMax',
@@ -229,7 +235,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> frecMaxGreaterThan(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      frecMaxGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -242,7 +249,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> frecMaxLessThan(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      frecMaxLessThan(
     int value, {
     bool include = false,
   }) {
@@ -255,7 +263,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> frecMaxBetween(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      frecMaxBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -272,8 +281,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> frecMinEqualTo(
-      int value) {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      frecMinEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'frecMin',
@@ -282,7 +291,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> frecMinGreaterThan(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      frecMinGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -295,7 +305,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> frecMinLessThan(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      frecMinLessThan(
     int value, {
     bool include = false,
   }) {
@@ -308,7 +319,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> frecMinBetween(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      frecMinBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -325,7 +337,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> idEqualTo(Id value) {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -334,7 +347,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -347,7 +361,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> idLessThan(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -360,7 +375,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> idBetween(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -377,7 +393,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> infoEqualTo(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      infoEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -390,7 +407,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> infoGreaterThan(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      infoGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -405,7 +423,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> infoLessThan(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      infoLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -420,7 +439,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> infoBetween(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      infoBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -439,7 +459,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> infoStartsWith(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      infoStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -452,7 +473,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> infoEndsWith(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      infoEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -465,9 +487,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> infoContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      infoContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'info',
@@ -477,9 +498,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> infoMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      infoMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'info',
@@ -489,7 +509,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> infoIsEmpty() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      infoIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'info',
@@ -498,7 +519,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> infoIsNotEmpty() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      infoIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'info',
@@ -507,7 +529,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> nombreEqualTo(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      nombreEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -520,7 +543,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> nombreGreaterThan(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      nombreGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -535,7 +559,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> nombreLessThan(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      nombreLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -550,7 +575,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> nombreBetween(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      nombreBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -569,7 +595,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> nombreStartsWith(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      nombreStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -582,7 +609,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> nombreEndsWith(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      nombreEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -595,9 +623,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> nombreContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      nombreContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'nombre',
@@ -607,9 +634,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> nombreMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      nombreMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'nombre',
@@ -619,7 +645,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> nombreIsEmpty() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      nombreIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'nombre',
@@ -628,7 +655,8 @@ extension TerapiaQueryFilter
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterFilterCondition> nombreIsNotEmpty() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterFilterCondition>
+      nombreIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'nombre',
@@ -638,177 +666,193 @@ extension TerapiaQueryFilter
   }
 }
 
-extension TerapiaQueryObject
-    on QueryBuilder<Terapia, Terapia, QFilterCondition> {}
+extension TerapiaPersonalQueryObject
+    on QueryBuilder<TerapiaPersonal, TerapiaPersonal, QFilterCondition> {}
 
-extension TerapiaQueryLinks
-    on QueryBuilder<Terapia, Terapia, QFilterCondition> {}
+extension TerapiaPersonalQueryLinks
+    on QueryBuilder<TerapiaPersonal, TerapiaPersonal, QFilterCondition> {}
 
-extension TerapiaQuerySortBy on QueryBuilder<Terapia, Terapia, QSortBy> {
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> sortByEditable() {
+extension TerapiaPersonalQuerySortBy
+    on QueryBuilder<TerapiaPersonal, TerapiaPersonal, QSortBy> {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy>
+      sortByEditable() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'editable', Sort.asc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> sortByEditableDesc() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy>
+      sortByEditableDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'editable', Sort.desc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> sortByFrecMax() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy> sortByFrecMax() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'frecMax', Sort.asc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> sortByFrecMaxDesc() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy>
+      sortByFrecMaxDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'frecMax', Sort.desc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> sortByFrecMin() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy> sortByFrecMin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'frecMin', Sort.asc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> sortByFrecMinDesc() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy>
+      sortByFrecMinDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'frecMin', Sort.desc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> sortByInfo() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy> sortByInfo() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'info', Sort.asc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> sortByInfoDesc() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy>
+      sortByInfoDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'info', Sort.desc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> sortByNombre() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy> sortByNombre() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'nombre', Sort.asc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> sortByNombreDesc() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy>
+      sortByNombreDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'nombre', Sort.desc);
     });
   }
 }
 
-extension TerapiaQuerySortThenBy
-    on QueryBuilder<Terapia, Terapia, QSortThenBy> {
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> thenByEditable() {
+extension TerapiaPersonalQuerySortThenBy
+    on QueryBuilder<TerapiaPersonal, TerapiaPersonal, QSortThenBy> {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy>
+      thenByEditable() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'editable', Sort.asc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> thenByEditableDesc() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy>
+      thenByEditableDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'editable', Sort.desc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> thenByFrecMax() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy> thenByFrecMax() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'frecMax', Sort.asc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> thenByFrecMaxDesc() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy>
+      thenByFrecMaxDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'frecMax', Sort.desc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> thenByFrecMin() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy> thenByFrecMin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'frecMin', Sort.asc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> thenByFrecMinDesc() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy>
+      thenByFrecMinDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'frecMin', Sort.desc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> thenById() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> thenByInfo() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy> thenByInfo() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'info', Sort.asc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> thenByInfoDesc() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy>
+      thenByInfoDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'info', Sort.desc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> thenByNombre() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy> thenByNombre() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'nombre', Sort.asc);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QAfterSortBy> thenByNombreDesc() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QAfterSortBy>
+      thenByNombreDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'nombre', Sort.desc);
     });
   }
 }
 
-extension TerapiaQueryWhereDistinct
-    on QueryBuilder<Terapia, Terapia, QDistinct> {
-  QueryBuilder<Terapia, Terapia, QDistinct> distinctByEditable() {
+extension TerapiaPersonalQueryWhereDistinct
+    on QueryBuilder<TerapiaPersonal, TerapiaPersonal, QDistinct> {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QDistinct>
+      distinctByEditable() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'editable');
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QDistinct> distinctByFrecMax() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QDistinct>
+      distinctByFrecMax() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'frecMax');
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QDistinct> distinctByFrecMin() {
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QDistinct>
+      distinctByFrecMin() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'frecMin');
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QDistinct> distinctByInfo(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QDistinct> distinctByInfo(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'info', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Terapia, Terapia, QDistinct> distinctByNombre(
+  QueryBuilder<TerapiaPersonal, TerapiaPersonal, QDistinct> distinctByNombre(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'nombre', caseSensitive: caseSensitive);
@@ -816,39 +860,39 @@ extension TerapiaQueryWhereDistinct
   }
 }
 
-extension TerapiaQueryProperty
-    on QueryBuilder<Terapia, Terapia, QQueryProperty> {
-  QueryBuilder<Terapia, int, QQueryOperations> idProperty() {
+extension TerapiaPersonalQueryProperty
+    on QueryBuilder<TerapiaPersonal, TerapiaPersonal, QQueryProperty> {
+  QueryBuilder<TerapiaPersonal, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<Terapia, bool, QQueryOperations> editableProperty() {
+  QueryBuilder<TerapiaPersonal, bool, QQueryOperations> editableProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'editable');
     });
   }
 
-  QueryBuilder<Terapia, int, QQueryOperations> frecMaxProperty() {
+  QueryBuilder<TerapiaPersonal, int, QQueryOperations> frecMaxProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'frecMax');
     });
   }
 
-  QueryBuilder<Terapia, int, QQueryOperations> frecMinProperty() {
+  QueryBuilder<TerapiaPersonal, int, QQueryOperations> frecMinProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'frecMin');
     });
   }
 
-  QueryBuilder<Terapia, String, QQueryOperations> infoProperty() {
+  QueryBuilder<TerapiaPersonal, String, QQueryOperations> infoProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'info');
     });
   }
 
-  QueryBuilder<Terapia, String, QQueryOperations> nombreProperty() {
+  QueryBuilder<TerapiaPersonal, String, QQueryOperations> nombreProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'nombre');
     });
