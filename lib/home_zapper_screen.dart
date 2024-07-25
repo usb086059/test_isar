@@ -73,182 +73,110 @@ class HomeZapperScreen extends ConsumerWidget {
                 const Text('MODOS DE APLICACIÓN',
                     style: TextStyle(
                         fontSize: 20,
-                        color: Colors.blue,
+                        color: Color.fromARGB(255, 50, 102, 175),
                         fontWeight: FontWeight.bold)),
                 //const SizedBox(height: 8),
                 Container(
-                  constraints: BoxConstraints(
-                      maxHeight: heightScreen * 0.35,
-                      maxWidth: widthScreen * 0.95),
+                  padding: const EdgeInsets.only(
+                      top: 11.5, bottom: 30, left: 16, right: 16),
                   decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          child: FittedBox(
-                            //alignment: Alignment.centerLeft,
-                            fit: BoxFit.scaleDown,
-                            child: GestureDetector(
-                              onTap: () {
-                                ref.read(selectModoProvider.notifier).state =
-                                    true;
-                              },
-                              child: Card(
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30))),
-                                elevation: 10,
-                                color: modoSeleccionado
-                                    ? Colors.blue
-                                    : Colors.white,
-                                shadowColor: Colors.blue,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Text('POR TANDAS',
-                                          style: TextStyle(
-                                              fontSize: 25,
-                                              color: modoSeleccionado
-                                                  ? Colors.white
-                                                  : null,
-                                              fontWeight: FontWeight.bold)),
-                                      DataTable(
-                                          headingTextStyle: TextStyle(
-                                              fontSize: 20,
-                                              color: modoSeleccionado
-                                                  ? Colors.white
-                                                  : null,
-                                              fontWeight: FontWeight.bold),
-                                          dataTextStyle: TextStyle(
-                                              fontSize: 20,
-                                              color: modoSeleccionado
-                                                  ? Colors.white
-                                                  : null),
-                                          columnSpacing: 17,
-                                          columns: const [
-                                            DataColumn(
-                                                label: Text(
-                                                  'CICLOS',
-                                                ),
-                                                numeric: true),
-                                            DataColumn(
-                                                label: Text('ON  '),
-                                                numeric: true),
-                                            DataColumn(
-                                                label: Text('OFF  '),
-                                                numeric: true),
-                                          ],
-                                          rows: const [
-                                            DataRow(cells: [
-                                              DataCell(Text('1     ')),
-                                              DataCell(Text('7 min')),
-                                              DataCell(Text('20 min')),
-                                            ]),
-                                            DataRow(cells: [
-                                              DataCell(Text('2     ')),
-                                              DataCell(Text('7 min')),
-                                              DataCell(Text('20 min')),
-                                            ]),
-                                            DataRow(cells: [
-                                              DataCell(Text('3     ')),
-                                              DataCell(Text('7 min')),
-                                              DataCell(Text('FIN  ')),
-                                            ])
-                                          ]),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: GestureDetector(
-                              onTap: () {
-                                ref.read(selectModoProvider.notifier).state =
-                                    false;
-                              },
-                              child: Card(
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30))),
-                                elevation: 10,
-                                color: modoSeleccionado
-                                    ? Colors.white
-                                    : Colors.blue,
-                                shadowColor: Colors.blue,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Text('CONTINUO',
-                                          style: TextStyle(
-                                              color: modoSeleccionado
-                                                  ? null
-                                                  : Colors.white,
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.bold)),
-                                      DataTable(
-                                          headingTextStyle: TextStyle(
-                                              color: modoSeleccionado
-                                                  ? null
-                                                  : Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
-                                          dataTextStyle: TextStyle(
-                                              fontSize: 20,
-                                              color: modoSeleccionado
-                                                  ? null
-                                                  : Colors.white),
-                                          columnSpacing: 17,
-                                          columns: const [
-                                            DataColumn(
-                                                label: Text('CICLOS'),
-                                                numeric: true),
-                                            DataColumn(
-                                                label: Text('ON   '),
-                                                numeric: true),
-                                            DataColumn(
-                                                label: Text('OFF'),
-                                                numeric: true),
-                                          ],
-                                          rows: const [
-                                            DataRow(cells: [
-                                              DataCell(Text('1     ')),
-                                              DataCell(Text('60 min')),
-                                              DataCell(Text('FIN')),
-                                            ]),
-                                            /* DataRow(cells: [
-                                          DataCell(Text('1')),
-                                          DataCell(Text('7')),
-                                          DataCell(Text('20')),
-                                        ]),
-                                        DataRow(cells: [
-                                          DataCell(Text('1')),
-                                          DataCell(Text('7')),
-                                          DataCell(Text('20')),
-                                        ]) */
-                                          ]),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                      //borderRadius: BorderRadius.circular(45),
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage('assets/icons/icono9.png'))),
+                  child: FilledButton(
+                      style: ButtonStyle(
+                          shape: const MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.elliptical(30, 35)))),
+                          backgroundColor: modoSeleccionado
+                              ? const MaterialStatePropertyAll(
+                                  Color.fromARGB(255, 50, 102, 175))
+                              : const MaterialStatePropertyAll(
+                                  Colors.transparent)),
+                      onPressed: () {
+                        ref.read(selectModoProvider.notifier).state = true;
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('POR TANDAS',
+                              style: TextStyle(
+                                  color: modoSeleccionado
+                                      ? Colors.white
+                                      : const Color.fromARGB(255, 50, 102, 175),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold)),
+                          Text('Ciclo 1-2: = 7 minutos ON y 20 minutos OFF.',
+                              style: TextStyle(
+                                  color: modoSeleccionado
+                                      ? Colors.white
+                                      : const Color.fromARGB(255, 50, 102, 175),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold)),
+                          Text('Ciclo 3 = 7 minutos ON y termina la terapia.',
+                              style: TextStyle(
+                                  color: modoSeleccionado
+                                      ? Colors.white
+                                      : const Color.fromARGB(255, 50, 102, 175),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600)),
+                        ],
+                      )),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(width: 10),
+                Container(
+                  padding: const EdgeInsets.only(
+                      top: 11.5, bottom: 30, left: 16, right: 16),
+                  decoration: const BoxDecoration(
+                      //borderRadius: BorderRadius.circular(45),
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage('assets/icons/icono9.png'))),
+                  child: FilledButton(
+                      style: ButtonStyle(
+                          shape: const MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.elliptical(30, 35)))),
+                          backgroundColor: modoSeleccionado
+                              ? const MaterialStatePropertyAll(
+                                  Colors.transparent)
+                              : const MaterialStatePropertyAll(
+                                  Color.fromARGB(255, 50, 102, 175))),
+                      onPressed: () {
+                        ref.read(selectModoProvider.notifier).state = false;
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('CONTINUO',
+                              style: TextStyle(
+                                  color: modoSeleccionado
+                                      ? const Color.fromARGB(255, 50, 102, 175)
+                                      : Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold)),
+                          Text(
+                              '     Un ciclo único que dura 60 minutos ON     ',
+                              style: TextStyle(
+                                  color: modoSeleccionado
+                                      ? const Color.fromARGB(255, 50, 102, 175)
+                                      : Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold)),
+                          Text('y luego finaliza la terapia.',
+                              style: TextStyle(
+                                  color: modoSeleccionado
+                                      ? const Color.fromARGB(255, 50, 102, 175)
+                                      : Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600)),
+                        ],
+                      )),
+                ),
+                //const SizedBox(height: 16),
                 Divider(color: Colors.blue[50]),
                 Row(
                   children: [
@@ -887,7 +815,7 @@ class HomeZapperScreen extends ConsumerWidget {
                 //const SizedBox(height: 4),
                 Container(
                     constraints: BoxConstraints(
-                        maxHeight: heightScreen * 0.55,
+                        maxHeight: heightScreen * 0.47,
                         maxWidth: widthScreen * 0.95),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -1042,57 +970,16 @@ class CustomTherapy extends ConsumerWidget {
                           ? Colors.white
                           : const Color.fromARGB(255, 50, 102, 175),
                       fontSize: 16,
-                      fontWeight: FontWeight.w600)),
+                      fontWeight: FontWeight.bold)),
               Text('$frecMin KHz - $frecMax KHz',
                   style: TextStyle(
                       color: ref.watch(indexTerapiaProvider) == terapiaSel
                           ? Colors.white
                           : const Color.fromARGB(255, 50, 102, 175),
                       fontSize: 12,
-                      fontWeight: FontWeight.w600))
+                      fontWeight: FontWeight.bold))
             ],
-          )
-          /* Container(
-          color: Colors.green,
-          alignment: Alignment.center,
-          child: ListTile(
-            isThreeLine: true,
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 0, horizontal: 14),
-
-            //splashColor: Colors.blue,
-            onTap: () async {
-              ref.read(indexTerapiaProvider.notifier).state = terapiaSel;
-              ref.read(terapiaProvider.notifier).state = await ref
-                  .watch(servicesProvider)
-                  .getTerapiaSeleccionada(terapiaSel);
-            },
-            //leading: const Icon(Icons.arrow_forward_ios),
-            // trailing: const Icon(
-            //   Icons.favorite,
-            //   size: 10,
-            // ),
-            title: Text(
-              name,
-              style: TextStyle(
-                  color: ref.watch(indexTerapiaProvider) == terapiaSel
-                      ? Colors.white
-                      : null,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600),
-            ),
-            subtitle: Text(
-              '$frecMin KHz - $frecMax KHz',
-              style: TextStyle(
-                  color: ref.watch(indexTerapiaProvider) == terapiaSel
-                      ? Colors.white
-                      : null,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600),
-            ),
-          ),
-        ), */
-          ),
+          )),
     );
   }
 }
