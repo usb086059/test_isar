@@ -258,12 +258,12 @@ class HomeZapperScreen extends ConsumerWidget {
                         'TERAPIAS',
                         style: TextStyle(
                             fontSize: 20,
-                            color: Colors.blue,
+                            color: Color.fromARGB(255, 50, 102, 175),
                             fontWeight: FontWeight.bold),
                       ),
                     ),
                     IconButton(
-                        color: Colors.blue,
+                        color: const Color.fromARGB(255, 50, 102, 175),
                         disabledColor: Colors.black12,
                         onPressed: !ref.watch(terapiaProvider).editable
                             ? null
@@ -351,7 +351,7 @@ class HomeZapperScreen extends ConsumerWidget {
                         icon: const Icon(Icons.delete_forever_outlined)),
                     //SizedBox(width: 4),
                     IconButton(
-                        color: Colors.blue,
+                        color: const Color.fromARGB(255, 50, 102, 175),
                         disabledColor: Colors.black12,
                         onPressed: !ref.watch(terapiaProvider).editable
                             ? null
@@ -635,7 +635,7 @@ class HomeZapperScreen extends ConsumerWidget {
                         icon: const Icon(Icons.edit_note)),
                     //SizedBox(width: 4),
                     IconButton(
-                        color: Colors.blue,
+                        color: const Color.fromARGB(255, 50, 102, 175),
                         disabledColor: Colors.black12,
                         onPressed: () {
                           showDialog(
@@ -911,11 +911,10 @@ class HomeZapperScreen extends ConsumerWidget {
                                 itemCount: snapshot.data?.length,
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
-                                        childAspectRatio:
-                                            heightScreen * 0.00185,
-                                        crossAxisSpacing: 8,
-                                        mainAxisSpacing: 12,
-                                        crossAxisCount: 2),
+                                        childAspectRatio: heightScreen * 0.0058,
+                                        //crossAxisSpacing: 8,
+                                        //mainAxisSpacing: 12,
+                                        crossAxisCount: 1),
                                 itemBuilder: (context, index) {
                                   if (ref
                                       .watch(countdownProvider)
@@ -1015,72 +1014,85 @@ class CustomTherapy extends ConsumerWidget {
     //final int ter = ref.watch(indexTerapiaProvider);
     return Container(
       //color: Colors.green,
-      //padding: EdgeInsets.symmetric(horizontal: 8.5, vertical: 12),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(45),
-          boxShadow: [
-            BoxShadow(
-                offset: const Offset(0, 10),
-                color: Colors.grey.shade300,
-                blurRadius: 5,
-                spreadRadius: 0,
-                blurStyle: BlurStyle.normal)
-          ],
-          image: const DecorationImage(
-              /* colorFilter:
-                  ColorFilter.mode(Colors.lightBlueAccent, BlendMode.modulate), */
-              fit: BoxFit.fill,
-              image: AssetImage('assets/icons/ovalo.png'))),
-      child: Card(
-          color: ref.watch(indexTerapiaProvider) == terapiaSel
-              ? Colors.lightBlueAccent
-              : Colors.white,
-          margin: const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(33))),
-          //elevation: 10,
-          //color: Colors.blue,
-          //shadowColor: Colors.cyanAccent,
-          child: Container(
-            //color: Colors.green,
-            alignment: Alignment.center,
-            child: ListTile(
-              isThreeLine: true,
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 14),
+      padding: const EdgeInsets.only(top: 9, bottom: 23, left: 16, right: 16),
+      decoration: const BoxDecoration(
+          //borderRadius: BorderRadius.circular(45),
+          image: DecorationImage(
+              fit: BoxFit.fill, image: AssetImage('assets/icons/icono9.png'))),
+      child: FilledButton(
+          style: ButtonStyle(
+              shape: const MaterialStatePropertyAll(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.elliptical(25, 20)))),
+              backgroundColor: ref.watch(indexTerapiaProvider) == terapiaSel
+                  ? const MaterialStatePropertyAll(
+                      Color.fromARGB(255, 50, 102, 175))
+                  : const MaterialStatePropertyAll(Colors.transparent)),
+          onPressed: () async {
+            ref.read(indexTerapiaProvider.notifier).state = terapiaSel;
+            ref.read(terapiaProvider.notifier).state = await ref
+                .watch(servicesProvider)
+                .getTerapiaSeleccionada(terapiaSel);
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(name,
+                  style: TextStyle(
+                      color: ref.watch(indexTerapiaProvider) == terapiaSel
+                          ? Colors.white
+                          : const Color.fromARGB(255, 50, 102, 175),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600)),
+              Text('$frecMin KHz - $frecMax KHz',
+                  style: TextStyle(
+                      color: ref.watch(indexTerapiaProvider) == terapiaSel
+                          ? Colors.white
+                          : const Color.fromARGB(255, 50, 102, 175),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600))
+            ],
+          )
+          /* Container(
+          color: Colors.green,
+          alignment: Alignment.center,
+          child: ListTile(
+            isThreeLine: true,
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 0, horizontal: 14),
 
-              //splashColor: Colors.blue,
-              onTap: () async {
-                ref.read(indexTerapiaProvider.notifier).state = terapiaSel;
-                ref.read(terapiaProvider.notifier).state = await ref
-                    .watch(servicesProvider)
-                    .getTerapiaSeleccionada(terapiaSel);
-              },
-              //leading: const Icon(Icons.arrow_forward_ios),
-              // trailing: const Icon(
-              //   Icons.favorite,
-              //   size: 10,
-              // ),
-              title: Text(
-                name,
-                style: TextStyle(
-                    color: ref.watch(indexTerapiaProvider) == terapiaSel
-                        ? Colors.white
-                        : null,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600),
-              ),
-              subtitle: Text(
-                '$frecMin KHz - $frecMax KHz',
-                style: TextStyle(
-                    color: ref.watch(indexTerapiaProvider) == terapiaSel
-                        ? Colors.white
-                        : null,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600),
-              ),
+            //splashColor: Colors.blue,
+            onTap: () async {
+              ref.read(indexTerapiaProvider.notifier).state = terapiaSel;
+              ref.read(terapiaProvider.notifier).state = await ref
+                  .watch(servicesProvider)
+                  .getTerapiaSeleccionada(terapiaSel);
+            },
+            //leading: const Icon(Icons.arrow_forward_ios),
+            // trailing: const Icon(
+            //   Icons.favorite,
+            //   size: 10,
+            // ),
+            title: Text(
+              name,
+              style: TextStyle(
+                  color: ref.watch(indexTerapiaProvider) == terapiaSel
+                      ? Colors.white
+                      : null,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600),
             ),
-          )),
+            subtitle: Text(
+              '$frecMin KHz - $frecMax KHz',
+              style: TextStyle(
+                  color: ref.watch(indexTerapiaProvider) == terapiaSel
+                      ? Colors.white
+                      : null,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600),
+            ),
+          ),
+        ), */
+          ),
     );
   }
 }
