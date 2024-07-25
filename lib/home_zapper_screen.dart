@@ -92,56 +92,6 @@ class HomeZapperScreen extends ConsumerWidget {
                                       Radius.elliptical(30, 35)))),
                           backgroundColor: modoSeleccionado
                               ? const MaterialStatePropertyAll(
-                                  Color.fromARGB(255, 50, 102, 175))
-                              : const MaterialStatePropertyAll(
-                                  Colors.transparent)),
-                      onPressed: () {
-                        ref.read(selectModoProvider.notifier).state = true;
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('POR TANDAS',
-                              style: TextStyle(
-                                  color: modoSeleccionado
-                                      ? Colors.white
-                                      : const Color.fromARGB(255, 50, 102, 175),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold)),
-                          Text('Ciclo 1-2: = 7 minutos ON y 20 minutos OFF.',
-                              style: TextStyle(
-                                  color: modoSeleccionado
-                                      ? Colors.white
-                                      : const Color.fromARGB(255, 50, 102, 175),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold)),
-                          Text('Ciclo 3 = 7 minutos ON y termina la terapia.',
-                              style: TextStyle(
-                                  color: modoSeleccionado
-                                      ? Colors.white
-                                      : const Color.fromARGB(255, 50, 102, 175),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600)),
-                        ],
-                      )),
-                ),
-                const SizedBox(width: 10),
-                Container(
-                  padding: const EdgeInsets.only(
-                      top: 11.5, bottom: 30, left: 16, right: 16),
-                  decoration: const BoxDecoration(
-                      //borderRadius: BorderRadius.circular(45),
-                      image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage('assets/icons/icono9.png'))),
-                  child: FilledButton(
-                      style: ButtonStyle(
-                          shape: const MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.elliptical(30, 35)))),
-                          backgroundColor: modoSeleccionado
-                              ? const MaterialStatePropertyAll(
                                   Colors.transparent)
                               : const MaterialStatePropertyAll(
                                   Color.fromARGB(255, 50, 102, 175))),
@@ -176,7 +126,56 @@ class HomeZapperScreen extends ConsumerWidget {
                         ],
                       )),
                 ),
-                //const SizedBox(height: 16),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.only(
+                      top: 11.5, bottom: 30, left: 16, right: 16),
+                  decoration: const BoxDecoration(
+                      //borderRadius: BorderRadius.circular(45),
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage('assets/icons/icono9.png'))),
+                  child: FilledButton(
+                      style: ButtonStyle(
+                          shape: const MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.elliptical(30, 35)))),
+                          backgroundColor: modoSeleccionado
+                              ? const MaterialStatePropertyAll(
+                                  Color.fromARGB(255, 50, 102, 175))
+                              : const MaterialStatePropertyAll(
+                                  Colors.transparent)),
+                      onPressed: () {
+                        ref.read(selectModoProvider.notifier).state = true;
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('POR TANDAS',
+                              style: TextStyle(
+                                  color: modoSeleccionado
+                                      ? Colors.white
+                                      : const Color.fromARGB(255, 50, 102, 175),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold)),
+                          Text('Ciclo 1-2: = 7 minutos ON y 20 minutos OFF.',
+                              style: TextStyle(
+                                  color: modoSeleccionado
+                                      ? Colors.white
+                                      : const Color.fromARGB(255, 50, 102, 175),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold)),
+                          Text('Ciclo 3 = 7 minutos ON y termina la terapia.',
+                              style: TextStyle(
+                                  color: modoSeleccionado
+                                      ? Colors.white
+                                      : const Color.fromARGB(255, 50, 102, 175),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600)),
+                        ],
+                      )),
+                ),
                 Divider(color: Colors.blue[50]),
                 Row(
                   children: [
@@ -815,7 +814,7 @@ class HomeZapperScreen extends ConsumerWidget {
                 //const SizedBox(height: 4),
                 Container(
                     constraints: BoxConstraints(
-                        maxHeight: heightScreen * 0.47,
+                        maxHeight: heightScreen * 0.5,
                         maxWidth: widthScreen * 0.95),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -839,7 +838,7 @@ class HomeZapperScreen extends ConsumerWidget {
                                 itemCount: snapshot.data?.length,
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
-                                        childAspectRatio: heightScreen * 0.0058,
+                                        childAspectRatio: heightScreen * 0.005,
                                         //crossAxisSpacing: 8,
                                         //mainAxisSpacing: 12,
                                         crossAxisCount: 1),
@@ -950,7 +949,7 @@ class CustomTherapy extends ConsumerWidget {
       child: FilledButton(
           style: ButtonStyle(
               shape: const MaterialStatePropertyAll(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.elliptical(25, 20)))),
+                  borderRadius: BorderRadius.all(Radius.elliptical(25, 23)))),
               backgroundColor: ref.watch(indexTerapiaProvider) == terapiaSel
                   ? const MaterialStatePropertyAll(
                       Color.fromARGB(255, 50, 102, 175))
