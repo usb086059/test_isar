@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/auth_google_services.dart';
 import 'package:flutter_application_1/firebase_services.dart';
+import 'package:flutter_application_1/gradient_services.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -17,11 +18,7 @@ class LoginScreen extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Container(
-        decoration: const BoxDecoration(
-            gradient: RadialGradient(
-                colors: [Colors.white, Color.fromARGB(255, 50, 102, 175)],
-                radius: 2.5,
-                stops: [0.14, 1])),
+        decoration: BoxDecoration(gradient: fondoLoginScreenGradient()),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(

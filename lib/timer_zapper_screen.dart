@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/countdown_provider.dart';
+import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_application_1/terapia.dart';
@@ -120,7 +121,10 @@ class TimerZapperScreen extends ConsumerWidget {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.blue,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(gradient: azulGradient()),
+            ),
+            backgroundColor: Colors.transparent,
             leading: Padding(
                 padding: const EdgeInsets.all(4),
                 child: CircleAvatar(
@@ -201,39 +205,50 @@ class TimerZapperScreen extends ConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const SizedBox(height: 128),
-                                  TextButton(
-                                    style: const ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.blue)),
-                                    onPressed: ref
-                                                .watch(countdownProvider)
-                                                .estado ==
-                                            'FIN'
-                                        ? () async {
-                                            ref
-                                                .read(
-                                                    selectModoProvider.notifier)
-                                                .state = false;
-                                            ref
-                                                .read(indexTerapiaProvider
-                                                    .notifier)
-                                                .state = 0;
-                                            ref
-                                                .watch(countdownProvider)
-                                                .terminarTimer();
-                                            ref
-                                                    .read(terapiaProvider.notifier)
-                                                    .state =
-                                                await ref
-                                                    .watch(servicesProvider)
-                                                    .getTerapiaSeleccionada(0);
-                                            context.pop();
-                                          }
-                                        : null,
-                                    child: const Text(
-                                      'VOLVER',
-                                      style: TextStyle(color: Colors.white),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        gradient:
+                                            azulGradientFloatingActionButton()),
+                                    child: TextButton(
+                                      style: const ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Colors.transparent)),
+                                      onPressed: ref
+                                                  .watch(countdownProvider)
+                                                  .estado ==
+                                              'FIN'
+                                          ? () async {
+                                              ref
+                                                  .read(selectModoProvider
+                                                      .notifier)
+                                                  .state = false;
+                                              ref
+                                                  .read(indexTerapiaProvider
+                                                      .notifier)
+                                                  .state = 0;
+                                              ref
+                                                  .watch(countdownProvider)
+                                                  .terminarTimer();
+                                              ref
+                                                      .read(terapiaProvider
+                                                          .notifier)
+                                                      .state =
+                                                  await ref
+                                                      .watch(servicesProvider)
+                                                      .getTerapiaSeleccionada(
+                                                          0);
+                                              context.pop();
+                                            }
+                                          : null,
+                                      child: const Text(
+                                        'VOLVER',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
                                   ),
                                 ],

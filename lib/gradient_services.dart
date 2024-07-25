@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 
+Gradient fondoLoginScreenGradient() {
+  return const RadialGradient(
+      colors: [Colors.white, Color.fromARGB(255, 50, 102, 175)],
+      radius: 2.5,
+      stops: [0.14, 1]);
+}
+
 Gradient azulGradient() {
   return const RadialGradient(
       focal: Alignment.topRight,
