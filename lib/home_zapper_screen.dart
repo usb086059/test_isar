@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/future_provider.dart';
 import 'package:flutter_application_1/register_screen.dart';
@@ -49,7 +50,10 @@ class HomeZapperScreen extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blue,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(gradient: azulGradient()),
+          ),
+          backgroundColor: Colors.transparent,
           leading: Padding(
               padding: const EdgeInsets.all(4),
               child:
@@ -84,47 +88,49 @@ class HomeZapperScreen extends ConsumerWidget {
                       image: DecorationImage(
                           fit: BoxFit.fill,
                           image: AssetImage('assets/icons/icono9.png'))),
-                  child: FilledButton(
-                      style: ButtonStyle(
-                          shape: const MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.elliptical(30, 35)))),
-                          backgroundColor: modoSeleccionado
-                              ? const MaterialStatePropertyAll(
-                                  Colors.transparent)
-                              : const MaterialStatePropertyAll(
-                                  Color.fromARGB(255, 50, 102, 175))),
-                      onPressed: () {
-                        ref.read(selectModoProvider.notifier).state = false;
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('CONTINUO',
-                              style: TextStyle(
-                                  color: modoSeleccionado
-                                      ? const Color.fromARGB(255, 50, 102, 175)
-                                      : Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold)),
-                          Text(
-                              '     Un ciclo único que dura 60 minutos ON     ',
-                              style: TextStyle(
-                                  color: modoSeleccionado
-                                      ? const Color.fromARGB(255, 50, 102, 175)
-                                      : Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold)),
-                          Text('y luego finaliza la terapia.',
-                              style: TextStyle(
-                                  color: modoSeleccionado
-                                      ? const Color.fromARGB(255, 50, 102, 175)
-                                      : Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600)),
-                        ],
-                      )),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        gradient: modoSeleccionado ? null : azulGradient(),
+                        borderRadius:
+                            const BorderRadius.all(Radius.elliptical(30, 35))),
+                    child: FilledButton(
+                        style: const ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.transparent)),
+                        onPressed: () {
+                          ref.read(selectModoProvider.notifier).state = false;
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('CONTINUO',
+                                style: TextStyle(
+                                    color: modoSeleccionado
+                                        ? const Color.fromARGB(
+                                            255, 50, 102, 175)
+                                        : Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold)),
+                            Text(
+                                '     Un ciclo único que dura 60 minutos ON     ',
+                                style: TextStyle(
+                                    color: modoSeleccionado
+                                        ? const Color.fromARGB(
+                                            255, 50, 102, 175)
+                                        : Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold)),
+                            Text('y luego finaliza la terapia.',
+                                style: TextStyle(
+                                    color: modoSeleccionado
+                                        ? const Color.fromARGB(
+                                            255, 50, 102, 175)
+                                        : Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600)),
+                          ],
+                        )),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Container(
@@ -135,46 +141,48 @@ class HomeZapperScreen extends ConsumerWidget {
                       image: DecorationImage(
                           fit: BoxFit.fill,
                           image: AssetImage('assets/icons/icono9.png'))),
-                  child: FilledButton(
-                      style: ButtonStyle(
-                          shape: const MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.elliptical(30, 35)))),
-                          backgroundColor: modoSeleccionado
-                              ? const MaterialStatePropertyAll(
-                                  Color.fromARGB(255, 50, 102, 175))
-                              : const MaterialStatePropertyAll(
-                                  Colors.transparent)),
-                      onPressed: () {
-                        ref.read(selectModoProvider.notifier).state = true;
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('POR TANDAS',
-                              style: TextStyle(
-                                  color: modoSeleccionado
-                                      ? Colors.white
-                                      : const Color.fromARGB(255, 50, 102, 175),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold)),
-                          Text('Ciclo 1-2: = 7 minutos ON y 20 minutos OFF.',
-                              style: TextStyle(
-                                  color: modoSeleccionado
-                                      ? Colors.white
-                                      : const Color.fromARGB(255, 50, 102, 175),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold)),
-                          Text('Ciclo 3 = 7 minutos ON y termina la terapia.',
-                              style: TextStyle(
-                                  color: modoSeleccionado
-                                      ? Colors.white
-                                      : const Color.fromARGB(255, 50, 102, 175),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600)),
-                        ],
-                      )),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        gradient: modoSeleccionado ? azulGradient() : null,
+                        borderRadius:
+                            const BorderRadius.all(Radius.elliptical(30, 35))),
+                    child: FilledButton(
+                        style: const ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.transparent)),
+                        onPressed: () {
+                          ref.read(selectModoProvider.notifier).state = true;
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('POR TANDAS',
+                                style: TextStyle(
+                                    color: modoSeleccionado
+                                        ? Colors.white
+                                        : const Color.fromARGB(
+                                            255, 50, 102, 175),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold)),
+                            Text('Ciclo 1-2 = 7 minutos ON y 20 minutos OFF. ',
+                                style: TextStyle(
+                                    color: modoSeleccionado
+                                        ? Colors.white
+                                        : const Color.fromARGB(
+                                            255, 50, 102, 175),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold)),
+                            Text('Ciclo 3 = 7 minutos ON y termina la terapia.',
+                                style: TextStyle(
+                                    color: modoSeleccionado
+                                        ? Colors.white
+                                        : const Color.fromARGB(
+                                            255, 50, 102, 175),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600)),
+                          ],
+                        )),
+                  ),
                 ),
                 Divider(color: Colors.blue[50]),
                 Row(
@@ -867,26 +875,37 @@ class HomeZapperScreen extends ConsumerWidget {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          //elevation: 3,
-          tooltip: 'Siguiente',
-          shape: const StadiumBorder(),
-          backgroundColor: Colors.blue,
-          onPressed: () async {
-            ref.read(terapiaProvider.notifier).state = await ref
-                .watch(servicesProvider)
-                .getTerapiaSeleccionada(puntero);
-            modoSeleccionado
-                ? timer.startStopTimer('Modo A')
-                : timer.startStopTimer('Modo B');
-            context.push('/timerZapper');
-          },
-          child: const Icon(
-            Icons.play_arrow_rounded,
-            color: Colors.white,
+        floatingActionButton: Container(
+          decoration: BoxDecoration(
+              gradient: azulGradientFloatingActionButton(),
+              borderRadius: BorderRadius.circular(100)),
+          child: FloatingActionButton(
+            elevation: 0,
+/*             focusElevation: 0,
+            hoverElevation: 0,
+            highlightElevation: 0, */
+            tooltip: 'Siguiente',
+            shape: const StadiumBorder(),
+            backgroundColor: Colors.transparent,
+            // foregroundColor: Colors.transparent,
+            // focusColor: Colors.transparent,
+            // hoverColor: Colors.transparent,
+            onPressed: () async {
+              ref.read(terapiaProvider.notifier).state = await ref
+                  .watch(servicesProvider)
+                  .getTerapiaSeleccionada(puntero);
+              modoSeleccionado
+                  ? timer.startStopTimer('Modo A')
+                  : timer.startStopTimer('Modo B');
+              context.push('/timerZapper');
+            },
+            child: const Icon(
+              Icons.play_arrow_rounded,
+              color: Colors.white,
+            ),
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
@@ -941,44 +960,46 @@ class CustomTherapy extends ConsumerWidget {
     //final int ter = ref.watch(indexTerapiaProvider);
     return Container(
       //color: Colors.green,
-      padding: const EdgeInsets.only(top: 9, bottom: 23, left: 16, right: 16),
+      padding: const EdgeInsets.only(top: 10, bottom: 26, left: 16, right: 16),
       decoration: const BoxDecoration(
           //borderRadius: BorderRadius.circular(45),
           image: DecorationImage(
               fit: BoxFit.fill, image: AssetImage('assets/icons/icono9.png'))),
-      child: FilledButton(
-          style: ButtonStyle(
-              shape: const MaterialStatePropertyAll(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.elliptical(25, 23)))),
-              backgroundColor: ref.watch(indexTerapiaProvider) == terapiaSel
-                  ? const MaterialStatePropertyAll(
-                      Color.fromARGB(255, 50, 102, 175))
-                  : const MaterialStatePropertyAll(Colors.transparent)),
-          onPressed: () async {
-            ref.read(indexTerapiaProvider.notifier).state = terapiaSel;
-            ref.read(terapiaProvider.notifier).state = await ref
-                .watch(servicesProvider)
-                .getTerapiaSeleccionada(terapiaSel);
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(name,
-                  style: TextStyle(
-                      color: ref.watch(indexTerapiaProvider) == terapiaSel
-                          ? Colors.white
-                          : const Color.fromARGB(255, 50, 102, 175),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold)),
-              Text('$frecMin KHz - $frecMax KHz',
-                  style: TextStyle(
-                      color: ref.watch(indexTerapiaProvider) == terapiaSel
-                          ? Colors.white
-                          : const Color.fromARGB(255, 50, 102, 175),
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold))
-            ],
-          )),
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: ref.watch(indexTerapiaProvider) == terapiaSel
+                ? azulGradient()
+                : null,
+            borderRadius: const BorderRadius.all(Radius.elliptical(27, 23))),
+        child: FilledButton(
+            style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.transparent)),
+            onPressed: () async {
+              ref.read(indexTerapiaProvider.notifier).state = terapiaSel;
+              ref.read(terapiaProvider.notifier).state = await ref
+                  .watch(servicesProvider)
+                  .getTerapiaSeleccionada(terapiaSel);
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(name,
+                    style: TextStyle(
+                        color: ref.watch(indexTerapiaProvider) == terapiaSel
+                            ? Colors.white
+                            : const Color.fromARGB(255, 50, 102, 175),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold)),
+                Text('$frecMin KHz - $frecMax KHz',
+                    style: TextStyle(
+                        color: ref.watch(indexTerapiaProvider) == terapiaSel
+                            ? Colors.white
+                            : const Color.fromARGB(255, 50, 102, 175),
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold))
+              ],
+            )),
+      ),
     );
   }
 }

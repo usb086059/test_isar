@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/future_provider.dart';
 import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,23 +23,9 @@ class DevicesScreen extends ConsumerWidget {
       home: Scaffold(
         appBar: AppBar(
           flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: RadialGradient(
-                    focal: Alignment.topRight,
-                    colors: [
-                      Color.fromARGB(255, 94, 202, 233),
-                      Color.fromARGB(
-                        255,
-                        52,
-                        78,
-                        153,
-                      ),
-                      Color.fromARGB(255, 51, 80, 152)
-                    ],
-                    radius: 5,
-                    stops: [0.0, 0.5, 1])),
+            decoration: BoxDecoration(gradient: azulGradient()),
           ),
-          backgroundColor: const Color.fromARGB(255, 50, 102, 175),
+          backgroundColor: Colors.transparent,
           leading: Padding(
             padding: const EdgeInsets.all(4.0),
             child: CircleAvatar(backgroundImage: NetworkImage(user.photoURL!)),
