@@ -142,18 +142,32 @@ class TimerZapperScreen extends ConsumerWidget {
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(
-                  top: 0, bottom: 16, left: 16, right: 16),
+                  top: 16, bottom: 16, left: 16, right: 16),
               child: Column(
                 children: [
                   Container(
-                      //height: 100,
-                      //width: 200,
                       constraints: BoxConstraints(
                           maxHeight: heightScreen * 0.35,
                           minHeight: heightScreen * 0.35,
                           minWidth: widthScreen * 0.95,
                           maxWidth: widthScreen * 0.95),
-                      //color: Colors.grey[200],
+                      decoration: BoxDecoration(
+                          //color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                                color: ref
+                                    .watch(countdownProvider)
+                                    .ciclosLeftColor,
+                                offset: const Offset(4, 4),
+                                blurRadius: 15,
+                                spreadRadius: 1),
+                            const BoxShadow(
+                                color: Colors.white,
+                                offset: Offset(-4, -4),
+                                blurRadius: 15,
+                                spreadRadius: 1)
+                          ]),
                       child: Stack(
                         children: [
                           Center(
@@ -270,7 +284,7 @@ class TimerZapperScreen extends ConsumerWidget {
                           )
                         ],
                       )),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 20),
                   Text(terapia.nombre,
                       style: const TextStyle(
                           fontSize: 25, fontWeight: FontWeight.bold)),

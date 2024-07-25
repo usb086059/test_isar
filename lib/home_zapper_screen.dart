@@ -204,6 +204,7 @@ class HomeZapperScreen extends ConsumerWidget {
                             ? null
                             : () {
                                 showDialog(
+                                    barrierDismissible: false,
                                     context: context,
                                     builder: (context) => AlertDialog(
                                           backgroundColor: Colors.blue,

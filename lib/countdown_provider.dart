@@ -84,9 +84,9 @@ class CountdownProvider extends ChangeNotifier {
   }
 
   Color get ciclosLeftColor {
-    Color colorCiclo = Colors.blue;
+    Color colorCiclo;
     if ((ciclos == 1 && estado != 'FIN') || ciclos == 3 || ciclos == 5) {
-      colorCiclo = Colors.blue;
+      colorCiclo = const Color.fromARGB(255, 52, 78, 153);
     } else {
       colorCiclo = Colors.purple;
       //colorCiclo = const Color.fromARGB(255, 142, 176, 219);
