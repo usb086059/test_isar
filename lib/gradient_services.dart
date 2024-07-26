@@ -40,3 +40,15 @@ Gradient azulGradientFloatingActionButton() {
       radius: 5,
       stops: [0.0, 0.2, 1]);
 }
+
+Gradient gradientAlertDialog() {
+  return RadialGradient(
+      focal: Alignment.topRight,
+      colors: [
+        Colors.blue.withOpacity(0.6),
+        Colors.blue.withOpacity(0.3),
+        Colors.blue.withOpacity(0.1)
+      ],
+      radius: 10,
+      stops: const [0.0, 0.1, 1]);
+}

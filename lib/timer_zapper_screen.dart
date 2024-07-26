@@ -279,7 +279,12 @@ class TimerZapperScreen extends ConsumerWidget {
                                   : porcentajeTimer,
                               backgroundColor:
                                   ref.watch(countdownProvider).ciclosLeftColor,
-                              color: Colors.blue[50],
+                              color: ref
+                                      .watch(countdownProvider)
+                                      .estado
+                                      .contains('Ciclo')
+                                  ? Colors.blue[50]
+                                  : Colors.purple[50],
                             ),
                           )
                         ],
