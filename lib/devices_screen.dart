@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
-import 'package:flutter_application_1/future_provider.dart';
 import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,77 +20,109 @@ class DevicesScreen extends ConsumerWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: BoxDecoration(gradient: azulGradient()),
+      home: Stack(
+        children: [
+          Container(
+            color: Colors.white,
           ),
-          backgroundColor: Colors.transparent,
-          leading: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: CircleAvatar(backgroundImage: NetworkImage(user.photoURL!)),
+          ClipPath(
+            clipper: LoginCurve(),
+            child: Container(
+              decoration: BoxDecoration(gradient: purpleGradientCurvas()),
+              //height: 100,
+              height: MediaQuery.sizeOf(context).height,
+              width: MediaQuery.sizeOf(context).width,
+              //color: Colors.blue.withOpacity(0.3),
+            ),
           ),
-          centerTitle: false,
-          title: Text(
-            nameUser,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-        ),
-        body: Container(
-          constraints: BoxConstraints(maxWidth: widthScreen),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    'assets/dedo_touch.png',
-                    scale: 3,
-                    color: const Color.fromARGB(255, 50, 102, 175),
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              flexibleSpace: Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Text(
+                        nameUser,
+                        style: const TextStyle(
+                            fontSize: 25,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      alignment: Alignment.centerRight,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.network(user.photoURL!)),
+                    ),
+                  ],
+                ),
+              ),
+              backgroundColor: Colors.transparent,
+              centerTitle: false,
+            ),
+            body: Container(
+              height: heightScreen,
+              width: widthScreen,
+              color: Colors.transparent,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'assets/dedo_touch.png',
+                        scale: 4,
+                        color: const Color.fromARGB(255, 50, 102, 175),
+                      ),
+                      //const SizedBox(height: 10),
+                      const FittedBox(
+                        alignment: Alignment.center,
+                        fit: BoxFit.scaleDown,
+                        child: Text('ELIJA EL DISPOSITIVO',
+                            style: TextStyle(
+                                fontSize: 25,
+                                color: Color.fromARGB(255, 50, 102, 175),
+                                fontWeight: FontWeight.bold)),
+                      ),
+                      //const SizedBox(height: 16),
+                      CustomIconSelectDevice(
+                        deviceName: 'PEDILUVIO',
+                        addresImageDevice: 'assets/icons/icon_circulo.png',
+                        contextDevicesScreen: context,
+                        refDevicesScreen: ref,
+                      ),
+                      CustomIconSelectDevice(
+                        deviceName: 'PEDILUVIO CON ZAPPER',
+                        addresImageDevice: 'assets/icons/icon_circulo.png',
+                        contextDevicesScreen: context,
+                        refDevicesScreen: ref,
+                      ),
+                      CustomIconSelectDevice(
+                        deviceName: 'ZAPPER',
+                        addresImageDevice: 'assets/icons/icon_circulo.png',
+                        contextDevicesScreen: context,
+                        refDevicesScreen: ref,
+                      ),
+                      CustomIconSelectDevice(
+                        deviceName: 'DERMATRONIC',
+                        addresImageDevice: 'assets/icons/icon_circulo.png',
+                        contextDevicesScreen: context,
+                        refDevicesScreen: ref,
+                      ),
+                      //const SizedBox(height: 16),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  const FittedBox(
-                    alignment: Alignment.center,
-                    fit: BoxFit.scaleDown,
-                    child: Text('ELIJA EL DISPOSITIVO',
-                        style: TextStyle(
-                            fontSize: 28,
-                            color: Color.fromARGB(255, 50, 102, 175),
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  const SizedBox(height: 16),
-                  CustomIconSelectDevice(
-                    deviceName: 'PEDILUVIO',
-                    addresImageDevice: 'assets/icons/icon_circulo.png',
-                    contextDevicesScreen: context,
-                    refDevicesScreen: ref,
-                  ),
-                  CustomIconSelectDevice(
-                    deviceName: 'PEDILUVIO CON ZAPPER',
-                    addresImageDevice: 'assets/icons/icon_circulo.png',
-                    contextDevicesScreen: context,
-                    refDevicesScreen: ref,
-                  ),
-                  CustomIconSelectDevice(
-                    deviceName: 'ZAPPER',
-                    addresImageDevice: 'assets/icons/icon_circulo.png',
-                    contextDevicesScreen: context,
-                    refDevicesScreen: ref,
-                  ),
-                  CustomIconSelectDevice(
-                    deviceName: 'DERMATRONIC',
-                    addresImageDevice: 'assets/icons/icon_circulo.png',
-                    contextDevicesScreen: context,
-                    refDevicesScreen: ref,
-                  ),
-                  //const SizedBox(height: 16),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

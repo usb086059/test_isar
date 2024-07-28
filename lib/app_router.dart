@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/curva_screem.dart';
 import 'package:flutter_application_1/home_zapper_screen.dart';
 import 'package:flutter_application_1/register_screen.dart';
 import 'package:flutter_application_1/screens.dart';
@@ -36,6 +37,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/timerZapper',
       builder: (context, state) => const TimerZapperScreen(),
-    )
+    ),
+    GoRoute(
+      path: '/curvaScreen',
+      builder: (context, state) => const CurvaScreen(),
+    ),
   ],
 );

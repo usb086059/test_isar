@@ -1,14 +1,13 @@
 //import 'dart:ffi' as ffi;
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/countdown_provider.dart';
+import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/state_provider.dart';
-import 'package:flutter_application_1/terapia.dart';
+
 import 'package:flutter_application_1/terapia_total.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,9 +23,9 @@ class TimerZapperScreen extends ConsumerWidget {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
     var user = FirebaseAuth.instance.currentUser;
-    final int tiempoClark = 10;
-    final int tiempoRift = 6;
-    final int tiempoReposo = 12;
+    const int tiempoClark = 10;
+    const int tiempoRift = 6;
+    const int tiempoReposo = 12;
 
     double porcentajeTimer = ((timer.duration.inSeconds.toDouble() * 100) /
             (timer.estado.contains('Unico') ? tiempoRift : tiempoClark)) /
@@ -119,257 +118,309 @@ class TimerZapperScreen extends ConsumerWidget {
       },
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          appBar: AppBar(
-            flexibleSpace: Container(
-              decoration: BoxDecoration(gradient: azulGradient()),
+        home: Stack(
+          children: [
+            Container(
+              color: Colors.white,
             ),
-            backgroundColor: Colors.transparent,
-            leading: Padding(
-                padding: const EdgeInsets.all(4),
-                child: CircleAvatar(
-                    backgroundImage: NetworkImage(user!.photoURL!))),
-            centerTitle: true,
-            title: const Text(
-              'ZAPPER',
-              style: TextStyle(
-                fontSize: 35,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+            ClipPath(
+              clipper: TimerScreenCurve(),
+              child: Container(
+                decoration: BoxDecoration(
+                    gradient:
+                        ref.watch(countdownProvider).estado.contains('Ciclo')
+                            ? azulGradientCurvas()
+                            : purpleGradientCurvas()),
+                //height: 100,
+                height: MediaQuery.sizeOf(context).height,
+                width: MediaQuery.sizeOf(context).width,
+                //color: Colors.blue.withOpacity(0.3),
               ),
             ),
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 16, bottom: 16, left: 16, right: 16),
-              child: Column(
-                children: [
-                  Container(
-                      constraints: BoxConstraints(
-                          maxHeight: heightScreen * 0.35,
-                          minHeight: heightScreen * 0.35,
-                          minWidth: widthScreen * 0.95,
-                          maxWidth: widthScreen * 0.95),
-                      decoration: BoxDecoration(
-                          //color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                                color: ref
-                                    .watch(countdownProvider)
-                                    .ciclosLeftColor,
-                                offset: const Offset(4, 4),
-                                blurRadius: 15,
-                                spreadRadius: 1),
-                            const BoxShadow(
-                                color: Colors.white,
-                                offset: Offset(-4, -4),
-                                blurRadius: 15,
-                                spreadRadius: 1)
-                          ]),
-                      child: Stack(
-                        children: [
-                          Center(
-                            /* top: ((heightScreen * 0.35) / 2) - 35,
-                              left: ((widthScreen * 0.95) / 4),
-                              right: ((widthScreen * 0.95) / 4), */
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+            Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: AppBar(
+                flexibleSpace: Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Text(
+                          'ZAPPER ${ref.watch(indexTerapiaProvider)}',
+                          style: const TextStyle(
+                            fontSize: 35,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        alignment: Alignment.centerRight,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(user!.photoURL!)),
+                      ),
+                    ],
+                  ),
+                ),
+                backgroundColor: Colors.transparent,
+                centerTitle: true,
+              ),
+              body: Container(
+                height: heightScreen,
+                width: widthScreen,
+                color: Colors.transparent,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 16, bottom: 16, left: 16, right: 16),
+                    child: Column(
+                      children: [
+                        Container(
+                            constraints: BoxConstraints(
+                                maxHeight: heightScreen * 0.35,
+                                minHeight: heightScreen * 0.35,
+                                minWidth: widthScreen * 0.95,
+                                maxWidth: widthScreen * 0.95),
+                            decoration: BoxDecoration(
+                                //color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: ref
+                                          .watch(countdownProvider)
+                                          .ciclosLeftColor,
+                                      offset: const Offset(4, 4),
+                                      blurRadius: 15,
+                                      spreadRadius: 1),
+                                  const BoxShadow(
+                                      color: Colors.white,
+                                      offset: Offset(-4, -4),
+                                      blurRadius: 15,
+                                      spreadRadius: 1)
+                                ]),
+                            child: Stack(
                               children: [
-                                const SizedBox(height: 20),
-                                Text(ref.watch(countdownProvider).estado,
-                                    style: const TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center),
-                                Text(
-                                  ref.watch(countdownProvider).timeLeftString,
-                                  style: const TextStyle(fontSize: 50),
-                                  textAlign: TextAlign.center,
+                                Center(
+                                  /* top: ((heightScreen * 0.35) / 2) - 35,
+                                    left: ((widthScreen * 0.95) / 4),
+                                    right: ((widthScreen * 0.95) / 4), */
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(height: 20),
+                                      Text(ref.watch(countdownProvider).estado,
+                                          style: const TextStyle(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center),
+                                      Text(
+                                        ref
+                                            .watch(countdownProvider)
+                                            .timeLeftString,
+                                        style: const TextStyle(fontSize: 50),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      IconButton(
+                                          disabledColor: Colors.transparent,
+                                          padding: const EdgeInsets.all(0.0),
+                                          iconSize: 50,
+                                          onPressed: ref
+                                                      .watch(countdownProvider)
+                                                      .estado !=
+                                                  'FIN'
+                                              ? () {
+                                                  modoSeleccionado
+                                                      ? timer.startStopTimer(
+                                                          'Modo A')
+                                                      : timer.startStopTimer(
+                                                          'Modo B');
+                                                }
+                                              : null,
+                                          icon: Icon(timer.isRunning
+                                              ? Icons.pause
+                                              : Icons.play_arrow)),
+                                    ],
+                                  ),
                                 ),
+                                Visibility(
+                                  visible:
+                                      ref.watch(countdownProvider).estado ==
+                                              'FIN'
+                                          ? true
+                                          : false,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(height: 128),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              gradient:
+                                                  purpleGradientVolverButton()),
+                                          child: TextButton(
+                                            style: const ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStatePropertyAll(
+                                                        Colors.transparent)),
+                                            onPressed: ref
+                                                        .watch(
+                                                            countdownProvider)
+                                                        .estado ==
+                                                    'FIN'
+                                                ? () async {
+                                                    ref
+                                                        .read(selectModoProvider
+                                                            .notifier)
+                                                        .state = false;
+                                                    ref
+                                                        .read(
+                                                            indexTerapiaProvider
+                                                                .notifier)
+                                                        .state = 0;
+                                                    ref
+                                                        .watch(
+                                                            countdownProvider)
+                                                        .terminarTimer();
+                                                    ref
+                                                            .read(
+                                                                terapiaProvider
+                                                                    .notifier)
+                                                            .state =
+                                                        await ref
+                                                            .watch(
+                                                                servicesProvider)
+                                                            .getTerapiaSeleccionada(
+                                                                0);
+                                                    context.pop();
+                                                  }
+                                                : null,
+                                            child: const Text(
+                                              'VOLVER',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Center(
+                                  child: CircularProgressIndicator(
+                                    strokeAlign: 12,
+                                    strokeWidth: 16,
+                                    strokeCap: StrokeCap.butt,
+                                    value: timer.estado.contains('Reposo')
+                                        ? porcentajeTimerReposo
+                                        : porcentajeTimer,
+                                    backgroundColor: ref
+                                        .watch(countdownProvider)
+                                        .ciclosLeftColor,
+                                    color: ref
+                                            .watch(countdownProvider)
+                                            .estado
+                                            .contains('Ciclo')
+                                        ? Colors.blue[50]
+                                        : Colors.purple[50],
+                                  ),
+                                )
+                              ],
+                            )),
+                        const SizedBox(height: 40),
+                        Text(terapia.nombre,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold)),
+                        Text(
+                            'Frecuencia: ${terapia.frecMin} KHz - ${terapia.frecMax} KHz',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 20),
+                        Container(
+                          constraints: BoxConstraints(
+                              maxHeight: heightScreen * 0.41,
+                              minHeight: heightScreen * 0.41,
+                              minWidth: widthScreen * 0.95,
+                              maxWidth: widthScreen * 0.95),
+                          //color: Colors.grey[200],
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  textFromFireBase(terapia.info),
+                                  textAlign: TextAlign.justify,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                const SizedBox(height: 30),
+
+                                /* IconButton(
+                                    onPressed: () {
+                                      ref.watch(countdownProvider).setCountdownDuration(
+                                          Duration(seconds: tiempoClark));
+                                    },
+                                    icon: const Icon(Icons.restart_alt)),
+                                Text('data ${timer.isRunning}'),
                                 IconButton(
-                                    disabledColor: Colors.transparent,
-                                    padding: const EdgeInsets.all(0.0),
                                     iconSize: 50,
-                                    onPressed: ref
-                                                .watch(countdownProvider)
-                                                .estado !=
-                                            'FIN'
-                                        ? () {
-                                            modoSeleccionado
-                                                ? timer.startStopTimer('Modo A')
-                                                : timer
-                                                    .startStopTimer('Modo B');
-                                          }
-                                        : null,
+                                    onPressed: () {
+                                      modoSeleccionado
+                                          ? timer.startStopTimer('Modo A')
+                                          : timer.startStopTimer('Modo B');
+                                    },
                                     icon: Icon(timer.isRunning
                                         ? Icons.pause
-                                        : Icons.play_arrow)),
+                                        : Icons.play_arrow)), */
                               ],
                             ),
                           ),
-                          Visibility(
-                            visible:
-                                ref.watch(countdownProvider).estado == 'FIN'
-                                    ? true
-                                    : false,
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const SizedBox(height: 128),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        gradient:
-                                            azulGradientFloatingActionButton()),
-                                    child: TextButton(
-                                      style: const ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  Colors.transparent)),
-                                      onPressed: ref
-                                                  .watch(countdownProvider)
-                                                  .estado ==
-                                              'FIN'
-                                          ? () async {
-                                              ref
-                                                  .read(selectModoProvider
-                                                      .notifier)
-                                                  .state = false;
-                                              ref
-                                                  .read(indexTerapiaProvider
-                                                      .notifier)
-                                                  .state = 0;
-                                              ref
-                                                  .watch(countdownProvider)
-                                                  .terminarTimer();
-                                              ref
-                                                      .read(terapiaProvider
-                                                          .notifier)
-                                                      .state =
-                                                  await ref
-                                                      .watch(servicesProvider)
-                                                      .getTerapiaSeleccionada(
-                                                          0);
-                                              context.pop();
-                                            }
-                                          : null,
-                                      child: const Text(
-                                        'VOLVER',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Center(
-                            child: CircularProgressIndicator(
-                              strokeAlign: 12,
-                              strokeWidth: 16,
-                              strokeCap: StrokeCap.butt,
-                              value: timer.estado.contains('Reposo')
-                                  ? porcentajeTimerReposo
-                                  : porcentajeTimer,
-                              backgroundColor:
-                                  ref.watch(countdownProvider).ciclosLeftColor,
-                              color: ref
-                                      .watch(countdownProvider)
-                                      .estado
-                                      .contains('Ciclo')
-                                  ? Colors.blue[50]
-                                  : Colors.purple[50],
-                            ),
-                          )
-                        ],
-                      )),
-                  const SizedBox(height: 20),
-                  Text(terapia.nombre,
-                      style: const TextStyle(
-                          fontSize: 25, fontWeight: FontWeight.bold)),
-                  Text(
-                      'Frecuencia: ${terapia.frecMin} KHz - ${terapia.frecMax} KHz',
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 20),
-                  Container(
-                    constraints: BoxConstraints(
-                        maxHeight: heightScreen * 0.41,
-                        minHeight: heightScreen * 0.41,
-                        minWidth: widthScreen * 0.95,
-                        maxWidth: widthScreen * 0.95),
-                    //color: Colors.grey[200],
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            textFromFireBase(terapia.info),
-                            textAlign: TextAlign.justify,
-                          ),
-                          const SizedBox(height: 30),
-
-                          /* IconButton(
-                              onPressed: () {
-                                ref.watch(countdownProvider).setCountdownDuration(
-                                    Duration(seconds: tiempoClark));
-                              },
-                              icon: const Icon(Icons.restart_alt)),
-                          Text('data ${timer.isRunning}'),
-                          IconButton(
-                              iconSize: 50,
-                              onPressed: () {
-                                modoSeleccionado
-                                    ? timer.startStopTimer('Modo A')
-                                    : timer.startStopTimer('Modo B');
-                              },
-                              icon: Icon(timer.isRunning
-                                  ? Icons.pause
-                                  : Icons.play_arrow)), */
-                        ],
-                      ),
+                        )
+                      ],
                     ),
-                  )
-                ],
+                  ),
+                ),
               ),
+              /*  floatingActionButton: FloatingActionButton(
+                  //elevation: 3,
+                  tooltip: 'Siguiente',
+                  shape: const StadiumBorder(),
+                  backgroundColor: Colors.blue,
+                
+                  onPressed: () {
+                    timer.startStopTimer();
+                  },
+                  child: Icon(
+                    timer.isRunning ? Icons.pause : Icons.play_arrow,
+                    color: Colors.white,
+                  ),
+                ), 
+                floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,*/
+              /*  bottomNavigationBar: Container(
+                decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [Colors.blue, Colors.white],
+                        stops: [0.01, 0.8])),
+                child: BottomAppBar(
+                  height: heightScreen * 0.05,
+                  color: Colors.transparent,
+                  notchMargin: 4,
+                  shape: const CircularNotchedRectangle(),
+                ),
+              ), */
+              //
             ),
-          ),
-          /*  floatingActionButton: FloatingActionButton(
-              //elevation: 3,
-              tooltip: 'Siguiente',
-              shape: const StadiumBorder(),
-              backgroundColor: Colors.blue,
-            
-              onPressed: () {
-                timer.startStopTimer();
-              },
-              child: Icon(
-                timer.isRunning ? Icons.pause : Icons.play_arrow,
-                color: Colors.white,
-              ),
-            ), 
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,*/
-          /*  bottomNavigationBar: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [Colors.blue, Colors.white],
-                    stops: [0.01, 0.8])),
-            child: BottomAppBar(
-              height: heightScreen * 0.05,
-              color: Colors.transparent,
-              notchMargin: 4,
-              shape: const CircularNotchedRectangle(),
-            ),
-          ), */
-          //
+          ],
         ),
       ),
     );

@@ -1,10 +1,8 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:ffi';
+//import 'dart:ffi';
 
 import 'package:flutter_application_1/dato.dart';
 import 'package:flutter_application_1/firebase_services.dart';
-import 'package:flutter_application_1/future_provider.dart';
-import 'package:flutter_application_1/register_screen.dart';
 import 'package:flutter_application_1/terapia.dart';
 import 'package:flutter_application_1/terapia_personal.dart';
 import 'package:flutter_application_1/terapia_total.dart';
