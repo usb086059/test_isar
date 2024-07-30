@@ -92,3 +92,51 @@ class TimerScreenCurve extends CustomClipper<Path> {
     return true;
   }
 }
+
+class Corte1 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width, size.height * 0.05);
+    path.lineTo(size.width * 0.7, size.height * 0.05);
+    path.lineTo(size.width * 0.7, size.height * 0.8);
+    path.lineTo(size.width, size.height * 0.8);
+    path.lineTo(size.width, 0);
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}
+
+class Corte2 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(size.width * 0.6, 0);
+    path.lineTo(size.width, size.height * 0.13);
+    path.lineTo(size.width, size.height * 0.7);
+    path.arcToPoint(
+      Offset(size.width * 0.75, size.height * 0.85),
+      radius: const Radius.circular(200),
+      clockwise: false,
+    );
+    //path.lineTo(size.width * 0.75, size.height * 0.85);
+    path.lineTo(0, size.height * 0.7);
+    path.lineTo(0, size.height * 0.13);
+    path.lineTo(size.width * 0.3, 0);
+    path.lineTo(0, 0);
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}

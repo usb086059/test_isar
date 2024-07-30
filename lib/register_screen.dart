@@ -41,204 +41,228 @@ class RegisterScreen extends StatelessWidget {
     var user = FirebaseAuth.instance.currentUser;
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.blue,
-              centerTitle: true,
-              title: const Text('Registro'),
-              titleTextStyle:
-                  const TextStyle(fontSize: 25, color: Colors.white),
-            ),
-            body: Container(
-              constraints: BoxConstraints(maxWidth: widthScreen),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              width: widthScreen * 0.44,
-                              child: TextFormField(
-                                controller: nombreController,
-                                keyboardType: TextInputType.text,
-                                decoration: formDecoration('Nombre'),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Dato Requerido';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            Container(
-                              width: widthScreen * 0.44,
-                              child: TextFormField(
-                                controller: apellidoController,
-                                keyboardType: TextInputType.text,
-                                decoration: formDecoration('Apellido'),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Dato Requerido';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              width: widthScreen * 0.44,
-                              child: TextFormField(
-                                controller: edadController,
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.always,
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(16))),
-                                    labelText: 'Edad',
-                                    labelStyle: TextStyle(fontSize: 25)),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Dato Requerido';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            DropdownMenu(
-                                controller: sexoController,
+        home: Container(
+          height: heightScreen,
+          width: widthScreen,
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  fit: BoxFit.fill, image: AssetImage('assets/fondo557.jpg'))),
+          child: Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                centerTitle: true,
+                title: const Text('Registro'),
+                titleTextStyle: const TextStyle(
+                    fontSize: 25,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+              body: Container(
+                height: heightScreen,
+                width: widthScreen,
+                color: Colors.transparent,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
                                 width: widthScreen * 0.44,
-                                inputDecorationTheme:
-                                    const InputDecorationTheme(
-                                        floatingLabelBehavior:
-                                            FloatingLabelBehavior.always,
-                                        border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(16))),
-                                        labelStyle: TextStyle(fontSize: 25)),
-                                enableSearch: false,
-                                initialSelection: 'Woman',
-                                label: const Text('Sexo'),
-                                dropdownMenuEntries: const <DropdownMenuEntry<
-                                    String>>[
-                                  DropdownMenuEntry(
-                                      value: 'Woman', label: 'Mujer'),
-                                  DropdownMenuEntry(
-                                      value: 'Man', label: 'Hombre')
-                                ]),
-                          ],
-                        ),
-                        const SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              width: widthScreen * 0.44,
-                              child: TextFormField(
-                                controller: telefono1Controller,
-                                keyboardType: TextInputType.phone,
-                                decoration: formDecoration('Teléfono 1'),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Dato Requerido';
-                                  }
-                                  return null;
-                                },
+                                child: TextFormField(
+                                  controller: nombreController,
+                                  keyboardType: TextInputType.text,
+                                  decoration: formDecoration('Nombre'),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Dato Requerido';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                            ),
-                            Container(
-                              width: widthScreen * 0.44,
-                              child: TextFormField(
-                                controller: telefono2Controller,
-                                keyboardType: TextInputType.phone,
-                                decoration: formDecoration('Teléfono 2'),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Dato Requerido';
-                                  }
-                                  return null;
-                                },
+                              Container(
+                                width: widthScreen * 0.44,
+                                child: TextFormField(
+                                  controller: apellidoController,
+                                  keyboardType: TextInputType.text,
+                                  decoration: formDecoration('Apellido'),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Dato Requerido';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
+                                width: widthScreen * 0.44,
+                                child: TextFormField(
+                                  controller: edadController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(16))),
+                                      labelText: 'Edad',
+                                      labelStyle: TextStyle(fontSize: 25)),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Dato Requerido';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              DropdownMenu(
+                                  controller: sexoController,
+                                  width: widthScreen * 0.44,
+                                  inputDecorationTheme:
+                                      const InputDecorationTheme(
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.always,
+                                          border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(16))),
+                                          labelStyle: TextStyle(fontSize: 25)),
+                                  enableSearch: false,
+                                  initialSelection: 'Woman',
+                                  label: const Text('Sexo'),
+                                  dropdownMenuEntries: const <DropdownMenuEntry<
+                                      String>>[
+                                    DropdownMenuEntry(
+                                        value: 'Woman', label: 'Mujer'),
+                                    DropdownMenuEntry(
+                                        value: 'Man', label: 'Hombre')
+                                  ]),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
+                                width: widthScreen * 0.44,
+                                child: TextFormField(
+                                  controller: telefono1Controller,
+                                  keyboardType: TextInputType.phone,
+                                  decoration: formDecoration('Teléfono 1'),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Dato Requerido';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              Container(
+                                width: widthScreen * 0.44,
+                                child: TextFormField(
+                                  controller: telefono2Controller,
+                                  keyboardType: TextInputType.phone,
+                                  decoration: formDecoration('Teléfono 2'),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Dato Requerido';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          Container(
+                            width: widthScreen * 0.85,
+                            child: TextFormField(
+                              controller: instagramController,
+                              keyboardType: TextInputType.text,
+                              decoration: formDecoration('Instagram'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Dato Requerido';
+                                }
+                                return null;
+                              },
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 30),
-                        Container(
-                          width: widthScreen * 0.85,
-                          child: TextFormField(
-                            controller: instagramController,
-                            keyboardType: TextInputType.text,
-                            decoration: formDecoration('Instagram'),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Dato Requerido';
-                              }
-                              return null;
-                            },
                           ),
-                        ),
-                        const SizedBox(height: 30),
-                        Container(
-                          width: widthScreen * 0.85,
-                          child: TextFormField(
-                            controller: paisController,
-                            keyboardType: TextInputType.text,
-                            decoration: formDecoration('País'),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Dato Requerido';
-                              }
-                              return null;
-                            },
+                          const SizedBox(height: 30),
+                          Container(
+                            width: widthScreen * 0.85,
+                            child: TextFormField(
+                              controller: paisController,
+                              keyboardType: TextInputType.text,
+                              decoration: formDecoration('País'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Dato Requerido';
+                                }
+                                return null;
+                              },
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Container(
-                          width: widthScreen * 0.85,
-                          child: TextFormField(
-                            controller: provinciaController,
-                            keyboardType: TextInputType.text,
-                            decoration: formDecoration('Estado / Provincia'),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Dato Requerido';
-                              }
-                              return null;
-                            },
+                          const SizedBox(
+                            height: 30,
                           ),
-                        ),
-                        const SizedBox(height: 30),
-                        const NewElevatedButton(),
-                        const SizedBox(height: 30),
-                        FilledButton.tonalIcon(
-                            onPressed: () async {
-                              if (user != null) {
-                                await FirebaseAuth.instance.signOut();
-                                context.go('/login');
-                              }
-                            },
-                            icon: const Icon(Icons.logout),
-                            label: const Text('Cerrar Sesión'))
-                      ],
+                          Container(
+                            width: widthScreen * 0.85,
+                            child: TextFormField(
+                              controller: provinciaController,
+                              keyboardType: TextInputType.text,
+                              decoration: formDecoration('Estado / Provincia'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Dato Requerido';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      minimumSize: const Size(150.0, 50.0)),
+                                  onPressed: () {
+                                    context.pop();
+                                  },
+                                  child: const Text('Volver')),
+                              const NewElevatedButton(),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          /* FilledButton.tonalIcon(
+                              onPressed: () async {
+                                if (user != null) {
+                                  await FirebaseAuth.instance.signOut();
+                                  context.go('/login');
+                                }
+                              },
+                              icon: const Icon(Icons.logout),
+                              label: const Text('Cerrar Sesión')) */
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            )));
+              )),
+        ));
   }
 
   InputDecoration formDecoration(String titleLabel) {

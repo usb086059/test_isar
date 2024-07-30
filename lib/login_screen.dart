@@ -49,8 +49,8 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       const SizedBox(height: 50),
                       Image.asset(
-                        'assets/logoEnBlanco.png',
-                        scale: 29,
+                        'assets/logoEnNegro1080.png',
+                        scale: 3.5,
                       ),
                       //const SizedBox(height: 50),
                       /* Card(

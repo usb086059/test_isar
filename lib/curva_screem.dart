@@ -1,7 +1,35 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final _formKey = GlobalKey<FormState>();
+final nombreController = TextEditingController();
+final apellidoController = TextEditingController();
+final edadController = TextEditingController();
+final sexoController = TextEditingController();
+final telefono1Controller = TextEditingController();
+final telefono2Controller = TextEditingController();
+//final correoController = TextEditingController();
+final instagramController = TextEditingController();
+final paisController = TextEditingController();
+final provinciaController = TextEditingController();
+//final claveController = TextEditingController();
+//final confirmarClaveController = TextEditingController();
+String googleID = '';
+String nombre = '';
+String apellido = '';
+String edad = '';
+String sexo = '';
+String telefono1 = '';
+String telefono2 = '';
+//String correo = '';
+String instagram = '';
+String pais = '';
+String provincia = '';
+//String clave = '';
+//String confirmarClave = '';
 
 class CurvaScreen extends ConsumerWidget {
   const CurvaScreen({super.key});
@@ -15,287 +43,420 @@ class CurvaScreen extends ConsumerWidget {
       home: Stack(
         children: [
           Container(
-            //color: Colors.white,
-            decoration: BoxDecoration(gradient: azulGradient()),
+            height: MediaQuery.sizeOf(context).height,
+            width: MediaQuery.sizeOf(context).width,
+            decoration: BoxDecoration(gradient: purpleGradientCurvas()),
           ),
           ClipPath(
             clipper: LoginCurve(),
             child: Container(
-              decoration: BoxDecoration(gradient: fondoLoginScreenGradient()),
-              //height: 100,
               height: MediaQuery.sizeOf(context).height,
               width: MediaQuery.sizeOf(context).width,
+              decoration: BoxDecoration(gradient: azulCorteGradient()),
+              //height: 100,
+
+              //color: Colors.blue.withOpacity(0.3),
+            ),
+          ),
+          ClipPath(
+            clipper: Corte3(),
+            child: Container(
+              height: MediaQuery.sizeOf(context).height,
+              width: MediaQuery.sizeOf(context).width,
+              decoration:
+                  BoxDecoration(gradient: azulGradientFloatingActionButton()),
+              //height: 100,
+
+              //color: Colors.blue.withOpacity(0.3),
+            ),
+          ),
+          /* Container(
+            height: MediaQuery.sizeOf(context).height,
+            width: MediaQuery.sizeOf(context).width,
+            decoration:
+                BoxDecoration(gradient: azulGradientFloatingActionButton()),
+            //height: 100,
+
+            //color: Colors.blue.withOpacity(0.3),
+          ), */
+          ClipPath(
+            clipper: Corte4(),
+            child: Container(
+              height: MediaQuery.sizeOf(context).height,
+              width: MediaQuery.sizeOf(context).width,
+              decoration: BoxDecoration(gradient: loginPurpleGradientCurvas()),
+              //height: 100,
+
+              //color: Colors.blue.withOpacity(0.3),
+            ),
+          ),
+          ClipPath(
+            clipper: Corte5(),
+            child: Container(
+              height: MediaQuery.sizeOf(context).height,
+              width: MediaQuery.sizeOf(context).width,
+              decoration: BoxDecoration(gradient: purpleGradientCurvas()),
+              //height: 100,
+
+              //color: Colors.blue.withOpacity(0.3),
+            ),
+          ),
+          ClipPath(
+            clipper: Corte6(),
+            child: Container(
+              height: MediaQuery.sizeOf(context).height,
+              width: MediaQuery.sizeOf(context).width,
+              decoration: BoxDecoration(gradient: purpleGradientVolverButton()),
+              //height: 100,
+
+              //color: Colors.blue.withOpacity(0.3),
+            ),
+          ),
+          ClipPath(
+            clipper: Corte7(),
+            child: Container(
+              height: MediaQuery.sizeOf(context).height,
+              width: MediaQuery.sizeOf(context).width,
+              decoration: BoxDecoration(gradient: loginPurpleGradientCurvas()),
+              //height: 100,
+
+              //color: Colors.blue.withOpacity(0.3),
+            ),
+          ),
+          ClipPath(
+            clipper: Corte9(),
+            child: Container(
+              height: MediaQuery.sizeOf(context).height,
+              width: MediaQuery.sizeOf(context).width,
+              decoration: BoxDecoration(gradient: gradientAlertDialog()),
+              //height: 100,
+
+              //color: Colors.blue.withOpacity(0.3),
+            ),
+          ),
+          ClipPath(
+            clipper: Corte8(),
+            child: Container(
+              height: MediaQuery.sizeOf(context).height,
+              width: MediaQuery.sizeOf(context).width,
+              decoration: BoxDecoration(gradient: loginPurpleGradientCurvas()),
+              //height: 100,
+
               //color: Colors.blue.withOpacity(0.3),
             ),
           ),
           Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.transparent,
-                  /* borderRadius:
-                        BorderRadius.only(bottomLeft: Radius.circular(30)) */
-                ),
-              ),
               backgroundColor: Colors.transparent,
+              centerTitle: true,
+              title: const Text('REGISTRO'),
+              titleTextStyle: const TextStyle(
+                  fontSize: 25,
+                  color: Colors.white,
+                  //color: Color.fromARGB(255, 50, 102, 175),
+                  fontWeight: FontWeight.bold),
             ),
             body: Container(
               height: MediaQuery.of(context).size.height,
               //color: Colors.red,
               decoration: const BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius:
-                      BorderRadius.only(topRight: Radius.circular(30))),
+                color: Colors.transparent,
+              ),
               child: SingleChildScrollView(
-                child: Center(
+                child: Form(
+                  key: _formKey,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 15),
-                      Image.asset(
-                        'assets/avt-logo-9.png',
-                        scale: 7,
-                      ),
-                      //const SizedBox(height: 50),
-                      /* Card(
-                    color: Colors.blue,
-                    child: Image.asset(
-                        'assets/avt-logo-vectorizado-en-dorado-y-blanco-02-1-600x178.png'),
-                  ),
-                  */
-                      const SizedBox(height: 100),
-                      Container(
-                        constraints: BoxConstraints(
-                            maxHeight: heightScreen * 0.1,
-                            minHeight: heightScreen * 0.1,
-                            minWidth: widthScreen * 0.95,
-                            maxWidth: widthScreen * 0.95),
-                        //color: Colors.amber[50],
-                        child: Image.asset(
-                          'assets/8.png',
-                          color: Colors.white,
-                          scale: 20,
-                        ),
-                      ),
-                      //const SizedBox(height: 1),
-                      Container(
-                        //color: Colors.white,
-                        alignment: Alignment.center,
-                        constraints: BoxConstraints(
-                            maxHeight: heightScreen * 0.14,
-                            minHeight: heightScreen * 0.14,
-                            minWidth: widthScreen * 0.95,
-                            maxWidth: widthScreen * 0.95),
-                        //color: Colors.amber[50],
-                        child: Image.asset(
-                          'assets/10.png',
-                          color: Colors.white,
-                          scale: 18,
-                        ),
-                      ),
-                      const SizedBox(height: 100),
-                      /* Text('Ancho Minimo = $anchoMin ... Ancho Maximo = $anchoMax'),
-                  Text('Alto Minimo = $altoMin ... Alto Maximo = $altoMax'),
-                  Text(
-                      'HeightScreen = $heightScreen ... WidthScreen = $widthScreen'), */
-
-                      /* const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
-                    child: Text(
-                      'Inicie sesión con una cuenta de Google',
-                      style: TextStyle(
-                          fontSize: 15,
-                          //color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                  ), */
-                      Container(
-                        padding: const EdgeInsets.only(
-                            left: 12, right: 12, top: 5, bottom: 18),
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                fit: BoxFit.fill,
-                                image: AssetImage('assets/icons/icono9.png'))),
-                        child: FilledButton.tonalIcon(
-                            style: const ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
-                            onPressed: () {},
-                            /* () async {
-                          final user = await signInWithGoogle(context);
-                          print('${user.user!.displayName}');
-                          if (user.user != null) {
-                            final List googleID = await getGoogleID();
-                            final String estaRegistrado = googleID.firstWhere(
-                                (element) => element == user.user!.uid,
-                                orElse: () => 'no existe');
-                            if (estaRegistrado == user.user!.uid) {
-                              context.push('/devices');
-                            } else {
-                              context.push('/register');
-                            }
-                          }
-                        }, */
-                            icon: Image.asset('assets/logo-google-G.png',
-                                scale: 20),
-                            label: const Text(
-                              'Inicie sesión con Google',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 50, 102, 175),
-                                  fontWeight: FontWeight.bold),
-                            )),
-                      ),
                       //const SizedBox(height: 10),
-                      /* FilledButton.tonalIcon(
-                      style: const ButtonStyle(
-                          textStyle:
-                              MaterialStatePropertyAll(TextStyle(fontSize: 20)),
-                          backgroundColor: MaterialStatePropertyAll(
-                              Color.fromARGB(255, 219, 239, 255)),
-                          foregroundColor:
-                              MaterialStatePropertyAll(Colors.black)),
-                      onPressed: () async {
-                        final user = await signInWithGoogle(context);
-                        print('${user.user!.displayName}');
-                        if (user.user != null) {
-                          final List googleID = await getGoogleID();
-                          final String estaRegistrado = googleID.firstWhere(
-                              (element) => element == user.user!.uid,
-                              orElse: () => 'no existe');
-                          if (estaRegistrado == user.user!.uid) {
-                            context.push('/devices');
-                          } else {
-                            context.push('/register');
-                          }
-                        }
-                      },
-                      icon: Image.asset(
-                        'assets/logo-google-G.png',
-                        scale: 20,
+                      Container(
+                        padding: EdgeInsets.only(
+                          top: heightScreen * 0.06,
+                          //right: widthScreen * 0.1
+                        ),
+                        height: heightScreen * 0.8,
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: heightScreen * 0.06,
+                              width: widthScreen * 0.5,
+                              child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                //maxLength: 25,
+                                cursorColor: Colors.white,
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.white),
+                                textAlign: TextAlign.center,
+                                controller: nombreController,
+                                keyboardType: TextInputType.text,
+                                decoration: formDecoration('Nombre'),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Dato Requerido';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              width: widthScreen * 0.5,
+                              height: heightScreen * 0.06,
+                              child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                //maxLength: 25,
+                                cursorColor: Colors.white,
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.white),
+                                textAlign: TextAlign.center,
+                                controller: apellidoController,
+                                keyboardType: TextInputType.text,
+                                decoration: formDecoration('Apellido'),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Dato Requerido';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              width: widthScreen * 0.5,
+                              height: heightScreen * 0.06,
+                              child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                //maxLength: 25,
+                                cursorColor: Colors.white,
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.white),
+                                textAlign: TextAlign.center,
+                                controller: edadController,
+                                keyboardType: TextInputType.number,
+                                decoration: formDecoration('Edad'),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Dato Requerido';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                                width: widthScreen * 0.5,
+                                height: heightScreen * 0.07,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextButton(
+                                        style: ButtonStyle(
+                                            fixedSize: MaterialStatePropertyAll(
+                                                Size(widthScreen * 0.21,
+                                                    heightScreen * 0.06)),
+                                            shape: MaterialStatePropertyAll(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16))),
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.blue)),
+                                        onPressed: () {},
+                                        child: Text(
+                                          'Mujer',
+                                          style: TextStyle(color: Colors.white),
+                                        )),
+                                    TextButton(
+                                        style: ButtonStyle(
+                                            fixedSize: MaterialStatePropertyAll(
+                                                Size(widthScreen * 0.21,
+                                                    heightScreen * 0.06)),
+                                            shape: MaterialStatePropertyAll(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16))),
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.white)),
+                                        onPressed: () {},
+                                        child: Text('Hombre')),
+                                  ],
+                                )),
+                            const SizedBox(height: 25),
+                            Container(
+                              width: widthScreen * 0.5,
+                              height: heightScreen * 0.06,
+                              child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                //maxLength: 25,
+                                cursorColor: Colors.white,
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.white),
+                                textAlign: TextAlign.center,
+                                controller: telefono1Controller,
+                                keyboardType: TextInputType.phone,
+                                decoration: formDecoration('Teléfono'),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Dato Requerido';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              width: widthScreen * 0.5,
+                              height: heightScreen * 0.06,
+                              child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                //maxLength: 25,
+                                cursorColor: Colors.white,
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.white),
+                                textAlign: TextAlign.center,
+                                controller: instagramController,
+                                keyboardType: TextInputType.text,
+                                decoration: formDecoration('Instagram'),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Dato Requerido';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              width: widthScreen * 0.5,
+                              height: heightScreen * 0.06,
+                              child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                //maxLength: 25,
+                                cursorColor: Colors.white,
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.white),
+                                textAlign: TextAlign.center,
+                                controller: paisController,
+                                keyboardType: TextInputType.text,
+                                decoration: formDecoration('País'),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Dato Requerido';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              width: widthScreen * 0.5,
+                              height: heightScreen * 0.06,
+                              child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                //maxLength: 25,
+                                cursorColor: Colors.white,
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.white),
+                                textAlign: TextAlign.center,
+                                controller: provinciaController,
+                                keyboardType: TextInputType.text,
+                                decoration:
+                                    formDecoration('Estado / Provincia'),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Dato Requerido';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            /* Container(
+                              width: widthScreen * 0.44,
+                              //height: heightScreen * 0.06,
+                              child: DropdownMenu(
+                                  width: widthScreen * 0.44,
+                                  textStyle: TextStyle(fontSize: 10),
+                                  controller: sexoController,
+                                  inputDecorationTheme:
+                                      const InputDecorationTheme(
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.always,
+                                          border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(16))),
+                                          labelStyle:
+                                              TextStyle(fontSize: 18)),
+                                  enableSearch: false,
+                                  initialSelection: 'Woman',
+                                  label: const Text('Sexo'),
+                                  dropdownMenuEntries: const <DropdownMenuEntry<
+                                      String>>[
+                                    DropdownMenuEntry(
+                                        value: 'Woman', label: 'Mujer'),
+                                    DropdownMenuEntry(
+                                        value: 'Man', label: 'Hombre')
+                                  ]),
+                            ), */
+                          ],
+                        ),
                       ),
-                      label: const Text('Continuar con Google')), */
-                      //const SizedBox(height: 150),
-                      /* Image.asset(
-                  'assets/logo-google-G.png',
-                  scale: 10,
-                ), */
-                      //TextButton(onPressed: () {}, child: const Text('CONTACTANOS'))
+                      //SizedBox(height: heightScreen * 0.03),
                     ],
                   ),
                 ),
               ),
             ),
-            /* bottomNavigationBar: Container(
-              height: 100,
-              color: Colors.blue,
-            ), */
-
-            /* Stack(
-              children: [
-                /* Container(
-                  height: 100,
-                  color: Colors.green,
-                  //child: Text('data'),
-                ),
-                Container(
-                  height: 50,
-                  color: Colors.white,
-                  //child: Text('data'),
-                ), */
-                ClipPath(
-                  clipper: BazierCurve(),
-                  child: Container(
-                    decoration: BoxDecoration(gradient: purpleGradientCurvas()),
-                    //height: 100,
-                    height: MediaQuery.sizeOf(context).height,
-                    width: MediaQuery.sizeOf(context).width,
-                    //color: Colors.blue.withOpacity(0.3),
-                  ),
-                ),
-              ],
-            ), */
             bottomNavigationBar: Container(
-                height: 100,
+                height: heightScreen * 0.1,
                 /* decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                       topRight: Radius.circular(20),
                       topLeft: Radius.circular(20))), */
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    /* const Text(
-                    'CONTÁCTANOS',
-                    style: TextStyle(
-                        //color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold),
-                  ), */
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Image.asset(
-                            'assets/icons/icono10.png',
-                            //Image.asset('assets/icons/icon_whatsapp.png',
-                            scale: 10,
-                            //color: Colors.blue
-                          ),
-                          color: Colors.red,
-                          iconSize: 40,
-                        ),
-                        /* IconButton(
-                        onPressed: () {},
-                        icon: Image.asset(
-                          'assets/icons/whatsappColor.png',
-                          //Image.asset('assets/icons/icon_whatsapp.png',
-                          scale: 14,
-                          //color: Colors.blue
-                        ),
-                        color: Colors.blue,
-                        iconSize: 40,
-                      ), */
-                        IconButton(
-                          onPressed: () {},
-                          icon: Image.asset(
-                            'assets/icons/icono11.png',
-                            //Image.asset('assets/icons/icon_instagram.png',
-                            scale: 10,
-                            //color: Colors.blue
-                          ),
-                          color: Colors.blue,
-                          iconSize: 40,
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Image.asset('assets/icons/icono12.png',
-                              scale: 10),
-                          //const Icon(Icons.facebook),
-                          color: Colors.blue,
-                          iconSize: 40,
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Image.asset(
-                            'assets/icons/icono13.png',
-                            //Image.asset('assets/icons/icon_youtube.png',
-                            scale: 10,
-                            //color: Colors.blue
-                          ),
-                          color: Colors.blue,
-                          iconSize: 40,
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Image.asset('assets/icons/icono14.png',
-                              scale: 10),
-                          color: Colors.blue,
-                          iconSize: 40,
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                fixedSize: Size(
+                                    widthScreen * 0.28, heightScreen * 0.065)),
+                            onPressed: () {},
+                            child: const Text('Volver')),
+                        NewElevatedButton(
+                          width: widthScreen * 0.28,
+                          height: heightScreen * 0.065,
+                          texto: 'Aceptar',
                         ),
                       ],
                     ),
@@ -306,44 +467,227 @@ class CurvaScreen extends ConsumerWidget {
       ),
     );
   }
+
+  InputDecoration formDecoration(String titleLabel) {
+    return InputDecoration(
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      labelStyle: const TextStyle(
+          fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+      enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.all(Radius.circular(16))),
+      focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, width: 4),
+          borderRadius: BorderRadius.all(Radius.circular(16))),
+      disabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+          borderRadius: BorderRadius.all(Radius.circular(16))),
+      errorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+          borderRadius: BorderRadius.all(Radius.circular(16))),
+      focusedErrorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+          borderRadius: BorderRadius.all(Radius.circular(16))),
+      labelText: titleLabel,
+    );
+  }
 }
 
-class BazierCurve extends CustomClipper<Path> {
+class NewElevatedButton extends StatelessWidget {
+  final double width;
+  final double height;
+  final String texto;
+  const NewElevatedButton(
+      {super.key,
+      required this.width,
+      required this.height,
+      required this.texto});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(fixedSize: Size(width, height)),
+        onPressed: () {},
+        child: Text(texto));
+  }
+}
+
+class Corte3 extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-    path.arcToPoint(
-      Offset(size.width * 0.3, size.height * 0.103),
-      radius: const Radius.circular(105),
-      clockwise: false,
-    );
-    path.lineTo(size.width * 0.7, size.height * 0.103);
+
+    path.lineTo(size.width * 0.5, 0);
     path.arcToPoint(
       Offset(size.width, size.height * 0.206),
-      radius: const Radius.circular(105),
+      radius: const Radius.circular(270),
       clockwise: true,
     );
-    path.lineTo(size.width, size.height * 0.794);
+
+    path.lineTo(size.width, 0);
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}
+
+class Corte4 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    //path.lineTo(0, size.height * 0.3);
     path.arcToPoint(
-      Offset(size.width * 0.7, size.height * 0.897),
+      Offset(size.width * 0.3, size.height * 0.150),
       radius: const Radius.circular(105),
-      clockwise: true,
-    );
-    path.lineTo(size.width * 0.2, size.height * 0.897);
-    path.arcToPoint(
-      Offset(0, size.height),
-      radius: const Radius.circular(80),
       clockwise: false,
     );
+    path.arcToPoint(
+      Offset(size.width * 0.0, size.height * 0.1),
+      radius: const Radius.circular(150),
+      clockwise: true,
+    );
+    path.lineTo(size.width * 0.0, size.height * 0.0);
+    /* path.lineTo(size.width * 0.4, size.height * 0.35);
+    path.arcToPoint(
+      Offset(size.width * 0, size.height * 0.5),
+      radius: const Radius.circular(130),
+      clockwise: true,
+    ); */
 
-/*     path.quadraticBezierTo(size.width * 0.1, size.height * 0.152,
-        size.width * 0.5, size.height * 0.152);
-    path.quadraticBezierTo(size.width * 0.75, size.height * -0.0,
-        size.width * 0.97, size.height * 0.15); */
-    //path.lineTo(size.width, size.height);
+    return path;
+  }
 
-    path.lineTo(size.width, size.height);
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}
+
+class Corte5 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
     path.lineTo(size.width, 0);
+    path.lineTo(size.width, size.height * 0.412);
+    path.arcToPoint(
+      Offset(size.width, size.height * 1),
+      radius: const Radius.circular(900),
+      clockwise: false,
+    );
+    path.lineTo(size.width, 0);
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}
+
+class Corte6 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width, size.height * 0.3);
+    path.arcToPoint(
+      Offset(size.width, size.height * 0.8),
+      radius: const Radius.circular(400),
+      clockwise: false,
+    );
+    path.lineTo(size.width, size.height * 0.75);
+    path.arcToPoint(
+      Offset(size.width, size.height * 0.206),
+      radius: const Radius.circular(500),
+      clockwise: true,
+    );
+    path.lineTo(size.width, 0);
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}
+
+class Corte7 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(size.width * 0, size.height * 0.3);
+    path.arcToPoint(
+      Offset(size.width * 0, size.height * 0.8),
+      radius: const Radius.circular(90),
+      clockwise: true,
+    );
+    path.lineTo(size.width * 0, size.height * 0.78);
+    path.arcToPoint(
+      Offset(size.width * 0, size.height * 0.25),
+      radius: const Radius.circular(50),
+      clockwise: false,
+    );
+    path.lineTo(size.width * 0, 0);
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}
+
+class Corte8 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(size.width * 0, size.height * 0.7);
+    path.arcToPoint(
+      Offset(size.width * 0, size.height * 0.35),
+      radius: const Radius.circular(40),
+      clockwise: false,
+    );
+    path.lineTo(size.width * 0, size.height * 0.35);
+    path.arcToPoint(
+      Offset(size.width * 0, size.height * 0.65),
+      radius: const Radius.circular(90),
+      clockwise: true,
+    );
+    path.lineTo(size.width * 0, 0);
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}
+
+class Corte9 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(size.width * 0, size.height * 0.702);
+    path.arcToPoint(
+      Offset(size.width * 0, size.height * 0.35),
+      radius: const Radius.circular(40),
+      clockwise: false,
+    );
+    path.lineTo(size.width * 0, size.height * 0.35);
+    path.arcToPoint(
+      Offset(size.width * 0, size.height * 0.645),
+      radius: const Radius.circular(90),
+      clockwise: true,
+    );
+    path.lineTo(size.width * 0, 0);
 
     return path;
   }
