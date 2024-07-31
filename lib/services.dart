@@ -1,6 +1,9 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'dart:ffi';
 
+//import 'dart:math';
+//import 'dart:ui_web';
+
 import 'package:flutter_application_1/dato.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/terapia.dart';
@@ -94,7 +97,6 @@ class Services {
 
     for (var element in listTerapias) {
       listTerapiasTotal.add(element);
-      print(listTerapiasTotal.length);
     }
 
     for (var element in listTerapiasTotal) {
@@ -156,7 +158,6 @@ class Services {
   Future<List<Terapia>> getAllTerapia() async {
     final isar = await db;
     final lista = await isar.terapias.where().findAll();
-    print(lista);
     return lista;
   }
 

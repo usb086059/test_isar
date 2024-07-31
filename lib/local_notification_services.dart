@@ -35,5 +35,5 @@ Future<void> showNotification() async {
   );
 
   await flutterLocalNotificationsPlugin.show(
-      1, 'ZAPPER', 'La terapia ha terminado con exito', notificationDetails);
+      1, 'ZAPPER', 'La terapia ha terminado con éxito', notificationDetails);
 }

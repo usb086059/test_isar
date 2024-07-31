@@ -202,13 +202,16 @@ class CustomIconSelectDevice extends ConsumerWidget {
         await ref
             .watch(servicesProvider)
             .cargarTerapiaTotal(); //Carga las terapias que se mostraran en el Gridview (terapias iniciales + personales)
+
         ref.read(origenHomeZapperProvider.notifier).state = true;
         ref.read(selectModoProvider.notifier).state = false;
         ref.read(indexTerapiaProvider.notifier).state = 0;
         ref.read(terapiaProvider.notifier).state =
             await ref.watch(servicesProvider).getTerapiaSeleccionada(0);
-        context.pop();
-        context.push('/homeZapper');
+        if (context.mounted) {
+          context.pop();
+          context.push('/homeZapper');
+        }
       };
     } else if (deviceName == 'DERMATRONIC') {
       return () {};

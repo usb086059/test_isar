@@ -15,6 +15,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await Services().db;
+
+  await Services().terapiasIniciales();
+  await Services().cargarTerapiaTotal();
+
   await initNotification();
   runApp(const ProviderScope(child: MyApp()));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

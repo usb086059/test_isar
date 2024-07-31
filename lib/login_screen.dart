@@ -130,13 +130,6 @@ class LoginScreen extends ConsumerWidget {
                                       backgroundColor: Colors.purple[300],
                                     ));
                                   });
-                              await ref
-                                  .watch(servicesProvider)
-                                  .terapiasIniciales(); //Actualiza terapias iniciales si es necesario
-                              await ref
-                                  .watch(servicesProvider)
-                                  .cargarTerapiaTotal(); //Carga las terapias que se mostraran en el Gridview (terapias iniciales + personales)
-
                               final user = await signInWithGoogle();
                               if (user.user != null) {
                                 final List googleID = await getGoogleID();
