@@ -187,6 +187,15 @@ class CustomIconSelectDevice extends ConsumerWidget {
       return () {};
     } else if (deviceName == 'ZAPPER') {
       return () async {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return Center(
+                  child: CircularProgressIndicator(
+                color: const Color.fromARGB(255, 50, 102, 175),
+                backgroundColor: Colors.purple[300],
+              ));
+            });
         await ref
             .watch(servicesProvider)
             .terapiasIniciales(); //Actualiza terapias iniciales si es necesario
@@ -198,6 +207,7 @@ class CustomIconSelectDevice extends ConsumerWidget {
         ref.read(indexTerapiaProvider.notifier).state = 0;
         ref.read(terapiaProvider.notifier).state =
             await ref.watch(servicesProvider).getTerapiaSeleccionada(0);
+        context.pop();
         context.push('/homeZapper');
       };
     } else if (deviceName == 'DERMATRONIC') {

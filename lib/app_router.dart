@@ -1,5 +1,6 @@
 import 'package:flutter_application_1/curva_screem.dart';
 import 'package:flutter_application_1/home_zapper_screen.dart';
+import 'package:flutter_application_1/notificaciones_screen.dart';
 import 'package:flutter_application_1/register_screen.dart';
 import 'package:flutter_application_1/screens.dart';
 import 'package:flutter_application_1/devices_screen.dart';
@@ -41,6 +42,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/curvaScreen',
       builder: (context, state) => const CurvaScreen(),
+    ),
+    GoRoute(
+      path: '/notificacionScreen',
+      builder: (context, state) => const NotificacionScree(),
     ),
   ],
 );

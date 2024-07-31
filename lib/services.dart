@@ -94,6 +94,7 @@ class Services {
 
     for (var element in listTerapias) {
       listTerapiasTotal.add(element);
+      print(listTerapiasTotal.length);
     }
 
     for (var element in listTerapiasTotal) {
@@ -154,12 +155,16 @@ class Services {
 
   Future<List<Terapia>> getAllTerapia() async {
     final isar = await db;
-    return await isar.terapias.where().findAll();
+    final lista = await isar.terapias.where().findAll();
+    print(lista);
+    return lista;
   }
 
   Future<List<TerapiaTotal>> getAllTerapiaTotal() async {
     final isar = await db;
-    return await isar.terapiaTotals.where().sortByNombre().findAll();
+    final terapiasTotales =
+        await isar.terapiaTotals.where().sortByNombre().findAll();
+    return terapiasTotales; //await isar.terapiaTotals.where().sortByNombre().findAll();
   }
 
   Future<List<TerapiaPersonal>> getAllTerapiaPersonal() async {

@@ -3,13 +3,15 @@ import 'package:flutter_application_1/auth_google_services.dart';
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
+import 'package:flutter_application_1/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
 /*     double anchoMin = MediaQuery.of(context).size.width * 0.35;
@@ -118,13 +120,31 @@ class LoginScreen extends StatelessWidget {
                                 backgroundColor: MaterialStatePropertyAll(
                                     Colors.transparent)),
                             onPressed: () async {
-                              final user = await signInWithGoogle(context);
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Center(
+                                        child: CircularProgressIndicator(
+                                      color: const Color.fromARGB(
+                                          255, 50, 102, 175),
+                                      backgroundColor: Colors.purple[300],
+                                    ));
+                                  });
+                              await ref
+                                  .watch(servicesProvider)
+                                  .terapiasIniciales(); //Actualiza terapias iniciales si es necesario
+                              await ref
+                                  .watch(servicesProvider)
+                                  .cargarTerapiaTotal(); //Carga las terapias que se mostraran en el Gridview (terapias iniciales + personales)
+
+                              final user = await signInWithGoogle();
                               if (user.user != null) {
                                 final List googleID = await getGoogleID();
                                 final String estaRegistrado =
                                     googleID.firstWhere(
                                         (element) => element == user.user!.uid,
                                         orElse: () => 'no existe');
+                                context.pop();
                                 if (estaRegistrado == user.user!.uid) {
                                   context.push('/devices');
                                 } else {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/app_router.dart';
+import 'package:flutter_application_1/local_notification_services.dart';
 //import 'package:flutter_application_1/home_screen.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,6 +15,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await Services().db;
+  await initNotification();
   runApp(const ProviderScope(child: MyApp()));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 }

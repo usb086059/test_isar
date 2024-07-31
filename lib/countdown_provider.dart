@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/local_notification_services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final countdownProvider = ChangeNotifierProvider((ref) => CountdownProvider());
@@ -67,6 +68,7 @@ class CountdownProvider extends ChangeNotifier {
           ciclos = 1;
           _tickSubscription?.cancel();
           isRunning = false;
+          showNotification();
         }
       } else if (modo == 'Modo B') {
         if (duration.inSeconds == 0) {
@@ -74,6 +76,7 @@ class CountdownProvider extends ChangeNotifier {
           ciclos = 1;
           _tickSubscription?.cancel();
           isRunning = false;
+          showNotification();
         } else {
           estado = 'Ciclo Unico';
         }
