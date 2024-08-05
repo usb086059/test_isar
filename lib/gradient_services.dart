@@ -89,6 +89,18 @@ Gradient gradientAlertDialog() {
       stops: const [0.0, 0.1, 1]);
 }
 
+Gradient gradientRegistro() {
+  return RadialGradient(
+      focal: Alignment.topRight,
+      colors: [
+        Colors.blue.withOpacity(0.9),
+        Colors.blue.withOpacity(0.9),
+        Colors.blue.withOpacity(0.1)
+      ],
+      radius: 10,
+      stops: const [0.0, 0.1, 1]);
+}
+
 Gradient azulGradientCurvas() {
   return const RadialGradient(
       focal: Alignment.topRight,

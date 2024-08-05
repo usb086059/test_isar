@@ -1,6 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
-import "package:flutter/material.dart";
-import "package:go_router/go_router.dart";
+//import "package:flutter/material.dart";
+//import "package:go_router/go_router.dart";
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -42,13 +42,9 @@ Future<void> addUser(
   String edad,
   String sexo,
   String telefono1,
-  String telefono2,
-  //String correo,
   String instagram,
   String pais,
   String provincia,
-  //String clave,
-  //String confirmarClave
 ) async {
   await db.collection('usuarios').add({
     'googleID': googleID,
@@ -57,12 +53,8 @@ Future<void> addUser(
     'Edad': edad,
     'Sexo': sexo,
     'Teléfono 1': telefono1,
-    'Teléfono 2': telefono2,
-    //'Correo': correo,
     'Instagra': instagram,
     'País': pais,
     'Estado / Provincia': provincia,
-    //'Contraseña': clave,
-    //'Confirmar Contraseña': confirmarClave
   });
 }

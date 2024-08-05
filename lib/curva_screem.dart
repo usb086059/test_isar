@@ -1,4 +1,9 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/auth_google_services.dart';
+import 'package:flutter_application_1/firebase_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
@@ -10,26 +15,18 @@ final apellidoController = TextEditingController();
 final edadController = TextEditingController();
 final sexoController = TextEditingController();
 final telefono1Controller = TextEditingController();
-final telefono2Controller = TextEditingController();
-//final correoController = TextEditingController();
 final instagramController = TextEditingController();
 final paisController = TextEditingController();
 final provinciaController = TextEditingController();
-//final claveController = TextEditingController();
-//final confirmarClaveController = TextEditingController();
 String googleID = '';
 String nombre = '';
 String apellido = '';
 String edad = '';
 String sexo = '';
 String telefono1 = '';
-String telefono2 = '';
-//String correo = '';
 String instagram = '';
 String pais = '';
 String provincia = '';
-//String clave = '';
-//String confirmarClave = '';
 
 class CurvaScreen extends ConsumerWidget {
   const CurvaScreen({super.key});
@@ -38,6 +35,7 @@ class CurvaScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
+    var user = FirebaseAuth.instance.currentUser;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Stack(
@@ -145,9 +143,16 @@ class CurvaScreen extends ConsumerWidget {
               //color: Colors.blue.withOpacity(0.3),
             ),
           ),
+          Container(
+            height: MediaQuery.sizeOf(context).height,
+            width: MediaQuery.sizeOf(context).width,
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.fill, image: AssetImage('assets/fondo3.jpg'))),
+          ),
           Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: AppBar(
+            /* appBar: AppBar(
               backgroundColor: Colors.transparent,
               centerTitle: true,
               title: const Text('REGISTRO'),
@@ -156,28 +161,64 @@ class CurvaScreen extends ConsumerWidget {
                   color: Colors.white,
                   //color: Color.fromARGB(255, 50, 102, 175),
                   fontWeight: FontWeight.bold),
-            ),
-            body: Container(
-              height: MediaQuery.of(context).size.height,
-              //color: Colors.red,
-              decoration: const BoxDecoration(
-                color: Colors.transparent,
-              ),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      //const SizedBox(height: 10),
-                      Container(
-                        padding: EdgeInsets.only(
-                          top: heightScreen * 0.06,
-                          //right: widthScreen * 0.1
-                        ),
-                        height: heightScreen * 0.8,
-                        alignment: Alignment.center,
+            ), */
+            body: Stack(
+              children: [
+                Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Container(
+                      constraints: BoxConstraints(
+                          maxHeight: heightScreen * 0.9,
+                          maxWidth: widthScreen * 0.6),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                        child: Container(),
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Container(
+                      constraints: BoxConstraints(
+                          maxHeight: heightScreen * 0.9,
+                          maxWidth: widthScreen * 0.6),
+                      decoration: BoxDecoration(
+                          border:
+                              Border.all(color: Colors.white.withOpacity(0.2)),
+                          borderRadius: BorderRadius.circular(30),
+                          gradient: gradientRegistro()),
+                      child: Container(),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    height: heightScreen * 0.9,
+                    width: widthScreen * 0.6,
+                    decoration: const BoxDecoration(
+                      color: Colors.transparent,
+                    ),
+                    child: SingleChildScrollView(
+                      child: Form(
+                        key: _formKey,
                         child: Column(
                           children: [
+                            Container(
+                              height: heightScreen * 0.09,
+                              width: widthScreen * 0.5,
+                              alignment: Alignment.center,
+                              child: const Text(
+                                'REGISTRO',
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.white,
+                                    //color: Color.fromARGB(255, 50, 102, 175),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
                             Container(
                               height: heightScreen * 0.06,
                               width: widthScreen * 0.5,
@@ -189,7 +230,9 @@ class CurvaScreen extends ConsumerWidget {
                                 //maxLength: 25,
                                 cursorColor: Colors.white,
                                 style: const TextStyle(
-                                    fontSize: 15, color: Colors.white),
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                                 controller: nombreController,
                                 keyboardType: TextInputType.text,
@@ -214,7 +257,9 @@ class CurvaScreen extends ConsumerWidget {
                                 //maxLength: 25,
                                 cursorColor: Colors.white,
                                 style: const TextStyle(
-                                    fontSize: 15, color: Colors.white),
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                                 controller: apellidoController,
                                 keyboardType: TextInputType.text,
@@ -239,7 +284,9 @@ class CurvaScreen extends ConsumerWidget {
                                 //maxLength: 25,
                                 cursorColor: Colors.white,
                                 style: const TextStyle(
-                                    fontSize: 15, color: Colors.white),
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                                 controller: edadController,
                                 keyboardType: TextInputType.number,
@@ -263,36 +310,49 @@ class CurvaScreen extends ConsumerWidget {
                                     TextButton(
                                         style: ButtonStyle(
                                             fixedSize: MaterialStatePropertyAll(
-                                                Size(widthScreen * 0.21,
+                                                Size(widthScreen * 0.23,
                                                     heightScreen * 0.06)),
                                             shape: MaterialStatePropertyAll(
                                                 RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             16))),
+                                            side: MaterialStatePropertyAll(
+                                                BorderSide(
+                                                    color: Colors.white,
+                                                    width: 4)),
                                             backgroundColor:
                                                 MaterialStatePropertyAll(
-                                                    Colors.blue)),
+                                                    Colors.transparent)),
                                         onPressed: () {},
                                         child: Text(
                                           'Mujer',
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
                                         )),
                                     TextButton(
                                         style: ButtonStyle(
                                             fixedSize: MaterialStatePropertyAll(
-                                                Size(widthScreen * 0.21,
+                                                Size(widthScreen * 0.23,
                                                     heightScreen * 0.06)),
                                             shape: MaterialStatePropertyAll(
                                                 RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             16))),
+                                            side: MaterialStatePropertyAll(
+                                                BorderSide(
+                                                    color: Colors.white,
+                                                    width: 1)),
                                             backgroundColor:
                                                 MaterialStatePropertyAll(
-                                                    Colors.white)),
+                                                    Colors.transparent)),
                                         onPressed: () {},
-                                        child: Text('Hombre')),
+                                        child: Text('Hombre',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold))),
                                   ],
                                 )),
                             const SizedBox(height: 25),
@@ -307,7 +367,9 @@ class CurvaScreen extends ConsumerWidget {
                                 //maxLength: 25,
                                 cursorColor: Colors.white,
                                 style: const TextStyle(
-                                    fontSize: 15, color: Colors.white),
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                                 controller: telefono1Controller,
                                 keyboardType: TextInputType.phone,
@@ -332,7 +394,9 @@ class CurvaScreen extends ConsumerWidget {
                                 //maxLength: 25,
                                 cursorColor: Colors.white,
                                 style: const TextStyle(
-                                    fontSize: 15, color: Colors.white),
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                                 controller: instagramController,
                                 keyboardType: TextInputType.text,
@@ -357,7 +421,9 @@ class CurvaScreen extends ConsumerWidget {
                                 //maxLength: 25,
                                 cursorColor: Colors.white,
                                 style: const TextStyle(
-                                    fontSize: 15, color: Colors.white),
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                                 controller: paisController,
                                 keyboardType: TextInputType.text,
@@ -384,7 +450,9 @@ class CurvaScreen extends ConsumerWidget {
                                 //maxLength: 25,
                                 cursorColor: Colors.white,
                                 style: const TextStyle(
-                                    fontSize: 15, color: Colors.white),
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                                 controller: provinciaController,
                                 keyboardType: TextInputType.text,
@@ -398,6 +466,94 @@ class CurvaScreen extends ConsumerWidget {
                                 },
                               ),
                             ),
+                            const SizedBox(height: 20),
+                            Container(
+                                width: widthScreen * 0.5,
+                                height: heightScreen * 0.07,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextButton(
+                                        style: ButtonStyle(
+                                            fixedSize: MaterialStatePropertyAll(
+                                                Size(widthScreen * 0.21,
+                                                    heightScreen * 0.06)),
+                                            /* shape: MaterialStatePropertyAll(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16))), */
+                                            side: MaterialStatePropertyAll(
+                                                BorderSide(
+                                                    color: Colors.white,
+                                                    width: 6)),
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.transparent)),
+                                        onPressed: () {},
+                                        child: Text(
+                                          'Volver',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                    TextButton(
+                                        style: ButtonStyle(
+                                            fixedSize: MaterialStatePropertyAll(
+                                                Size(widthScreen * 0.21,
+                                                    heightScreen * 0.06)),
+                                            /* shape: MaterialStatePropertyAll(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16))), */
+                                            side: MaterialStatePropertyAll(
+                                                BorderSide(
+                                                    color: Colors.white,
+                                                    width: 6)),
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.transparent)),
+                                        onPressed: () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                    content:
+                                                        Text('Bien Hecho')));
+                                            googleID = user!.uid;
+                                            nombre = nombreController.text;
+                                            apellido = apellidoController.text;
+                                            edad = edadController.text;
+                                            sexo = sexoController.text;
+                                            telefono1 =
+                                                telefono1Controller.text;
+                                            instagram =
+                                                instagramController.text;
+                                            pais = paisController.text;
+                                            provincia =
+                                                provinciaController.text;
+                                            addUser(
+                                                googleID,
+                                                nombre,
+                                                apellido,
+                                                edad,
+                                                sexo,
+                                                telefono1,
+                                                instagram,
+                                                pais,
+                                                provincia);
+
+                                            context.push('/devices');
+                                          }
+                                        },
+                                        child: Text('Guardar',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold))),
+                                  ],
+                                )),
                             /* Container(
                               width: widthScreen * 0.44,
                               //height: heightScreen * 0.06,
@@ -428,13 +584,12 @@ class CurvaScreen extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      //SizedBox(height: heightScreen * 0.03),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-            bottomNavigationBar: Container(
+            /* bottomNavigationBar: Container(
                 height: heightScreen * 0.1,
                 /* decoration: const BoxDecoration(
                   color: Colors.white,
@@ -461,7 +616,7 @@ class CurvaScreen extends ConsumerWidget {
                       ],
                     ),
                   ],
-                )),
+                )), */
           ),
         ],
       ),

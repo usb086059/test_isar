@@ -1,8 +1,11 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/auth_google_services.dart';
+//import 'package:flutter_application_1/auth_google_services.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_application_1/gradient_services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _formKey = GlobalKey<FormState>();
 final nombreController = TextEditingController();
@@ -10,185 +13,266 @@ final apellidoController = TextEditingController();
 final edadController = TextEditingController();
 final sexoController = TextEditingController();
 final telefono1Controller = TextEditingController();
-final telefono2Controller = TextEditingController();
-//final correoController = TextEditingController();
 final instagramController = TextEditingController();
 final paisController = TextEditingController();
 final provinciaController = TextEditingController();
-//final claveController = TextEditingController();
-//final confirmarClaveController = TextEditingController();
+
 String googleID = '';
 String nombre = '';
 String apellido = '';
 String edad = '';
 String sexo = '';
 String telefono1 = '';
-String telefono2 = '';
-//String correo = '';
 String instagram = '';
 String pais = '';
 String provincia = '';
-//String clave = '';
-//String confirmarClave = '';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends ConsumerWidget {
   const RegisterScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
     var user = FirebaseAuth.instance.currentUser;
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Container(
-          height: heightScreen,
-          width: widthScreen,
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.fill, image: AssetImage('assets/fondo557.jpg'))),
-          child: Scaffold(
-              backgroundColor: Colors.transparent,
-              appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                centerTitle: true,
-                title: const Text('Registro'),
-                titleTextStyle: const TextStyle(
-                    fontSize: 25,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
+      debugShowCheckedModeBanner: false,
+      home: Container(
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.fill, image: AssetImage('assets/fondo3.jpg'))),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: [
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: Container(
+                    constraints: BoxConstraints(
+                        maxHeight: heightScreen * 0.9,
+                        maxWidth: widthScreen * 0.6),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                      child: Container(),
+                    ),
+                  ),
+                ),
               ),
-              body: Container(
-                height: heightScreen,
-                width: widthScreen,
-                color: Colors.transparent,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: Container(
+                    constraints: BoxConstraints(
+                        maxHeight: heightScreen * 0.9,
+                        maxWidth: widthScreen * 0.6),
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: Colors.white.withOpacity(0.2)),
+                        borderRadius: BorderRadius.circular(30),
+                        gradient: gradientRegistro()),
+                    child: Container(),
+                  ),
+                ),
+              ),
+              Center(
+                child: Container(
+                  height: heightScreen * 0.9,
+                  width: widthScreen * 0.6,
+                  decoration: const BoxDecoration(
+                    color: Colors.transparent,
+                  ),
+                  child: SingleChildScrollView(
                     child: Form(
                       key: _formKey,
                       child: Column(
                         children: [
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                width: widthScreen * 0.44,
-                                child: TextFormField(
-                                  controller: nombreController,
-                                  keyboardType: TextInputType.text,
-                                  decoration: formDecoration('Nombre'),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Dato Requerido';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Container(
-                                width: widthScreen * 0.44,
-                                child: TextFormField(
-                                  controller: apellidoController,
-                                  keyboardType: TextInputType.text,
-                                  decoration: formDecoration('Apellido'),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Dato Requerido';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 30),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                width: widthScreen * 0.44,
-                                child: TextFormField(
-                                  controller: edadController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                      floatingLabelBehavior:
-                                          FloatingLabelBehavior.always,
-                                      border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(16))),
-                                      labelText: 'Edad',
-                                      labelStyle: TextStyle(fontSize: 25)),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Dato Requerido';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              DropdownMenu(
-                                  controller: sexoController,
-                                  width: widthScreen * 0.44,
-                                  inputDecorationTheme:
-                                      const InputDecorationTheme(
-                                          floatingLabelBehavior:
-                                              FloatingLabelBehavior.always,
-                                          border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(16))),
-                                          labelStyle: TextStyle(fontSize: 25)),
-                                  enableSearch: false,
-                                  initialSelection: 'Woman',
-                                  label: const Text('Sexo'),
-                                  dropdownMenuEntries: const <DropdownMenuEntry<
-                                      String>>[
-                                    DropdownMenuEntry(
-                                        value: 'Woman', label: 'Mujer'),
-                                    DropdownMenuEntry(
-                                        value: 'Man', label: 'Hombre')
-                                  ]),
-                            ],
-                          ),
-                          const SizedBox(height: 30),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                width: widthScreen * 0.44,
-                                child: TextFormField(
-                                  controller: telefono1Controller,
-                                  keyboardType: TextInputType.phone,
-                                  decoration: formDecoration('Teléfono 1'),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Dato Requerido';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Container(
-                                width: widthScreen * 0.44,
-                                child: TextFormField(
-                                  controller: telefono2Controller,
-                                  keyboardType: TextInputType.phone,
-                                  decoration: formDecoration('Teléfono 2'),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Dato Requerido';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 30),
                           Container(
-                            width: widthScreen * 0.85,
+                            height: heightScreen * 0.09,
+                            width: widthScreen * 0.5,
+                            alignment: Alignment.center,
+                            child: const Text(
+                              'REGISTRO',
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(
+                            height: heightScreen * 0.06,
+                            width: widthScreen * 0.5,
                             child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              textCapitalization: TextCapitalization.characters,
+                              //maxLength: 25,
+                              cursorColor: Colors.white,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                              controller: nombreController,
+                              keyboardType: TextInputType.text,
+                              decoration: formDecoration('Nombre'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Dato Requerido';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: widthScreen * 0.5,
+                            height: heightScreen * 0.06,
+                            child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              textCapitalization: TextCapitalization.characters,
+                              //maxLength: 25,
+                              cursorColor: Colors.white,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                              controller: apellidoController,
+                              keyboardType: TextInputType.text,
+                              decoration: formDecoration('Apellido'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Dato Requerido';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: widthScreen * 0.5,
+                            height: heightScreen * 0.06,
+                            child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              textCapitalization: TextCapitalization.characters,
+                              //maxLength: 25,
+                              cursorColor: Colors.white,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                              controller: edadController,
+                              keyboardType: TextInputType.number,
+                              decoration: formDecoration('Edad'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Dato Requerido';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                              width: widthScreen * 0.5,
+                              height: heightScreen * 0.07,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                      style: ButtonStyle(
+                                          fixedSize: MaterialStatePropertyAll(
+                                              Size(widthScreen * 0.23,
+                                                  heightScreen * 0.06)),
+                                          shape: MaterialStatePropertyAll(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          16))),
+                                          side: const MaterialStatePropertyAll(
+                                              BorderSide(
+                                                  color: Colors.white,
+                                                  width: 4)),
+                                          backgroundColor:
+                                              const MaterialStatePropertyAll(
+                                                  Colors.transparent)),
+                                      onPressed: () {},
+                                      child: const Text(
+                                        'Mujer',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                  TextButton(
+                                      style: ButtonStyle(
+                                          fixedSize: MaterialStatePropertyAll(
+                                              Size(widthScreen * 0.23,
+                                                  heightScreen * 0.06)),
+                                          shape: MaterialStatePropertyAll(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          16))),
+                                          side: const MaterialStatePropertyAll(
+                                              BorderSide(
+                                                  color: Colors.white,
+                                                  width: 1)),
+                                          backgroundColor:
+                                              const MaterialStatePropertyAll(
+                                                  Colors.transparent)),
+                                      onPressed: () {},
+                                      child: const Text('Hombre',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold))),
+                                ],
+                              )),
+                          const SizedBox(height: 25),
+                          SizedBox(
+                            width: widthScreen * 0.5,
+                            height: heightScreen * 0.06,
+                            child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              textCapitalization: TextCapitalization.characters,
+                              //maxLength: 25,
+                              cursorColor: Colors.white,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                              controller: telefono1Controller,
+                              keyboardType: TextInputType.phone,
+                              decoration: formDecoration('Teléfono'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Dato Requerido';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: widthScreen * 0.5,
+                            height: heightScreen * 0.06,
+                            child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              textCapitalization: TextCapitalization.characters,
+                              //maxLength: 25,
+                              cursorColor: Colors.white,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
                               controller: instagramController,
                               keyboardType: TextInputType.text,
                               decoration: formDecoration('Instagram'),
@@ -200,10 +284,21 @@ class RegisterScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          const SizedBox(height: 30),
-                          Container(
-                            width: widthScreen * 0.85,
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: widthScreen * 0.5,
+                            height: heightScreen * 0.06,
                             child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              textCapitalization: TextCapitalization.characters,
+                              //maxLength: 25,
+                              cursorColor: Colors.white,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
                               controller: paisController,
                               keyboardType: TextInputType.text,
                               decoration: formDecoration('País'),
@@ -216,11 +311,22 @@ class RegisterScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(
-                            height: 30,
+                            height: 20,
                           ),
-                          Container(
-                            width: widthScreen * 0.85,
+                          SizedBox(
+                            width: widthScreen * 0.5,
+                            height: heightScreen * 0.06,
                             child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              textCapitalization: TextCapitalization.characters,
+                              //maxLength: 25,
+                              cursorColor: Colors.white,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
                               controller: provinciaController,
                               keyboardType: TextInputType.text,
                               decoration: formDecoration('Estado / Provincia'),
@@ -232,82 +338,117 @@ class RegisterScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          const SizedBox(height: 30),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      minimumSize: const Size(150.0, 50.0)),
-                                  onPressed: () {
-                                    context.pop();
-                                  },
-                                  child: const Text('Volver')),
-                              const NewElevatedButton(),
-                            ],
-                          ),
-                          const SizedBox(height: 30),
-                          /* FilledButton.tonalIcon(
-                              onPressed: () async {
-                                if (user != null) {
-                                  await FirebaseAuth.instance.signOut();
-                                  context.go('/login');
-                                }
-                              },
-                              icon: const Icon(Icons.logout),
-                              label: const Text('Cerrar Sesión')) */
+                          const SizedBox(height: 20),
+                          SizedBox(
+                              width: widthScreen * 0.5,
+                              height: heightScreen * 0.07,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                      style: ButtonStyle(
+                                          fixedSize: MaterialStatePropertyAll(
+                                              Size(widthScreen * 0.23,
+                                                  heightScreen * 0.06)),
+                                          side: const MaterialStatePropertyAll(
+                                              BorderSide(
+                                                  color: Colors.white,
+                                                  width: 6)),
+                                          backgroundColor:
+                                              const MaterialStatePropertyAll(
+                                                  Colors.transparent)),
+                                      onPressed: () {
+                                        if (context.mounted) {
+                                          context.pop();
+                                        }
+                                      },
+                                      child: const Text(
+                                        'Volver',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                  TextButton(
+                                      style: ButtonStyle(
+                                          fixedSize: MaterialStatePropertyAll(
+                                              Size(widthScreen * 0.23,
+                                                  heightScreen * 0.06)),
+                                          side: const MaterialStatePropertyAll(
+                                              BorderSide(
+                                                  color: Colors.white,
+                                                  width: 6)),
+                                          backgroundColor:
+                                              const MaterialStatePropertyAll(
+                                                  Colors.transparent)),
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(const SnackBar(
+                                                  content: Text('Bien Hecho')));
+                                          googleID = user!.uid;
+                                          nombre = nombreController.text;
+                                          apellido = apellidoController.text;
+                                          edad = edadController.text;
+                                          sexo = sexoController.text;
+                                          telefono1 = telefono1Controller.text;
+                                          instagram = instagramController.text;
+                                          pais = paisController.text;
+                                          provincia = provinciaController.text;
+                                          addUser(
+                                              googleID,
+                                              nombre,
+                                              apellido,
+                                              edad,
+                                              sexo,
+                                              telefono1,
+                                              instagram,
+                                              pais,
+                                              provincia);
+
+                                          context.push('/devices');
+                                        }
+                                      },
+                                      child: const Text('Guardar',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold))),
+                                ],
+                              )),
                         ],
                       ),
                     ),
                   ),
                 ),
-              )),
-        ));
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   InputDecoration formDecoration(String titleLabel) {
     return InputDecoration(
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16))),
-        labelText: titleLabel,
-        labelStyle: const TextStyle(fontSize: 25));
-  }
-}
-
-class NewElevatedButton extends StatelessWidget {
-  const NewElevatedButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var user = FirebaseAuth.instance.currentUser;
-    return ElevatedButton(
-        style: ElevatedButton.styleFrom(minimumSize: const Size(150.0, 50.0)),
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(content: Text('Bien Hecho')));
-            googleID = user!.uid;
-            nombre = nombreController.text;
-            apellido = apellidoController.text;
-            edad = edadController.text;
-            sexo = sexoController.text;
-            telefono1 = telefono1Controller.text;
-            telefono2 = telefono2Controller.text;
-            //correo = correoController.text;
-            instagram = instagramController.text;
-            pais = paisController.text;
-            provincia = provinciaController.text;
-            //clave = claveController.text;
-            //confirmarClave = confirmarClaveController.text;
-            addUser(googleID, nombre, apellido, edad, sexo, telefono1,
-                telefono2, instagram, pais, provincia);
-
-            context.push('/devices');
-          }
-        },
-        child: const Text('Aceptar'));
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      labelStyle: const TextStyle(
+          fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+      enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.all(Radius.circular(16))),
+      focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, width: 4),
+          borderRadius: BorderRadius.all(Radius.circular(16))),
+      disabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+          borderRadius: BorderRadius.all(Radius.circular(16))),
+      errorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+          borderRadius: BorderRadius.all(Radius.circular(16))),
+      focusedErrorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+          borderRadius: BorderRadius.all(Radius.circular(16))),
+      labelText: titleLabel,
+    );
   }
 }
