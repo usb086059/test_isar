@@ -6,6 +6,7 @@ import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -18,6 +19,13 @@ class LoginScreen extends ConsumerWidget {
     double anchoMax = MediaQuery.of(context).size.width * 0.95;
     double altoMin = MediaQuery.of(context).size.height * 0.35;
     double altoMax = MediaQuery.of(context).size.height * 0.5; */
+    /* final Uri urlWhatsapp = Uri.parse('https://wa.me/584241283205');
+    final Uri urlInstagram = Uri.parse('https://www.instagram.com/grupoavt/');
+    final Uri urlFacebook =
+        Uri.parse('https://www.facebook.com/profile.php?id=100083266544719');
+    final Uri urlYoutube = Uri.parse('https://grupoavt.com');
+    final Uri urlWeb = Uri.parse('https://grupoavt.com');
+    final List listContactos = []; */
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Stack(
@@ -217,7 +225,11 @@ class LoginScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final String whatsapp =
+                                await getContacto('whatsapp');
+                            myLaunchUrl(whatsapp);
+                          },
                           icon: Image.asset(
                             'assets/icons/icono10.png',
                             //Image.asset('assets/icons/icon_whatsapp.png',
@@ -239,7 +251,11 @@ class LoginScreen extends ConsumerWidget {
                             iconSize: 40,
                           ), */
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final String instagram =
+                                await getContacto('instagram');
+                            myLaunchUrl(instagram);
+                          },
                           icon: Image.asset(
                             'assets/icons/icono11.png',
                             //Image.asset('assets/icons/icon_instagram.png',
@@ -250,7 +266,11 @@ class LoginScreen extends ConsumerWidget {
                           iconSize: 40,
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final String facebook =
+                                await getContacto('facebook');
+                            myLaunchUrl(facebook);
+                          },
                           icon: Image.asset('assets/icons/icono12.png',
                               scale: 10),
                           //const Icon(Icons.facebook),
@@ -258,7 +278,10 @@ class LoginScreen extends ConsumerWidget {
                           iconSize: 40,
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final String youtube = await getContacto('youtube');
+                            myLaunchUrl(youtube);
+                          },
                           icon: Image.asset(
                             'assets/icons/icono13.png',
                             //Image.asset('assets/icons/icon_youtube.png',
@@ -269,7 +292,10 @@ class LoginScreen extends ConsumerWidget {
                           iconSize: 40,
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final String web = await getContacto('web');
+                            myLaunchUrl(web);
+                          },
                           icon: Image.asset('assets/icons/icono14.png',
                               scale: 10),
                           color: Colors.blue,
@@ -299,5 +325,12 @@ class LoginScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> myLaunchUrl(String urlContacto) async {
+    final Uri url = Uri.parse(urlContacto);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('No se encontró el URL $url');
+    }
   }
 }

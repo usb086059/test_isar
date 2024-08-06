@@ -35,6 +35,20 @@ Future<List> getTerapias() async {
   return terapias;
 }
 
+Future<String> getContacto(String contacto) async {
+  List listContactos = [];
+  String url;
+  CollectionReference collectionReferenceContactos = db.collection('contacto');
+  QuerySnapshot queryListContactos = await collectionReferenceContactos
+      .where('nombre', isEqualTo: contacto)
+      .get();
+  for (var element in queryListContactos.docs) {
+    listContactos.add(element.data());
+  }
+  url = listContactos[0]['url'];
+  return url;
+}
+
 Future<void> addUser(
   String googleID,
   String nombre,
