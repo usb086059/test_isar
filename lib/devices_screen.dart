@@ -6,7 +6,6 @@ import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_application_1/services.dart';
-//import 'package:isar/isar.dart';
 
 class DevicesScreen extends ConsumerWidget {
   const DevicesScreen({super.key});
@@ -29,10 +28,8 @@ class DevicesScreen extends ConsumerWidget {
             clipper: LoginCurve(),
             child: Container(
               decoration: BoxDecoration(gradient: purpleGradientCurvas()),
-              //height: 100,
               height: MediaQuery.sizeOf(context).height,
               width: MediaQuery.sizeOf(context).width,
-              //color: Colors.blue.withOpacity(0.3),
             ),
           ),
           Scaffold(
@@ -80,7 +77,7 @@ class DevicesScreen extends ConsumerWidget {
                         scale: 4,
                         color: const Color.fromARGB(255, 50, 102, 175),
                       ),
-                      //const SizedBox(height: 10),
+                      SizedBox(height: heightScreen * 0.002),
                       const FittedBox(
                         alignment: Alignment.center,
                         fit: BoxFit.scaleDown,
@@ -90,7 +87,7 @@ class DevicesScreen extends ConsumerWidget {
                                 color: Color.fromARGB(255, 50, 102, 175),
                                 fontWeight: FontWeight.bold)),
                       ),
-                      //const SizedBox(height: 16),
+                      SizedBox(height: heightScreen * 0.002),
                       CustomIconSelectDevice(
                         deviceName: 'PEDILUVIO',
                         addresImageDevice: 'assets/icons/icon_circulo.png',
@@ -115,7 +112,6 @@ class DevicesScreen extends ConsumerWidget {
                         contextDevicesScreen: context,
                         refDevicesScreen: ref,
                       ),
-                      //const SizedBox(height: 16),
                     ],
                   ),
                 ),

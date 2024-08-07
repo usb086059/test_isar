@@ -54,9 +54,7 @@ Future<void> addUser(
   String nombre,
   String apellido,
   String edad,
-  String sexo,
-  String telefono1,
-  String instagram,
+  String telefono,
   String pais,
   String provincia,
 ) async {
@@ -65,9 +63,7 @@ Future<void> addUser(
     'Nombre': nombre,
     'Apellido': apellido,
     'Edad': edad,
-    'Sexo': sexo,
-    'Teléfono 1': telefono1,
-    'Instagra': instagram,
+    'Teléfono': telefono,
     'País': pais,
     'Estado / Provincia': provincia,
   });

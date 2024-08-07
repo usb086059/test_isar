@@ -13,18 +13,14 @@ final _formKey = GlobalKey<FormState>();
 final nombreController = TextEditingController();
 final apellidoController = TextEditingController();
 final edadController = TextEditingController();
-final sexoController = TextEditingController();
-final telefono1Controller = TextEditingController();
-final instagramController = TextEditingController();
+final telefonoController = TextEditingController();
 final paisController = TextEditingController();
 final provinciaController = TextEditingController();
 String googleID = '';
 String nombre = '';
 String apellido = '';
 String edad = '';
-String sexo = '';
-String telefono1 = '';
-String instagram = '';
+String telefono = '';
 String pais = '';
 String provincia = '';
 
@@ -301,62 +297,6 @@ class CurvaScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 20),
                             Container(
-                                width: widthScreen * 0.5,
-                                height: heightScreen * 0.07,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextButton(
-                                        style: ButtonStyle(
-                                            fixedSize: MaterialStatePropertyAll(
-                                                Size(widthScreen * 0.23,
-                                                    heightScreen * 0.06)),
-                                            shape: MaterialStatePropertyAll(
-                                                RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            16))),
-                                            side: MaterialStatePropertyAll(
-                                                BorderSide(
-                                                    color: Colors.white,
-                                                    width: 4)),
-                                            backgroundColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.transparent)),
-                                        onPressed: () {},
-                                        child: Text(
-                                          'Mujer',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        )),
-                                    TextButton(
-                                        style: ButtonStyle(
-                                            fixedSize: MaterialStatePropertyAll(
-                                                Size(widthScreen * 0.23,
-                                                    heightScreen * 0.06)),
-                                            shape: MaterialStatePropertyAll(
-                                                RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            16))),
-                                            side: MaterialStatePropertyAll(
-                                                BorderSide(
-                                                    color: Colors.white,
-                                                    width: 1)),
-                                            backgroundColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.transparent)),
-                                        onPressed: () {},
-                                        child: Text('Hombre',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold))),
-                                  ],
-                                )),
-                            const SizedBox(height: 25),
-                            Container(
                               width: widthScreen * 0.5,
                               height: heightScreen * 0.06,
                               child: TextFormField(
@@ -371,36 +311,9 @@ class CurvaScreen extends ConsumerWidget {
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
-                                controller: telefono1Controller,
+                                controller: telefonoController,
                                 keyboardType: TextInputType.phone,
                                 decoration: formDecoration('Teléfono'),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Dato Requerido';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Container(
-                              width: widthScreen * 0.5,
-                              height: heightScreen * 0.06,
-                              child: TextFormField(
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                textCapitalization:
-                                    TextCapitalization.characters,
-                                //maxLength: 25,
-                                cursorColor: Colors.white,
-                                style: const TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                                controller: instagramController,
-                                keyboardType: TextInputType.text,
-                                decoration: formDecoration('Instagram'),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Dato Requerido';
@@ -526,11 +439,7 @@ class CurvaScreen extends ConsumerWidget {
                                             nombre = nombreController.text;
                                             apellido = apellidoController.text;
                                             edad = edadController.text;
-                                            sexo = sexoController.text;
-                                            telefono1 =
-                                                telefono1Controller.text;
-                                            instagram =
-                                                instagramController.text;
+                                            telefono = telefonoController.text;
                                             pais = paisController.text;
                                             provincia =
                                                 provinciaController.text;
@@ -539,9 +448,7 @@ class CurvaScreen extends ConsumerWidget {
                                                 nombre,
                                                 apellido,
                                                 edad,
-                                                sexo,
-                                                telefono1,
-                                                instagram,
+                                                telefono,
                                                 pais,
                                                 provincia);
 

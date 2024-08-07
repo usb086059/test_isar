@@ -11,9 +11,7 @@ final _formKey = GlobalKey<FormState>();
 final nombreController = TextEditingController();
 final apellidoController = TextEditingController();
 final edadController = TextEditingController();
-final sexoController = TextEditingController();
-final telefono1Controller = TextEditingController();
-final instagramController = TextEditingController();
+final telefonoController = TextEditingController();
 final paisController = TextEditingController();
 final provinciaController = TextEditingController();
 
@@ -21,9 +19,7 @@ String googleID = '';
 String nombre = '';
 String apellido = '';
 String edad = '';
-String sexo = '';
-String telefono1 = '';
-String instagram = '';
+String telefono = '';
 String pais = '';
 String provincia = '';
 
@@ -34,6 +30,10 @@ class RegisterScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
+    double heightContainerForm = heightScreen * 0.7;
+    double widthContainerForm = widthScreen * 0.75;
+    double heightCeldaForm = heightScreen * 0.06;
+    double widthCeldaForm = widthScreen * 0.6;
     var user = FirebaseAuth.instance.currentUser;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -50,8 +50,8 @@ class RegisterScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(30),
                   child: Container(
                     constraints: BoxConstraints(
-                        maxHeight: heightScreen * 0.9,
-                        maxWidth: widthScreen * 0.6),
+                        maxHeight: heightContainerForm,
+                        maxWidth: widthContainerForm),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
                       child: Container(),
@@ -64,8 +64,8 @@ class RegisterScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(30),
                   child: Container(
                     constraints: BoxConstraints(
-                        maxHeight: heightScreen * 0.9,
-                        maxWidth: widthScreen * 0.6),
+                        maxHeight: heightContainerForm,
+                        maxWidth: widthContainerForm),
                     decoration: BoxDecoration(
                         border:
                             Border.all(color: Colors.white.withOpacity(0.2)),
@@ -77,8 +77,8 @@ class RegisterScreen extends ConsumerWidget {
               ),
               Center(
                 child: Container(
-                  height: heightScreen * 0.9,
-                  width: widthScreen * 0.6,
+                  height: heightContainerForm,
+                  width: widthContainerForm,
                   decoration: const BoxDecoration(
                     color: Colors.transparent,
                   ),
@@ -100,13 +100,13 @@ class RegisterScreen extends ConsumerWidget {
                             ),
                           ),
                           SizedBox(
-                            height: heightScreen * 0.06,
-                            width: widthScreen * 0.5,
+                            height: heightCeldaForm,
+                            width: widthCeldaForm,
                             child: TextFormField(
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               textCapitalization: TextCapitalization.characters,
-                              //maxLength: 25,
+                              maxLength: 15,
                               cursorColor: Colors.white,
                               style: const TextStyle(
                                   fontSize: 15,
@@ -118,7 +118,7 @@ class RegisterScreen extends ConsumerWidget {
                               decoration: formDecoration('Nombre'),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Dato Requerido';
+                                  return 'Requerido';
                                 }
                                 return null;
                               },
@@ -126,13 +126,13 @@ class RegisterScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
-                            width: widthScreen * 0.5,
-                            height: heightScreen * 0.06,
+                            height: heightCeldaForm,
+                            width: widthCeldaForm,
                             child: TextFormField(
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               textCapitalization: TextCapitalization.characters,
-                              //maxLength: 25,
+                              maxLength: 15,
                               cursorColor: Colors.white,
                               style: const TextStyle(
                                   fontSize: 15,
@@ -144,7 +144,7 @@ class RegisterScreen extends ConsumerWidget {
                               decoration: formDecoration('Apellido'),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Dato Requerido';
+                                  return 'Requerido';
                                 }
                                 return null;
                               },
@@ -152,13 +152,13 @@ class RegisterScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
-                            width: widthScreen * 0.5,
-                            height: heightScreen * 0.06,
+                            height: heightCeldaForm,
+                            width: widthCeldaForm,
                             child: TextFormField(
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               textCapitalization: TextCapitalization.characters,
-                              //maxLength: 25,
+                              maxLength: 2,
                               cursorColor: Colors.white,
                               style: const TextStyle(
                                   fontSize: 15,
@@ -170,7 +170,14 @@ class RegisterScreen extends ConsumerWidget {
                               decoration: formDecoration('Edad'),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Dato Requerido';
+                                  return 'Requerido';
+                                } else {
+                                  final int? isInt = int.tryParse(value);
+                                  if (isInt == null) {
+                                    return 'No Letras';
+                                  } else if (isInt < 0) {
+                                    return 'No (-)';
+                                  }
                                 }
                                 return null;
                               },
@@ -178,81 +185,32 @@ class RegisterScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
-                              width: widthScreen * 0.5,
-                              height: heightScreen * 0.07,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextButton(
-                                      style: ButtonStyle(
-                                          fixedSize: MaterialStatePropertyAll(
-                                              Size(widthScreen * 0.23,
-                                                  heightScreen * 0.06)),
-                                          shape: MaterialStatePropertyAll(
-                                              RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          16))),
-                                          side: const MaterialStatePropertyAll(
-                                              BorderSide(
-                                                  color: Colors.white,
-                                                  width: 4)),
-                                          backgroundColor:
-                                              const MaterialStatePropertyAll(
-                                                  Colors.transparent)),
-                                      onPressed: () {},
-                                      child: const Text(
-                                        'Mujer',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      )),
-                                  TextButton(
-                                      style: ButtonStyle(
-                                          fixedSize: MaterialStatePropertyAll(
-                                              Size(widthScreen * 0.23,
-                                                  heightScreen * 0.06)),
-                                          shape: MaterialStatePropertyAll(
-                                              RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          16))),
-                                          side: const MaterialStatePropertyAll(
-                                              BorderSide(
-                                                  color: Colors.white,
-                                                  width: 1)),
-                                          backgroundColor:
-                                              const MaterialStatePropertyAll(
-                                                  Colors.transparent)),
-                                      onPressed: () {},
-                                      child: const Text('Hombre',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold))),
-                                ],
-                              )),
-                          const SizedBox(height: 25),
-                          SizedBox(
-                            width: widthScreen * 0.5,
-                            height: heightScreen * 0.06,
+                            height: heightCeldaForm,
+                            width: widthCeldaForm,
                             child: TextFormField(
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               textCapitalization: TextCapitalization.characters,
-                              //maxLength: 25,
+                              maxLength: 15,
                               cursorColor: Colors.white,
                               style: const TextStyle(
                                   fontSize: 15,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
                               textAlign: TextAlign.center,
-                              controller: telefono1Controller,
+                              controller: telefonoController,
                               keyboardType: TextInputType.phone,
                               decoration: formDecoration('Teléfono'),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Dato Requerido';
+                                  return 'Requerido';
+                                } else {
+                                  final int? isInt = int.tryParse(value);
+                                  if (isInt == null) {
+                                    return 'No Letras';
+                                  } else if (isInt < 0) {
+                                    return 'No (-)';
+                                  }
                                 }
                                 return null;
                               },
@@ -260,39 +218,13 @@ class RegisterScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
-                            width: widthScreen * 0.5,
-                            height: heightScreen * 0.06,
+                            height: heightCeldaForm,
+                            width: widthCeldaForm,
                             child: TextFormField(
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               textCapitalization: TextCapitalization.characters,
-                              //maxLength: 25,
-                              cursorColor: Colors.white,
-                              style: const TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                              controller: instagramController,
-                              keyboardType: TextInputType.text,
-                              decoration: formDecoration('Instagram'),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Dato Requerido';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            width: widthScreen * 0.5,
-                            height: heightScreen * 0.06,
-                            child: TextFormField(
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              textCapitalization: TextCapitalization.characters,
-                              //maxLength: 25,
+                              maxLength: 15,
                               cursorColor: Colors.white,
                               style: const TextStyle(
                                   fontSize: 15,
@@ -304,7 +236,7 @@ class RegisterScreen extends ConsumerWidget {
                               decoration: formDecoration('País'),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Dato Requerido';
+                                  return 'Requerido';
                                 }
                                 return null;
                               },
@@ -314,13 +246,13 @@ class RegisterScreen extends ConsumerWidget {
                             height: 20,
                           ),
                           SizedBox(
-                            width: widthScreen * 0.5,
-                            height: heightScreen * 0.06,
+                            height: heightCeldaForm,
+                            width: widthCeldaForm,
                             child: TextFormField(
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               textCapitalization: TextCapitalization.characters,
-                              //maxLength: 25,
+                              maxLength: 15,
                               cursorColor: Colors.white,
                               style: const TextStyle(
                                   fontSize: 15,
@@ -332,7 +264,7 @@ class RegisterScreen extends ConsumerWidget {
                               decoration: formDecoration('Estado / Provincia'),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Dato Requerido';
+                                  return 'Requerido';
                                 }
                                 return null;
                               },
@@ -381,32 +313,42 @@ class RegisterScreen extends ConsumerWidget {
                                           backgroundColor:
                                               const MaterialStatePropertyAll(
                                                   Colors.transparent)),
-                                      onPressed: () {
+                                      onPressed: () async {
                                         if (_formKey.currentState!.validate()) {
-                                          ScaffoldMessenger.of(context)
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                  color: const Color.fromARGB(
+                                                      255, 50, 102, 175),
+                                                  backgroundColor:
+                                                      Colors.purple[300],
+                                                ));
+                                              });
+                                          /* ScaffoldMessenger.of(context)
                                               .showSnackBar(const SnackBar(
-                                                  content: Text('Bien Hecho')));
+                                                  content: Text('Bien Hecho'))); */
                                           googleID = user!.uid;
                                           nombre = nombreController.text;
                                           apellido = apellidoController.text;
                                           edad = edadController.text;
-                                          sexo = sexoController.text;
-                                          telefono1 = telefono1Controller.text;
-                                          instagram = instagramController.text;
+                                          telefono = telefonoController.text;
                                           pais = paisController.text;
                                           provincia = provinciaController.text;
-                                          addUser(
+                                          await addUser(
                                               googleID,
                                               nombre,
                                               apellido,
                                               edad,
-                                              sexo,
-                                              telefono1,
-                                              instagram,
+                                              telefono,
                                               pais,
                                               provincia);
-
-                                          context.push('/devices');
+                                          if (context.mounted) {
+                                            context.pop();
+                                            context.go('/devices');
+                                          }
                                         }
                                       },
                                       child: const Text('Guardar',
