@@ -282,7 +282,7 @@ class HomeZapperScreen extends ConsumerWidget {
                       //const SizedBox(height: 4),
                       Container(
                           constraints: BoxConstraints(
-                              maxHeight: heightScreen * 0.5,
+                              maxHeight: heightScreen * 0.47,
                               maxWidth: widthScreen * 0.95),
                           decoration: const BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -343,32 +343,45 @@ class HomeZapperScreen extends ConsumerWidget {
               ),
             ),
             floatingActionButton: Container(
+              alignment: Alignment.bottomCenter,
+              height: 60,
+              width: 80,
               decoration: BoxDecoration(
-                  gradient: azulGradientFloatingActionButton(),
-                  borderRadius: BorderRadius.circular(100)),
-              child: FloatingActionButton(
-                elevation: 0,
-                /*             focusElevation: 0,
-                hoverElevation: 0,
-                highlightElevation: 0, */
-                tooltip: 'Siguiente',
-                shape: const StadiumBorder(),
-                backgroundColor: Colors.transparent,
-                // foregroundColor: Colors.transparent,
-                // focusColor: Colors.transparent,
-                // hoverColor: Colors.transparent,
-                onPressed: () async {
-                  ref.read(terapiaProvider.notifier).state = await ref
-                      .watch(servicesProvider)
-                      .getTerapiaSeleccionada(puntero);
-                  modoSeleccionado
-                      ? timer.startStopTimer('Modo A')
-                      : timer.startStopTimer('Modo B');
-                  context.push('/timerZapper');
-                },
-                child: const Icon(
-                  Icons.play_arrow_rounded,
-                  color: Colors.white,
+                  color: Color.fromRGBO(97, 62, 161, 1),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(50),
+                      topRight: Radius.circular(50))),
+              //padding: EdgeInsets.all(10),
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                constraints: BoxConstraints(maxHeight: 56, maxWidth: 56),
+                decoration: BoxDecoration(
+                    gradient: azulGradientFloatingActionButton(),
+                    borderRadius: BorderRadius.circular(100)),
+                child: FloatingActionButton(
+                  elevation: 0,
+                  /*             focusElevation: 0,
+                  hoverElevation: 0,
+                  highlightElevation: 0, */
+                  tooltip: 'Siguiente',
+                  shape: const StadiumBorder(),
+                  backgroundColor: Colors.transparent,
+                  // foregroundColor: Colors.transparent,
+                  // focusColor: Colors.transparent,
+                  // hoverColor: Colors.transparent,
+                  onPressed: () async {
+                    ref.read(terapiaProvider.notifier).state = await ref
+                        .watch(servicesProvider)
+                        .getTerapiaSeleccionada(puntero);
+                    modoSeleccionado
+                        ? timer.startStopTimer('Modo A')
+                        : timer.startStopTimer('Modo B');
+                    context.push('/timerZapper');
+                  },
+                  child: const Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
