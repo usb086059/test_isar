@@ -1,0 +1,258 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/form_decoration_terapia.dart';
+import 'package:flutter_application_1/gradient_services.dart';
+import 'package:flutter_application_1/services.dart';
+import 'package:flutter_application_1/state_provider.dart';
+import 'package:flutter_application_1/terapia_personal.dart';
+import 'package:flutter_application_1/countdown_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+Future<dynamic> agregarTerapia(
+    BuildContext context,
+    double heightScreen,
+    double widthScreen,
+    GlobalKey<FormState> formKey,
+    TextEditingController nombreTerapiaController,
+    TextEditingController frecMinimaController,
+    TextEditingController frecMaximaController,
+    TextEditingController descripcionController,
+    WidgetRef ref) {
+  return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => Material(
+            color: Colors.transparent,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Center(
+                child: SingleChildScrollView(
+                  reverse: true,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        constraints:
+                            BoxConstraints(maxHeight: heightScreen * 0.7),
+                        height: heightScreen * 0.7,
+                        width: widthScreen * 0.75,
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
+                                color: Colors.white.withOpacity(0.2)),
+                            gradient: gradientAlertDialog()),
+                        child: SingleChildScrollView(
+                          child: Form(
+                              key: formKey,
+                              child: Column(
+                                children: [
+                                  const Text(
+                                    'Agregar Terapia',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 25,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 30),
+                                  TextFormField(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    textCapitalization:
+                                        TextCapitalization.characters,
+                                    maxLength: 25,
+                                    cursorColor: Colors.white,
+                                    style: const TextStyle(color: Colors.white),
+                                    controller: nombreTerapiaController,
+                                    keyboardType: TextInputType.text,
+                                    decoration: formDecorationTerapia(
+                                        'Nombre', '', null),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Requerido';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: widthScreen * 0.31,
+                                        child: TextFormField(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          maxLength: 3,
+                                          cursorColor: Colors.white,
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                          controller: frecMinimaController,
+                                          keyboardType: TextInputType.number,
+                                          decoration: formDecorationTerapia(
+                                              'Frecuencia', 'KHz', 'Mínima'),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Requerido';
+                                            } else {
+                                              final int? isInt =
+                                                  int.tryParse(value);
+                                              if (isInt == null) {
+                                                return 'No Letras';
+                                              } else {
+                                                if (isInt < 0) {
+                                                  return 'No (-)';
+                                                }
+                                              }
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: widthScreen * 0.31,
+                                        child: TextFormField(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          maxLength: 3,
+                                          cursorColor: Colors.white,
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                          controller: frecMaximaController,
+                                          keyboardType: TextInputType.number,
+                                          decoration: formDecorationTerapia(
+                                              'Frecuencia', 'KHz', 'Máxima'),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Requerido';
+                                            } else {
+                                              final int? isInt =
+                                                  int.tryParse(value);
+                                              if (isInt == null) {
+                                                return 'No Letras';
+                                              } else {
+                                                if (isInt < 0) {
+                                                  return 'No (-)';
+                                                }
+                                              }
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  TextFormField(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    maxLines: 5,
+                                    maxLength: 200,
+                                    cursorColor: Colors.white,
+                                    style: const TextStyle(color: Colors.white),
+                                    controller: descripcionController,
+                                    keyboardType: TextInputType.text,
+                                    decoration: formDecorationTerapia(
+                                        'Descripción', '', null),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Requerido';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      TextButton(
+                                          style: const ButtonStyle(
+                                              side: MaterialStatePropertyAll(
+                                                  BorderSide(
+                                            color: Colors.white,
+                                          ))),
+                                          onPressed: () {
+                                            context.pop();
+                                          },
+                                          child: const Text(
+                                            'Cancelar',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          )),
+                                      TextButton(
+                                          style: const ButtonStyle(
+                                              side: MaterialStatePropertyAll(
+                                                  BorderSide(
+                                            color: Colors.white,
+                                          ))),
+                                          onPressed: () async {
+                                            if (formKey.currentState!
+                                                .validate()) {
+                                              final TerapiaPersonal
+                                                  newTerapiaPersonal =
+                                                  TerapiaPersonal(
+                                                      nombre:
+                                                          nombreTerapiaController
+                                                              .text
+                                                              .toUpperCase(),
+                                                      frecMin: int.parse(
+                                                          frecMinimaController
+                                                              .text),
+                                                      frecMax: int.parse(
+                                                          frecMaximaController
+                                                              .text),
+                                                      info:
+                                                          descripcionController
+                                                              .text,
+                                                      editable: true);
+                                              await ref
+                                                  .watch(servicesProvider)
+                                                  .addTerapiaPersonal(
+                                                      newTerapiaPersonal);
+                                              await ref
+                                                  .watch(servicesProvider)
+                                                  .cargarTerapiaTotal();
+                                              ref
+                                                      .read(terapiaProvider
+                                                          .notifier)
+                                                      .state =
+                                                  await ref
+                                                      .watch(servicesProvider)
+                                                      .getTerapiaSeleccionada(
+                                                          0);
+                                              ref
+                                                  .read(indexTerapiaProvider
+                                                      .notifier)
+                                                  .state = 0;
+                                              ref
+                                                  .watch(countdownProvider)
+                                                  .volver(true);
+                                              context.pop();
+                                            }
+                                          },
+                                          child: const Text('Guardar',
+                                              style: TextStyle(
+                                                  color: Colors.white)))
+                                    ],
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom))
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ));
+}
