@@ -5,6 +5,7 @@
 //import 'dart:ui_web';
 
 import 'package:flutter_application_1/dato.dart';
+import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/terapia.dart';
 import 'package:flutter_application_1/terapia_personal.dart';
@@ -30,7 +31,8 @@ class Services {
         DatoSchema,
         TerapiaSchema,
         TerapiaPersonalSchema,
-        TerapiaTotalSchema
+        TerapiaTotalSchema,
+        DeviceSchema
       ], directory: dir.path, inspector: true);
     }
     return Future.value(Isar.getInstance());
@@ -146,6 +148,80 @@ class Services {
     cargarTerapiaTotal();
     return;
   }
+
+//*********DEVICE*********** */
+  Future<void> addDevice(Device newDevice) async {
+    final isar = await db;
+    return isar.writeTxnSync(() => isar.devices.putSync(newDevice));
+  }
+
+  Future<void> editDevice(Device device) async {
+    //final isar = await db;
+    //final Device? deviceActual = await isar.devices.get(device.id);
+    final Device deviceActual = await getDevice(device.mac);
+    deviceActual.nombre = device.tipo;
+    deviceActual.mac = device.mac;
+    deviceActual.nombre = device.nombre;
+    deviceActual.conectado = device.conectado;
+    deviceActual.relojAsignado = device.relojAsignado;
+    addDevice(deviceActual);
+  }
+
+  Future<void> deleteDevice(int idDevice) async {
+    final isar = await db;
+    return isar.writeTxn(() => isar.devices.delete(idDevice));
+  }
+
+  Future<bool> getDeviceExists(String mac) async {
+    final isar = await db;
+    final Device? device =
+        await isar.devices.where().filter().macEqualTo(mac).findFirst();
+    if (device?.id != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<Device> getDevice(String mac) async {
+    final isar = await db;
+    final Device? device =
+        await isar.devices.where().filter().macEqualTo(mac).findFirst();
+    return device!;
+  }
+
+  Future<String> getDeviceNombre(String mac) async {
+    final isar = await db;
+    final Device? device =
+        await isar.devices.where().filter().macEqualTo(mac).findFirst();
+    return device!.nombre;
+  }
+
+  Future<List<Device>> getAllDevice() async {
+    final isar = await db;
+    final lista = await isar.devices.where().findAll();
+    return lista;
+  }
+
+  Future<List<Device>> getAllDeviceConected() async {
+    final isar = await db;
+    final lista =
+        await isar.devices.where().filter().conectadoEqualTo(true).findAll();
+    return lista;
+  }
+
+  Future<List<Device>> getAllDeviceConRelojAsignado() async {
+    final isar = await db;
+    final lista = await isar.devices
+        .where()
+        .filter()
+        .conectadoEqualTo(true)
+        .and()
+        .relojAsignadoGreaterThan(0)
+        .findAll();
+    return lista;
+  }
+  /* ----------------DEVICE -------------------- */
 
   Future<TerapiaTotal> getTerapiaSeleccionada(int id) async {
     //final isar = await db;

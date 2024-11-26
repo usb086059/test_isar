@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final countdownProvider = ChangeNotifierProvider((ref) => CountdownProvider());
+final countdownProvider5 =
+    ChangeNotifierProvider((ref) => CountdownProvider5());
 
-class CountdownProvider extends ChangeNotifier {
+class CountdownProvider5 extends ChangeNotifier {
   Duration duration = const Duration(seconds: 0);
   Duration tiempoModoA = const Duration(seconds: 10);
   Duration tiempoModoB = const Duration(seconds: 6);

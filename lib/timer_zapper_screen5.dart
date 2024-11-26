@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application_1/countdown_provider.dart';
+import 'package:flutter_application_1/countdown_provider_5.dart';
 import 'package:flutter_application_1/curve_services.dart';
+import 'package:flutter_application_1/end_drawer.dart';
 import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/state_provider.dart';
@@ -13,13 +14,13 @@ import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class TimerZapperScreen extends ConsumerWidget {
-  const TimerZapperScreen({super.key});
+class TimerZapperScreen5 extends ConsumerWidget {
+  const TimerZapperScreen5({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bool modoSeleccionado = ref.watch(selectModoProvider);
-    final timer = ref.watch(countdownProvider);
+    final timer = ref.watch(countdownProvider5);
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
     var user = FirebaseAuth.instance.currentUser;
@@ -40,79 +41,21 @@ class TimerZapperScreen extends ConsumerWidget {
       onPopInvoked: (didPop) async {
         if (didPop) {
           return;
-        } else if (ref.watch(countdownProvider).estado != 'FIN') {
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) => AlertDialog(
-                    backgroundColor: Colors.blue,
-                    actionsAlignment: MainAxisAlignment.spaceEvenly,
-                    title: const Text(
-                      'AVISO',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                    content: Container(
-                      constraints: BoxConstraints(
-                          maxHeight: heightScreen * 0.17,
-                          maxWidth: widthScreen * 0.95),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Intenta volver al menú de terapias. Si vuelve, se cancelará la terapia actual.',
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            '¿Quiere cancelar la terapia actual?',
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.all(16),
-                    actions: [
-                      TextButton(
-                          style: const ButtonStyle(
-                              side: MaterialStatePropertyAll(BorderSide(
-                            color: Colors.white,
-                          ))),
-                          onPressed: () {
-                            context.pop();
-                          },
-                          child: const Text(
-                            'No',
-                            style: TextStyle(color: Colors.white),
-                          )),
-                      TextButton(
-                          style: const ButtonStyle(
-                              side: MaterialStatePropertyAll(BorderSide(
-                            color: Colors.white,
-                          ))),
-                          onPressed: () async {
-                            ref.read(selectModoProvider.notifier).state = false;
-                            ref.read(indexTerapiaProvider.notifier).state = 0;
-                            ref.watch(countdownProvider).terminarTimer();
-                            ref.read(terapiaProvider.notifier).state = await ref
-                                .watch(servicesProvider)
-                                .getTerapiaSeleccionada(0);
-                            context.pop();
-                            context.pop();
-                          },
-                          child: const Text('Sí',
-                              style: TextStyle(color: Colors.white)))
-                    ],
-                  ));
-        } else {
+        } else if (ref.watch(countdownProvider5).estado == 'FIN') {
           ref.read(selectModoProvider.notifier).state = false;
           ref.read(indexTerapiaProvider.notifier).state = 0;
-          ref.watch(countdownProvider).terminarTimer();
+          ref.watch(countdownProvider5).terminarTimer();
           ref.read(terapiaProvider.notifier).state =
               await ref.watch(servicesProvider).getTerapiaSeleccionada(0);
+          ref
+              .read(relojProvider.notifier)
+              .state[ref.watch(deviceProvider).relojAsignado] = 'disponible';
+          ref.read(deviceProvider.notifier).state.relojAsignado = 0;
+          await ref
+              .watch(servicesProvider)
+              .editDevice(ref.watch(deviceProvider));
+          context.pop();
+        } else {
           context.pop();
         }
       },
@@ -128,7 +71,7 @@ class TimerZapperScreen extends ConsumerWidget {
               child: Container(
                 decoration: BoxDecoration(
                     gradient:
-                        ref.watch(countdownProvider).estado.contains('Ciclo')
+                        ref.watch(countdownProvider5).estado.contains('Ciclo')
                             ? azulGradientCurvas()
                             : purpleGradientCurvas()),
                 //height: 100,
@@ -139,6 +82,9 @@ class TimerZapperScreen extends ConsumerWidget {
             ),
             Scaffold(
               backgroundColor: Colors.transparent,
+              endDrawer: EndDrawer(
+                  widthScreen: widthScreen, heightScreen: heightScreen),
+              endDrawerEnableOpenDragGesture: false,
               appBar: AppBar(
                 flexibleSpace: Padding(
                   padding: const EdgeInsets.only(top: 20),
@@ -146,7 +92,7 @@ class TimerZapperScreen extends ConsumerWidget {
                     children: [
                       Center(
                         child: Text(
-                          'ZAPPER ${ref.watch(indexTerapiaProvider)}',
+                          ref.watch(deviceProvider).nombre,
                           style: const TextStyle(
                             fontSize: 35,
                             color: Colors.white,
@@ -154,18 +100,36 @@ class TimerZapperScreen extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        alignment: Alignment.centerRight,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(user!.photoURL!)),
-                      ),
                     ],
                   ),
                 ),
                 backgroundColor: Colors.transparent,
                 centerTitle: true,
+                actions: [
+                  Builder(builder: (context) {
+                    return Container(
+                      padding: const EdgeInsets.all(0),
+                      margin: const EdgeInsets.all(0),
+                      height: heightScreen * 0.1,
+                      width: widthScreen * 0.15,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: NetworkImage(user!.photoURL!))),
+                      child: Center(
+                          child: IconButton(
+                              //highlightColor: Colors.black,
+                              onPressed: () {
+                                Scaffold.of(context).openEndDrawer();
+                              },
+                              icon: const Icon(
+                                Icons.menu,
+                                color: Colors.transparent,
+                              ))),
+                    );
+                  })
+                ],
               ),
               body: Container(
                 height: heightScreen,
@@ -189,7 +153,7 @@ class TimerZapperScreen extends ConsumerWidget {
                                 boxShadow: [
                                   BoxShadow(
                                       color: ref
-                                          .watch(countdownProvider)
+                                          .watch(countdownProvider5)
                                           .ciclosLeftColor,
                                       offset: const Offset(4, 4),
                                       blurRadius: 15,
@@ -210,14 +174,14 @@ class TimerZapperScreen extends ConsumerWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       const SizedBox(height: 20),
-                                      Text(ref.watch(countdownProvider).estado,
+                                      Text(ref.watch(countdownProvider5).estado,
                                           style: const TextStyle(
                                               fontSize: 25,
                                               fontWeight: FontWeight.bold),
                                           textAlign: TextAlign.center),
                                       Text(
                                         ref
-                                            .watch(countdownProvider)
+                                            .watch(countdownProvider5)
                                             .timeLeftString,
                                         style: const TextStyle(fontSize: 50),
                                         textAlign: TextAlign.center,
@@ -227,15 +191,23 @@ class TimerZapperScreen extends ConsumerWidget {
                                           padding: const EdgeInsets.all(0.0),
                                           iconSize: 50,
                                           onPressed: ref
-                                                      .watch(countdownProvider)
+                                                      .watch(countdownProvider5)
                                                       .estado !=
                                                   'FIN'
                                               ? () {
                                                   modoSeleccionado
                                                       ? timer.startStopTimer(
-                                                          'Modo A')
+                                                          'Modo A',
+                                                          ref
+                                                              .watch(
+                                                                  deviceProvider)
+                                                              .nombre)
                                                       : timer.startStopTimer(
-                                                          'Modo B');
+                                                          'Modo B',
+                                                          ref
+                                                              .watch(
+                                                                  deviceProvider)
+                                                              .nombre);
                                                 }
                                               : null,
                                           icon: Icon(timer.isRunning
@@ -246,7 +218,7 @@ class TimerZapperScreen extends ConsumerWidget {
                                 ),
                                 Visibility(
                                   visible:
-                                      ref.watch(countdownProvider).estado ==
+                                      ref.watch(countdownProvider5).estado ==
                                               'FIN'
                                           ? true
                                           : false,
@@ -269,7 +241,7 @@ class TimerZapperScreen extends ConsumerWidget {
                                                         Colors.transparent)),
                                             onPressed: ref
                                                         .watch(
-                                                            countdownProvider)
+                                                            countdownProvider5)
                                                         .estado ==
                                                     'FIN'
                                                 ? () async {
@@ -284,7 +256,7 @@ class TimerZapperScreen extends ConsumerWidget {
                                                         .state = 0;
                                                     ref
                                                         .watch(
-                                                            countdownProvider)
+                                                            countdownProvider5)
                                                         .terminarTimer();
                                                     ref
                                                             .read(
@@ -320,10 +292,10 @@ class TimerZapperScreen extends ConsumerWidget {
                                         ? porcentajeTimerReposo
                                         : porcentajeTimer,
                                     backgroundColor: ref
-                                        .watch(countdownProvider)
+                                        .watch(countdownProvider5)
                                         .ciclosLeftColor,
                                     color: ref
-                                            .watch(countdownProvider)
+                                            .watch(countdownProvider5)
                                             .estado
                                             .contains('Ciclo')
                                         ? Colors.blue[50]

@@ -7,9 +7,14 @@ import 'package:flutter_application_1/agregar_terapia.dart';
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/editar_terapia.dart';
 import 'package:flutter_application_1/eliminar_terapia.dart';
+import 'package:flutter_application_1/end_drawer.dart';
 import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/countdown_provider.dart';
+import 'package:flutter_application_1/countdown_provider_2.dart';
+import 'package:flutter_application_1/countdown_provider_3.dart';
+import 'package:flutter_application_1/countdown_provider_4.dart';
+import 'package:flutter_application_1/countdown_provider_5.dart';
 import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +25,10 @@ class HomeZapperScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final timer = ref.watch(countdownProvider);
+    final timer2 = ref.watch(countdownProvider2);
+    final timer3 = ref.watch(countdownProvider3);
+    final timer4 = ref.watch(countdownProvider4);
+    final timer5 = ref.watch(countdownProvider5);
     final bool modoSeleccionado = ref.watch(selectModoProvider);
     //final int terapiaSeleccionada = ref.watch(indexTerapiaProvider);
     double widthScreen = MediaQuery.of(context).size.width;
@@ -64,6 +73,9 @@ class HomeZapperScreen extends ConsumerWidget {
           ),
           Scaffold(
             backgroundColor: Colors.transparent,
+            endDrawer:
+                EndDrawer(widthScreen: widthScreen, heightScreen: heightScreen),
+            endDrawerEnableOpenDragGesture: false,
             appBar: AppBar(
               flexibleSpace: Padding(
                 padding: const EdgeInsets.only(top: 20),
@@ -71,7 +83,7 @@ class HomeZapperScreen extends ConsumerWidget {
                   children: [
                     Center(
                       child: Text(
-                        'ZAPPER ${ref.watch(indexTerapiaProvider)}',
+                        ref.watch(deviceProvider).nombre,
                         style: const TextStyle(
                           fontSize: 35,
                           color: Colors.white,
@@ -79,18 +91,43 @@ class HomeZapperScreen extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    Container(
+                    /* Container(
                       padding: const EdgeInsets.all(4),
                       alignment: Alignment.centerRight,
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: Image.network(user!.photoURL!)),
-                    ),
+                    ), */
                   ],
                 ),
               ),
               backgroundColor: Colors.transparent,
               centerTitle: true,
+              actions: [
+                Builder(builder: (context) {
+                  return Container(
+                    padding: const EdgeInsets.all(0),
+                    margin: const EdgeInsets.all(0),
+                    height: heightScreen * 0.1,
+                    width: widthScreen * 0.15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image: NetworkImage(user!.photoURL!))),
+                    child: Center(
+                        child: IconButton(
+                            //highlightColor: Colors.black,
+                            onPressed: () {
+                              Scaffold.of(context).openEndDrawer();
+                            },
+                            icon: const Icon(
+                              Icons.menu,
+                              color: Colors.transparent,
+                            ))),
+                  );
+                })
+              ],
             ),
             body: Container(
               height: heightScreen,
@@ -343,10 +380,10 @@ class HomeZapperScreen extends ConsumerWidget {
               ),
             ),
             floatingActionButton: Container(
-              alignment: Alignment.bottomCenter,
-              height: 60,
+              alignment: Alignment.center,
+              height: 65,
               width: 80,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Color.fromRGBO(97, 62, 161, 1),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(50),
@@ -354,7 +391,7 @@ class HomeZapperScreen extends ConsumerWidget {
               //padding: EdgeInsets.all(10),
               child: Container(
                 alignment: Alignment.bottomCenter,
-                constraints: BoxConstraints(maxHeight: 56, maxWidth: 56),
+                constraints: const BoxConstraints(maxHeight: 56, maxWidth: 56),
                 decoration: BoxDecoration(
                     gradient: azulGradientFloatingActionButton(),
                     borderRadius: BorderRadius.circular(100)),
@@ -370,13 +407,74 @@ class HomeZapperScreen extends ConsumerWidget {
                   // focusColor: Colors.transparent,
                   // hoverColor: Colors.transparent,
                   onPressed: () async {
+                    int relojNumber = 0;
                     ref.read(terapiaProvider.notifier).state = await ref
                         .watch(servicesProvider)
                         .getTerapiaSeleccionada(puntero);
-                    modoSeleccionado
-                        ? timer.startStopTimer('Modo A')
-                        : timer.startStopTimer('Modo B');
-                    context.push('/timerZapper');
+                    relojNumber = ref.watch(relojProvider).indexOf(ref
+                        .watch(deviceProvider)
+                        .mac); //indexOf devuelve -1 si no encuentra nada
+                    if (relojNumber == -1) {
+                      relojNumber =
+                          ref.watch(relojProvider).indexOf('disponible');
+                      if (relojNumber == -1) {
+                        //Avisar que No hay reloj disponible
+                      } else {
+                        ref.read(relojProvider.notifier).state[relojNumber] =
+                            ref.watch(deviceProvider).mac;
+                        ref.read(deviceProvider.notifier).state.relojAsignado =
+                            relojNumber;
+                        await ref
+                            .watch(servicesProvider)
+                            .editDevice(ref.watch(deviceProvider));
+                        //context.push('/timerZapper$relojNumber');
+                      }
+                    } else {
+                      ref.read(deviceProvider.notifier).state.relojAsignado =
+                          relojNumber;
+                      await ref
+                          .watch(servicesProvider)
+                          .editDevice(ref.watch(deviceProvider));
+                      //context.push('/timerZapper$relojNumber');
+                    }
+
+                    switch (relojNumber) {
+                      case 1:
+                        modoSeleccionado
+                            ? timer.startStopTimer(
+                                'Modo A', ref.watch(deviceProvider).nombre)
+                            : timer.startStopTimer(
+                                'Modo B', ref.watch(deviceProvider).nombre);
+                        context.push('/timerZapper$relojNumber');
+                      case 2:
+                        modoSeleccionado
+                            ? timer2.startStopTimer(
+                                'Modo A', ref.watch(deviceProvider).nombre)
+                            : timer2.startStopTimer(
+                                'Modo B', ref.watch(deviceProvider).nombre);
+                        context.push('/timerZapper$relojNumber');
+                      case 3:
+                        modoSeleccionado
+                            ? timer3.startStopTimer(
+                                'Modo A', ref.watch(deviceProvider).nombre)
+                            : timer3.startStopTimer(
+                                'Modo B', ref.watch(deviceProvider).nombre);
+                        context.push('/timerZapper$relojNumber');
+                      case 4:
+                        modoSeleccionado
+                            ? timer4.startStopTimer(
+                                'Modo A', ref.watch(deviceProvider).nombre)
+                            : timer4.startStopTimer(
+                                'Modo B', ref.watch(deviceProvider).nombre);
+                        context.push('/timerZapper$relojNumber');
+                      case 5:
+                        modoSeleccionado
+                            ? timer5.startStopTimer(
+                                'Modo A', ref.watch(deviceProvider).nombre)
+                            : timer5.startStopTimer(
+                                'Modo B', ref.watch(deviceProvider).nombre);
+                        context.push('/timerZapper$relojNumber');
+                    }
                   },
                   child: const Icon(
                     Icons.play_arrow_rounded,

@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,3 +23,15 @@ final terapiaProvider = StateProvider<TerapiaTotal>((ref) => TerapiaTotal(
     info: 'Agregue una breve descripción de la terapia',
     editable: false,
     idTerapiaPersonal: 0));
+
+final deviceProvider = StateProvider<Device>((ref) =>
+    Device(tipo: '', mac: '', nombre: '', conectado: false, relojAsignado: 0));
+
+final relojProvider = StateProvider<List<String>>((ref) => [
+      'dermatronic',
+      'disponible',
+      'disponible',
+      'disponible',
+      'disponible',
+      'disponible',
+    ]);
