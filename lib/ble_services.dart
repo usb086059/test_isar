@@ -93,7 +93,6 @@ class BleServices extends ChangeNotifier {
     await device.connect();
     if (device.isConnected) {
       await scanDevices(0);
-      //await scanDevicesConected();
     }
     notifyListeners();
   }
@@ -115,6 +114,49 @@ class BleServices extends ChangeNotifier {
     //await scanDevicesConected();
     notifyListeners();
   }
+
+  Future<void> crearServicioBLE(String remoteId, String comando) async {
+    final BluetoothDevice device = FlutterBluePlus.connectedDevices
+        .firstWhere((element) => element.remoteId.toString() == remoteId);
+
+    List<BluetoothService> listServicios = await device.discoverServices();
+    for (var element in listServicios) {
+      String serviceUuid = element.serviceUuid.toString();
+      var char = element.characteristics;
+      print('>>>>>>>>>>>> $serviceUuid');
+      print('<<<<<<<<<<<< $char');
+    }
+
+    final caracteristica = BluetoothCharacteristic(
+        remoteId: device.remoteId,
+        serviceUuid: Guid('FFE0'),
+        characteristicUuid: Guid('FFE1'));
+
+    final List<int> letra1 = comando.substring(0, 1).codeUnits;
+    final List<int> letra2 = comando.substring(1, 2).codeUnits;
+    final List<int> letra3 = comando.substring(2, 3).codeUnits;
+    final List<int> letra4 = comando.substring(3, 4).codeUnits;
+    final List<int> letra5 = comando.substring(4, 5).codeUnits;
+    final List<int> letra6 = comando.substring(5).codeUnits;
+
+    await caracteristica.write(letra1, withoutResponse: true);
+    //delay();
+    caracteristica.write(letra2, withoutResponse: true);
+    //delay();
+    caracteristica.write(letra3, withoutResponse: true);
+    //delay();
+    caracteristica.write(letra4, withoutResponse: true);
+    //delay();
+    caracteristica.write(letra5, withoutResponse: true);
+    //delay();
+    caracteristica.write(letra6, withoutResponse: true);
+  }
+
+  /*  Future<void> delay() async {
+    Future.delayed(const Duration(milliseconds: 1), () {
+      return;
+    });
+  } */
 
   /*  @override
   notifyListeners(); */

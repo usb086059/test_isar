@@ -80,14 +80,14 @@ Future<dynamic> eliminarTerapia(BuildContext context, double heightScreen,
                         ))),
                         onPressed: () async {
                           final int id =
-                              ref.watch(terapiaProvider).idTerapiaPersonal;
+                              ref.watch(terapiaProvider0).idTerapiaPersonal;
                           await ref
                               .watch(servicesProvider)
                               .deleteTerapiaPersonal(id);
                           await ref
                               .watch(servicesProvider)
                               .cargarTerapiaTotal();
-                          ref.read(terapiaProvider.notifier).state = await ref
+                          ref.read(terapiaProvider0.notifier).state = await ref
                               .watch(servicesProvider)
                               .getTerapiaSeleccionada(0);
 

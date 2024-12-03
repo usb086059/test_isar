@@ -34,7 +34,7 @@ class TimerZapperScreen4 extends ConsumerWidget {
     double porcentajeTimerReposo =
         ((timer.duration.inSeconds.toDouble() * 100) / tiempoReposo) / 100;
 
-    final TerapiaTotal terapia = ref.watch(terapiaProvider);
+    final TerapiaTotal terapia = ref.watch(terapiaProvider4);
 
     return PopScope(
       canPop: false,
@@ -45,7 +45,7 @@ class TimerZapperScreen4 extends ConsumerWidget {
           ref.read(selectModoProvider.notifier).state = false;
           ref.read(indexTerapiaProvider.notifier).state = 0;
           ref.watch(countdownProvider4).terminarTimer();
-          ref.read(terapiaProvider.notifier).state =
+          ref.read(terapiaProvider4.notifier).state =
               await ref.watch(servicesProvider).getTerapiaSeleccionada(0);
           ref
               .read(relojProvider.notifier)
@@ -260,7 +260,7 @@ class TimerZapperScreen4 extends ConsumerWidget {
                                                         .terminarTimer();
                                                     ref
                                                             .read(
-                                                                terapiaProvider
+                                                                terapiaProvider4
                                                                     .notifier)
                                                             .state =
                                                         await ref

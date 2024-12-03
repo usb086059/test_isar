@@ -220,7 +220,7 @@ Future<dynamic> agregarTerapia(
                                                   .watch(servicesProvider)
                                                   .cargarTerapiaTotal();
                                               ref
-                                                      .read(terapiaProvider
+                                                      .read(terapiaProvider0
                                                           .notifier)
                                                       .state =
                                                   await ref

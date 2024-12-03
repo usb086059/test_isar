@@ -46,13 +46,13 @@ class HomeZapperScreen extends ConsumerWidget {
     //final Terapia newTerapia;
 
     final nombreEditarTerapiaController =
-        TextEditingController(text: ref.watch(terapiaProvider).nombre);
+        TextEditingController(text: ref.watch(terapiaProvider0).nombre);
     final frecMinimaEditarTerapiaController = TextEditingController(
-        text: ref.watch(terapiaProvider).frecMin.toString());
+        text: ref.watch(terapiaProvider0).frecMin.toString());
     final frecMaximaEditarTerapiaController = TextEditingController(
-        text: ref.watch(terapiaProvider).frecMax.toString());
+        text: ref.watch(terapiaProvider0).frecMax.toString());
     final descripcionEditarTerapiaController =
-        TextEditingController(text: ref.watch(terapiaProvider).info);
+        TextEditingController(text: ref.watch(terapiaProvider0).info);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -271,7 +271,7 @@ class HomeZapperScreen extends ConsumerWidget {
                           IconButton(
                               color: const Color.fromARGB(255, 50, 102, 175),
                               disabledColor: Colors.black12,
-                              onPressed: !ref.watch(terapiaProvider).editable
+                              onPressed: !ref.watch(terapiaProvider0).editable
                                   ? null
                                   : () {
                                       eliminarTerapia(context, heightScreen,
@@ -282,7 +282,7 @@ class HomeZapperScreen extends ConsumerWidget {
                           IconButton(
                               color: const Color.fromARGB(255, 50, 102, 175),
                               disabledColor: Colors.black12,
-                              onPressed: !ref.watch(terapiaProvider).editable
+                              onPressed: !ref.watch(terapiaProvider0).editable
                                   ? null
                                   : () {
                                       editarTerapia(
@@ -408,9 +408,6 @@ class HomeZapperScreen extends ConsumerWidget {
                   // hoverColor: Colors.transparent,
                   onPressed: () async {
                     int relojNumber = 0;
-                    ref.read(terapiaProvider.notifier).state = await ref
-                        .watch(servicesProvider)
-                        .getTerapiaSeleccionada(puntero);
                     relojNumber = ref.watch(relojProvider).indexOf(ref
                         .watch(deviceProvider)
                         .mac); //indexOf devuelve -1 si no encuentra nada
@@ -440,6 +437,9 @@ class HomeZapperScreen extends ConsumerWidget {
 
                     switch (relojNumber) {
                       case 1:
+                        ref.read(terapiaProvider1.notifier).state = await ref
+                            .watch(servicesProvider)
+                            .getTerapiaSeleccionada(puntero);
                         modoSeleccionado
                             ? timer.startStopTimer(
                                 'Modo A', ref.watch(deviceProvider).nombre)
@@ -447,6 +447,9 @@ class HomeZapperScreen extends ConsumerWidget {
                                 'Modo B', ref.watch(deviceProvider).nombre);
                         context.push('/timerZapper$relojNumber');
                       case 2:
+                        ref.read(terapiaProvider2.notifier).state = await ref
+                            .watch(servicesProvider)
+                            .getTerapiaSeleccionada(puntero);
                         modoSeleccionado
                             ? timer2.startStopTimer(
                                 'Modo A', ref.watch(deviceProvider).nombre)
@@ -454,6 +457,9 @@ class HomeZapperScreen extends ConsumerWidget {
                                 'Modo B', ref.watch(deviceProvider).nombre);
                         context.push('/timerZapper$relojNumber');
                       case 3:
+                        ref.read(terapiaProvider3.notifier).state = await ref
+                            .watch(servicesProvider)
+                            .getTerapiaSeleccionada(puntero);
                         modoSeleccionado
                             ? timer3.startStopTimer(
                                 'Modo A', ref.watch(deviceProvider).nombre)
@@ -461,6 +467,9 @@ class HomeZapperScreen extends ConsumerWidget {
                                 'Modo B', ref.watch(deviceProvider).nombre);
                         context.push('/timerZapper$relojNumber');
                       case 4:
+                        ref.read(terapiaProvider4.notifier).state = await ref
+                            .watch(servicesProvider)
+                            .getTerapiaSeleccionada(puntero);
                         modoSeleccionado
                             ? timer4.startStopTimer(
                                 'Modo A', ref.watch(deviceProvider).nombre)
@@ -468,6 +477,9 @@ class HomeZapperScreen extends ConsumerWidget {
                                 'Modo B', ref.watch(deviceProvider).nombre);
                         context.push('/timerZapper$relojNumber');
                       case 5:
+                        ref.read(terapiaProvider5.notifier).state = await ref
+                            .watch(servicesProvider)
+                            .getTerapiaSeleccionada(puntero);
                         modoSeleccionado
                             ? timer5.startStopTimer(
                                 'Modo A', ref.watch(deviceProvider).nombre)
@@ -527,7 +539,7 @@ class CustomTherapy extends ConsumerWidget {
                 backgroundColor: MaterialStatePropertyAll(Colors.transparent)),
             onPressed: () async {
               ref.read(indexTerapiaProvider.notifier).state = terapiaSel;
-              ref.read(terapiaProvider.notifier).state = await ref
+              ref.read(terapiaProvider0.notifier).state = await ref
                   .watch(servicesProvider)
                   .getTerapiaSeleccionada(terapiaSel);
             },

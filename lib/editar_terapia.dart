@@ -198,7 +198,7 @@ Future<dynamic> editarTerapia(
                                               .validate()) {
                                             TerapiaTotal newTerapiaPersonal =
                                                 await ref
-                                                    .watch(terapiaProvider);
+                                                    .watch(terapiaProvider0);
                                             newTerapiaPersonal.nombre =
                                                 nombreEditarTerapiaController
                                                     .text
@@ -221,7 +221,7 @@ Future<dynamic> editarTerapia(
                                                 .watch(servicesProvider)
                                                 .cargarTerapiaTotal();
                                             ref
-                                                    .read(terapiaProvider.notifier)
+                                                    .read(terapiaProvider0.notifier)
                                                     .state =
                                                 await ref
                                                     .watch(servicesProvider)

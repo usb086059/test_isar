@@ -318,7 +318,7 @@ class BleScreen extends ConsumerWidget {
                                               Text('Equipo: ${data.tipo}'),
                                           trailing: TextButton(
                                               onPressed: () async {
-                                                ref
+                                                /* ref
                                                             .read(relojProvider
                                                                 .notifier)
                                                             .state[
@@ -330,7 +330,10 @@ class BleScreen extends ConsumerWidget {
                                                     .watch(servicesProvider)
                                                     .editDevice(data);
                                                 await bluetoothProvider
-                                                    .desconectar2(data.mac);
+                                                    .desconectar2(data.mac); */
+                                                await bluetoothProvider
+                                                    .crearServicioBLE(
+                                                        data.mac, 'pause*');
                                               },
                                               child: const Text('Desconectar')),
                                         ),

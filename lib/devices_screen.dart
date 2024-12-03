@@ -202,7 +202,7 @@ class CustomIconSelectDevice extends ConsumerWidget {
         ref.read(origenHomeZapperProvider.notifier).state = true;
         ref.read(selectModoProvider.notifier).state = false;
         ref.read(indexTerapiaProvider.notifier).state = 0;
-        ref.read(terapiaProvider.notifier).state =
+        ref.read(terapiaProvider0.notifier).state =
             await ref.watch(servicesProvider).getTerapiaSeleccionada(0);
         if (context.mounted) {
           context.pop();
