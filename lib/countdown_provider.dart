@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/comandos.dart';
+import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
+import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_application_1/ble_services.dart';
 
 final countdownProvider = ChangeNotifierProvider((ref) => CountdownProvider());
 
@@ -17,22 +21,38 @@ class CountdownProvider extends ChangeNotifier {
   String modo = 'Modo B';
   StreamSubscription<int>? _tickSubscription;
   bool volvioDeTimerZapperScreen = false;
-  String nombreDevice = '';
+  Device device =
+      Device(tipo: '', mac: '', nombre: '', conectado: false, relojAsignado: 0);
+  TerapiaTotal terapia = TerapiaTotal(
+      nombre: '',
+      frecMin: 1,
+      frecMax: 1,
+      info: 'Agregue una breve descripción de la terapia',
+      editable: false,
+      idTerapiaPersonal: 0);
 
   void volver(bool volvio) {
     volvioDeTimerZapperScreen = volvio;
   }
 
-  void startStopTimer(String modoTiempo, String nombre) {
-    modo = modoTiempo;
-    nombreDevice = nombre;
-    if (modoTiempo == 'Modo A' && duration.inSeconds == 0) {
-      duration = tiempoModoA;
-      estado = 'Ciclo 1';
-    } else if (duration.inSeconds == 0) {
-      duration = tiempoModoB;
-      estado = 'Ciclo Unico';
+  void startStopTimer(String modoTiempo, Device _device, TerapiaTotal _terapia,
+      bool playInicial) {
+    if (playInicial) {
+      _tickSubscription?.cancel();
+      ciclos = 1;
+      isRunning = false;
+      modo = modoTiempo;
+      device = _device;
+      terapia = _terapia;
+      if (modoTiempo == 'Modo A') {
+        duration = tiempoModoA;
+        estado = 'Ciclo 1';
+      } else {
+        duration = tiempoModoB;
+        estado = 'Ciclo Unico';
+      }
     }
+
     if (!isRunning) {
       _startTimer(duration.inSeconds);
     } else {
@@ -40,6 +60,11 @@ class CountdownProvider extends ChangeNotifier {
     }
     isRunning = !isRunning;
     notifyListeners();
+  }
+
+  void enviarComando(String comando) async {
+    await BleServices()
+        .enviarDataBLE(device.mac, listComandos[comando]!, terapia);
   }
 
   void _startTimer(int seconds) {
@@ -53,37 +78,33 @@ class CountdownProvider extends ChangeNotifier {
         ciclos++;
         if (ciclos == 1) {
           estado = 'Ciclo 1';
+          enviarComando('play');
         } else if (ciclos == 2) {
           estado = 'Reposo 1';
+          enviarComando('pause');
           setCountdownDuration(tiempoReposo);
         } else if (ciclos == 3) {
           estado = 'Ciclo 2';
+          enviarComando('play');
           setCountdownDuration(tiempoModoA);
         } else if (ciclos == 4) {
           estado = 'Reposo 2';
+          enviarComando('pause');
           setCountdownDuration(tiempoReposo);
         } else if (ciclos == 5) {
           estado = 'Ciclo 3';
+          enviarComando('play');
           setCountdownDuration(tiempoModoA);
         } else {
-          estado = 'FIN';
-          ciclos = 1;
-          _tickSubscription?.cancel();
-          isRunning = false;
-          showNotification(nombreDevice);
+          terminarTimer();
         }
       } else if (modo == 'Modo B') {
         if (duration.inSeconds == 0) {
-          estado = 'FIN';
-          ciclos = 1;
-          _tickSubscription?.cancel();
-          isRunning = false;
-          showNotification(nombreDevice);
+          terminarTimer();
         } else {
           estado = 'Ciclo Unico';
         }
       }
-
       notifyListeners();
     });
   }
@@ -116,14 +137,15 @@ class CountdownProvider extends ChangeNotifier {
     _startTimer(duration.inSeconds);
   }
 
-  void terminarTimer() {
+  void terminarTimer() async {
     _tickSubscription?.cancel();
+    showNotification(device.nombre);
     isRunning = false;
-    estado = 'Ciclo Unico';
+    estado = 'FIN';
     ciclos = 1;
-    modo = 'Modo B';
-    duration = const Duration(seconds: 0);
     volvioDeTimerZapperScreen = true;
+    await BleServices()
+        .enviarDataBLE(device.mac, listComandos['fin']!, terapia);
     notifyListeners();
   }
 }

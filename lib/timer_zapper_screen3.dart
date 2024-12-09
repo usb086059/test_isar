@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/ble_services.dart';
+import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/countdown_provider_3.dart';
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/end_drawer.dart';
@@ -24,6 +26,7 @@ class TimerZapperScreen3 extends ConsumerWidget {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
     var user = FirebaseAuth.instance.currentUser;
+    final bluetoothProvider = ref.watch(bleProvider);
     const int tiempoClark = 10;
     const int tiempoRift = 6;
     const int tiempoReposo = 12;
@@ -44,7 +47,6 @@ class TimerZapperScreen3 extends ConsumerWidget {
         } else if (ref.watch(countdownProvider3).estado == 'FIN') {
           ref.read(selectModoProvider.notifier).state = false;
           ref.read(indexTerapiaProvider.notifier).state = 0;
-          ref.watch(countdownProvider3).terminarTimer();
           ref.read(terapiaProvider3.notifier).state =
               await ref.watch(servicesProvider).getTerapiaSeleccionada(0);
           ref
@@ -194,20 +196,48 @@ class TimerZapperScreen3 extends ConsumerWidget {
                                                       .watch(countdownProvider3)
                                                       .estado !=
                                                   'FIN'
-                                              ? () {
+                                              ? () async {
                                                   modoSeleccionado
                                                       ? timer.startStopTimer(
                                                           'Modo A',
-                                                          ref
-                                                              .watch(
-                                                                  deviceProvider)
-                                                              .nombre)
+                                                          ref.watch(
+                                                              deviceProvider),
+                                                          ref.watch(
+                                                              terapiaProvider3),
+                                                          false)
                                                       : timer.startStopTimer(
                                                           'Modo B',
-                                                          ref
-                                                              .watch(
-                                                                  deviceProvider)
-                                                              .nombre);
+                                                          ref.watch(
+                                                              deviceProvider),
+                                                          ref.watch(
+                                                              terapiaProvider3),
+                                                          false);
+                                                  if (timer.isRunning) {
+                                                    if (timer.estado
+                                                        .contains('Ciclo')) {
+                                                      await bluetoothProvider
+                                                          .enviarDataBLE(
+                                                              ref
+                                                                  .watch(
+                                                                      deviceProvider)
+                                                                  .mac,
+                                                              listComandos[
+                                                                  'play']!,
+                                                              ref.watch(
+                                                                  terapiaProvider3));
+                                                    }
+                                                  } else {
+                                                    await bluetoothProvider
+                                                        .enviarDataBLE(
+                                                            ref
+                                                                .watch(
+                                                                    deviceProvider)
+                                                                .mac,
+                                                            listComandos[
+                                                                'pause']!,
+                                                            ref.watch(
+                                                                terapiaProvider3));
+                                                  }
                                                 }
                                               : null,
                                           icon: Icon(timer.isRunning
@@ -254,10 +284,6 @@ class TimerZapperScreen3 extends ConsumerWidget {
                                                             indexTerapiaProvider
                                                                 .notifier)
                                                         .state = 0;
-                                                    ref
-                                                        .watch(
-                                                            countdownProvider3)
-                                                        .terminarTimer();
                                                     ref
                                                             .read(
                                                                 terapiaProvider3

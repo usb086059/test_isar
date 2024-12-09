@@ -309,6 +309,20 @@ class BleScreen extends ConsumerWidget {
                                             ref
                                                 .watch(countdownProvider)
                                                 .volver(false);
+                                            ref
+                                                .read(
+                                                    selectModoProvider.notifier)
+                                                .state = false;
+                                            ref
+                                                .read(indexTerapiaProvider
+                                                    .notifier)
+                                                .state = 0;
+                                            ref
+                                                    .read(terapiaProvider1.notifier)
+                                                    .state =
+                                                await ref
+                                                    .watch(servicesProvider)
+                                                    .getTerapiaSeleccionada(0);
                                             if (context.mounted) {
                                               context.push('/homeZapper');
                                             }
@@ -318,22 +332,22 @@ class BleScreen extends ConsumerWidget {
                                               Text('Equipo: ${data.tipo}'),
                                           trailing: TextButton(
                                               onPressed: () async {
-                                                /* ref
-                                                            .read(relojProvider
-                                                                .notifier)
-                                                            .state[
-                                                        data.relojAsignado] =
-                                                    'disponible';
+                                                if (data.relojAsignado > 0) {
+                                                  ref
+                                                              .read(
+                                                                  relojProvider
+                                                                      .notifier)
+                                                              .state[
+                                                          data.relojAsignado] =
+                                                      'disponible';
+                                                  data.relojAsignado = 0;
+                                                }
                                                 data.conectado = false;
-                                                data.relojAsignado = 0;
                                                 await ref
                                                     .watch(servicesProvider)
                                                     .editDevice(data);
                                                 await bluetoothProvider
-                                                    .desconectar2(data.mac); */
-                                                await bluetoothProvider
-                                                    .crearServicioBLE(
-                                                        data.mac, 'pause*');
+                                                    .desconectar2(data.mac);
                                               },
                                               child: const Text('Desconectar')),
                                         ),

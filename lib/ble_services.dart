@@ -3,8 +3,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/state_provider.dart';
+import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -94,6 +96,9 @@ class BleServices extends ChangeNotifier {
     if (device.isConnected) {
       await scanDevices(0);
     }
+    /* int elMTU = await device.requestMtu(512);
+    await Future.delayed(const Duration(seconds: 16));
+    print('>>>>>>>>>> El MTU negociaodo es: $elMTU'); */
     notifyListeners();
   }
 
@@ -115,45 +120,170 @@ class BleServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> crearServicioBLE(String remoteId, String comando) async {
+  Future<void> enviarDataBLE(
+      String remoteId, String comando, TerapiaTotal terapia) async {
+    if (comando == listComandos['ON']! && terapia.frecMin == terapia.frecMax) {
+      comando = '${listComandos['fija']!}$comando';
+    }
+    //comando = comando.padLeft(8, '>');
+    String frecMin = '${listComandos['Fmin']!}${terapia.frecMin.toString()}*';
+    String frecMax = '${listComandos['Fmax']!}${terapia.frecMax.toString()}*';
+
     final BluetoothDevice device = FlutterBluePlus.connectedDevices
         .firstWhere((element) => element.remoteId.toString() == remoteId);
 
     List<BluetoothService> listServicios = await device.discoverServices();
-    for (var element in listServicios) {
+    /* for (var element in listServicios) {
       String serviceUuid = element.serviceUuid.toString();
       var char = element.characteristics;
       print('>>>>>>>>>>>> $serviceUuid');
       print('<<<<<<<<<<<< $char');
-    }
+    } */
 
     final caracteristica = BluetoothCharacteristic(
         remoteId: device.remoteId,
         serviceUuid: Guid('FFE0'),
         characteristicUuid: Guid('FFE1'));
 
-    final List<int> letra1 = comando.substring(0, 1).codeUnits;
-    final List<int> letra2 = comando.substring(1, 2).codeUnits;
-    final List<int> letra3 = comando.substring(2, 3).codeUnits;
-    final List<int> letra4 = comando.substring(3, 4).codeUnits;
-    final List<int> letra5 = comando.substring(4, 5).codeUnits;
-    final List<int> letra6 = comando.substring(5).codeUnits;
+    /* final List<int> letra1Fmin = frecMin.substring(0, 1).codeUnits;
+    final List<int> letra2Fmin = frecMin.substring(1, 2).codeUnits;
+    final List<int> letra3Fmin = frecMin.substring(2, 3).codeUnits;
+    final List<int> letra4Fmin = frecMin.substring(3, 4).codeUnits;
+    final List<int> letra5Fmin = frecMin.substring(4, 5).codeUnits;
+    final List<int> letra6Fmin = frecMin.substring(5, 6).codeUnits;
+    final List<int> letra7Fmin = frecMin.substring(6, 7).codeUnits;
+    final List<int> letra8Fmin = frecMin.substring(7).codeUnits;
 
-    await caracteristica.write(letra1, withoutResponse: true);
-    //delay();
-    caracteristica.write(letra2, withoutResponse: true);
-    //delay();
-    caracteristica.write(letra3, withoutResponse: true);
-    //delay();
-    caracteristica.write(letra4, withoutResponse: true);
-    //delay();
-    caracteristica.write(letra5, withoutResponse: true);
-    //delay();
-    caracteristica.write(letra6, withoutResponse: true);
+    final List<int> letra1Fmax = frecMax.substring(0, 1).codeUnits;
+    final List<int> letra2Fmax = frecMax.substring(1, 2).codeUnits;
+    final List<int> letra3Fmax = frecMax.substring(2, 3).codeUnits;
+    final List<int> letra4Fmax = frecMax.substring(3, 4).codeUnits;
+    final List<int> letra5Fmax = frecMax.substring(4, 5).codeUnits;
+    final List<int> letra6Fmax = frecMax.substring(5, 6).codeUnits;
+    final List<int> letra7Fmax = frecMax.substring(6, 7).codeUnits;
+    final List<int> letra8Fmax = frecMax.substring(7).codeUnits; */
+
+    /* final List<int> letra1Comando = comando.substring(0, 1).codeUnits;
+    final List<int> letra2Comando = comando.substring(1, 2).codeUnits;
+    final List<int> letra3Comando = comando.substring(2, 3).codeUnits;
+    final List<int> letra4Comando = comando.substring(3, 4).codeUnits;
+    final List<int> letra5Comando = comando.substring(4, 5).codeUnits;
+    final List<int> letra6Comando = comando.substring(5, 6).codeUnits;
+    final List<int> letra7Comando = comando.substring(6, 7).codeUnits;
+    final List<int> letra8Comando = comando.substring(7).codeUnits; */
+
+    //await caracteristica.setNotifyValue(true);
+
+    /* List<int> respuesta = [];
+    final subscriptionCaracteristica =
+        caracteristica.onValueReceived.listen((event) {
+      respuesta.addAll(event);
+    }); */
+
+    const int delayEntreEnviosPaquete = 30;
+
+    if (comando.contains(listComandos['ON']!)) {
+      for (int i = 1; i <= frecMin.length; i++) {
+        await caracteristica.write(frecMin.substring(i - 1, i).codeUnits,
+            withoutResponse: true);
+        await Future.delayed(
+            const Duration(milliseconds: delayEntreEnviosPaquete));
+      }
+
+      /* await caracteristica.write(letra1Fmin, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra2Fmin, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra3Fmin, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra4Fmin, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra5Fmin, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra6Fmin, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra7Fmin, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra8Fmin, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete)); */
+
+      for (int i = 1; i <= frecMax.length; i++) {
+        await caracteristica.write(frecMax.substring(i - 1, i).codeUnits,
+            withoutResponse: true);
+        await Future.delayed(
+            const Duration(milliseconds: delayEntreEnviosPaquete));
+      }
+
+      /* await caracteristica.write(letra1Fmax, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra2Fmax, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra3Fmax, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra4Fmax, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra5Fmax, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra6Fmax, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra7Fmax, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+      await caracteristica.write(letra8Fmax, withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete)); */
+    }
+
+    for (int i = 1; i <= comando.length; i++) {
+      await caracteristica.write(comando.substring(i - 1, i).codeUnits,
+          withoutResponse: true);
+      await Future.delayed(
+          const Duration(milliseconds: delayEntreEnviosPaquete));
+    }
+    print('>>>>>>>>>>$frecMin');
+    print('>>>>>>>>>>$frecMax');
+    print('>>>>>>>>>>$comando');
+
+    /* await caracteristica.write(letra1Comando, withoutResponse: true);
+    await Future.delayed(const Duration(milliseconds: delayEntreEnviosPaquete));
+    await caracteristica.write(letra2Comando, withoutResponse: true);
+    await Future.delayed(const Duration(milliseconds: delayEntreEnviosPaquete));
+    await caracteristica.write(letra3Comando, withoutResponse: true);
+    await Future.delayed(const Duration(milliseconds: delayEntreEnviosPaquete));
+    await caracteristica.write(letra4Comando, withoutResponse: true);
+    await Future.delayed(const Duration(milliseconds: delayEntreEnviosPaquete));
+    await caracteristica.write(letra5Comando, withoutResponse: true);
+    await Future.delayed(const Duration(milliseconds: delayEntreEnviosPaquete));
+    await caracteristica.write(letra6Comando, withoutResponse: true);
+    await Future.delayed(const Duration(milliseconds: delayEntreEnviosPaquete));
+    await caracteristica.write(letra7Comando, withoutResponse: true);
+    await Future.delayed(const Duration(milliseconds: delayEntreEnviosPaquete));
+    await caracteristica.write(letra8Comando, withoutResponse: true); */
+
+    /* await Future.delayed(const Duration(milliseconds: 500));
+    String resp = String.fromCharCodes(respuesta);
+    await Future.delayed(const Duration(milliseconds: 500));
+    print('>>>>>>> $resp');
+    await subscriptionCaracteristica.cancel(); */
+    //device.cancelWhenDisconnected(subscriptionCaracteristica);
   }
 
-  /*  Future<void> delay() async {
-    Future.delayed(const Duration(milliseconds: 1), () {
+  /* Future<void> delay() async {
+    Future.delayed(const Duration(seconds: 6), () {
       return;
     });
   } */
