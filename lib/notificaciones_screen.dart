@@ -13,7 +13,8 @@ class NotificacionScree extends ConsumerWidget {
       body: Center(
           child: ElevatedButton(
               onPressed: () async {
-                await showNotification(ref.watch(deviceProvider).nombre);
+                await showNotification(ref.watch(deviceProvider).nombre,
+                    'La terapia ha terminado con éxito');
               },
               child: const Text('Notifica'))),
     ));

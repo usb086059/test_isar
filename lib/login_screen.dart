@@ -111,7 +111,7 @@ class LoginScreen extends ConsumerWidget {
                                 if (context.mounted) {
                                   context.pop();
                                   if (estaRegistrado == user.user!.uid) {
-                                    context.go('/devices');
+                                    context.go('/bluetooth');
                                   } else {
                                     context.push('/register');
                                   }

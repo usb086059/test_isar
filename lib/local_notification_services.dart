@@ -19,7 +19,7 @@ Future<void> initNotification() async {
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
 
-Future<void> showNotification(String nombreDevice) async {
+Future<void> showNotification(String nombreDevice, String mensaje) async {
   const AndroidNotificationDetails androidNotificationDetails =
       AndroidNotificationDetails(
     'channelId',
@@ -34,6 +34,6 @@ Future<void> showNotification(String nombreDevice) async {
     //iOS: darwinNotificationDetails
   );
 
-  await flutterLocalNotificationsPlugin.show(1, nombreDevice,
-      'La terapia ha terminado con éxito', notificationDetails);
+  await flutterLocalNotificationsPlugin.show(
+      1, nombreDevice, mensaje, notificationDetails);
 }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/agregar_terapia.dart';
 import 'package:flutter_application_1/ble_services.dart';
 import 'package:flutter_application_1/curve_services.dart';
+import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/editar_terapia.dart';
 import 'package:flutter_application_1/eliminar_terapia.dart';
 import 'package:flutter_application_1/end_drawer.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_application_1/countdown_provider_3.dart';
 import 'package:flutter_application_1/countdown_provider_4.dart';
 import 'package:flutter_application_1/countdown_provider_5.dart';
 import 'package:flutter_application_1/state_provider.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_application_1/comandos.dart';
@@ -410,21 +412,36 @@ class HomeZapperScreen extends ConsumerWidget {
                   // focusColor: Colors.transparent,
                   // hoverColor: Colors.transparent,
                   onPressed: () async {
-                    int relojNumber = 0;
-                    relojNumber = ref.watch(relojProvider).indexOf(ref
-                        .watch(deviceProvider)
-                        .mac); //indexOf devuelve -1 si no encuentra nada
-                    print('<<<<<<<<<<<<RelojNumber: $relojNumber');
-                    print(
-                        '<<<<<<<<<<<<RelojNumber: ${ref.watch(relojProvider)[0]}');
-                    if (relojNumber == -1) {
-                      relojNumber =
-                          ref.watch(relojProvider).indexOf('disponible');
+                    Device dev = await ref
+                        .watch(servicesProvider)
+                        .getDevice(ref.watch(deviceProvider).mac);
+                    if (dev.conectado) {
+                      print('<<<<<<<<<<<<<<<object>>>>>>>>>>>>>>>');
+                      int relojNumber = 0;
+                      relojNumber = ref.watch(relojProvider).indexOf(ref
+                          .watch(deviceProvider)
+                          .mac); //indexOf devuelve -1 si no encuentra nada
+                      print('<<<<<<<<<<<<RelojNumber: $relojNumber');
+                      print(
+                          '<<<<<<<<<<<<RelojNumber: ${ref.watch(relojProvider)[0]}');
                       if (relojNumber == -1) {
-                        //Avisar que No hay reloj disponible
+                        relojNumber =
+                            ref.watch(relojProvider).indexOf('disponible');
+                        if (relojNumber == -1) {
+                          //Avisar que No hay reloj disponible
+                        } else {
+                          ref.read(relojProvider.notifier).state[relojNumber] =
+                              ref.watch(deviceProvider).mac;
+                          ref
+                              .read(deviceProvider.notifier)
+                              .state
+                              .relojAsignado = relojNumber;
+                          await ref
+                              .watch(servicesProvider)
+                              .editDevice(ref.watch(deviceProvider));
+                          //context.push('/timerZapper$relojNumber');
+                        }
                       } else {
-                        ref.read(relojProvider.notifier).state[relojNumber] =
-                            ref.watch(deviceProvider).mac;
                         ref.read(deviceProvider.notifier).state.relojAsignado =
                             relojNumber;
                         await ref
@@ -432,117 +449,113 @@ class HomeZapperScreen extends ConsumerWidget {
                             .editDevice(ref.watch(deviceProvider));
                         //context.push('/timerZapper$relojNumber');
                       }
-                    } else {
-                      ref.read(deviceProvider.notifier).state.relojAsignado =
-                          relojNumber;
-                      await ref
-                          .watch(servicesProvider)
-                          .editDevice(ref.watch(deviceProvider));
-                      //context.push('/timerZapper$relojNumber');
-                    }
-                    print('>>>>>>>>>>>>>RelojNumber: $relojNumber');
+                      print('>>>>>>>>>>>>>RelojNumber: $relojNumber');
 
-                    switch (relojNumber) {
-                      case 1:
-                        ref.read(terapiaProvider1.notifier).state = await ref
-                            .watch(servicesProvider)
-                            .getTerapiaSeleccionada(puntero);
-                        modoSeleccionado
-                            ? timer.startStopTimer(
-                                'Modo A',
-                                ref.watch(deviceProvider),
-                                ref.watch(terapiaProvider1),
-                                true)
-                            : timer.startStopTimer(
-                                'Modo B',
-                                ref.watch(deviceProvider),
-                                ref.watch(terapiaProvider1),
-                                true);
-                        await bluetoothProvider.enviarDataBLE(
-                            ref.watch(deviceProvider).mac,
-                            listComandos['ON']!,
-                            ref.watch(terapiaProvider1));
-                        context.push('/timerZapper$relojNumber');
-                      case 2:
-                        ref.read(terapiaProvider2.notifier).state = await ref
-                            .watch(servicesProvider)
-                            .getTerapiaSeleccionada(puntero);
-                        modoSeleccionado
-                            ? timer2.startStopTimer(
-                                'Modo A',
-                                ref.watch(deviceProvider),
-                                ref.watch(terapiaProvider2),
-                                true)
-                            : timer2.startStopTimer(
-                                'Modo B',
-                                ref.watch(deviceProvider),
-                                ref.watch(terapiaProvider2),
-                                true);
-                        await bluetoothProvider.enviarDataBLE(
-                            ref.watch(deviceProvider).mac,
-                            listComandos['ON']!,
-                            ref.watch(terapiaProvider2));
-                        context.push('/timerZapper$relojNumber');
-                      case 3:
-                        ref.read(terapiaProvider3.notifier).state = await ref
-                            .watch(servicesProvider)
-                            .getTerapiaSeleccionada(puntero);
-                        modoSeleccionado
-                            ? timer3.startStopTimer(
-                                'Modo A',
-                                ref.watch(deviceProvider),
-                                ref.watch(terapiaProvider3),
-                                true)
-                            : timer3.startStopTimer(
-                                'Modo B',
-                                ref.watch(deviceProvider),
-                                ref.watch(terapiaProvider3),
-                                true);
-                        await bluetoothProvider.enviarDataBLE(
-                            ref.watch(deviceProvider).mac,
-                            listComandos['ON']!,
-                            ref.watch(terapiaProvider3));
-                        context.push('/timerZapper$relojNumber');
-                      case 4:
-                        ref.read(terapiaProvider4.notifier).state = await ref
-                            .watch(servicesProvider)
-                            .getTerapiaSeleccionada(puntero);
-                        modoSeleccionado
-                            ? timer4.startStopTimer(
-                                'Modo A',
-                                ref.watch(deviceProvider),
-                                ref.watch(terapiaProvider4),
-                                true)
-                            : timer4.startStopTimer(
-                                'Modo B',
-                                ref.watch(deviceProvider),
-                                ref.watch(terapiaProvider4),
-                                true);
-                        await bluetoothProvider.enviarDataBLE(
-                            ref.watch(deviceProvider).mac,
-                            listComandos['ON']!,
-                            ref.watch(terapiaProvider4));
-                        context.push('/timerZapper$relojNumber');
-                      case 5:
-                        ref.read(terapiaProvider5.notifier).state = await ref
-                            .watch(servicesProvider)
-                            .getTerapiaSeleccionada(puntero);
-                        modoSeleccionado
-                            ? timer5.startStopTimer(
-                                'Modo A',
-                                ref.watch(deviceProvider),
-                                ref.watch(terapiaProvider5),
-                                true)
-                            : timer5.startStopTimer(
-                                'Modo B',
-                                ref.watch(deviceProvider),
-                                ref.watch(terapiaProvider5),
-                                true);
-                        await bluetoothProvider.enviarDataBLE(
-                            ref.watch(deviceProvider).mac,
-                            listComandos['ON']!,
-                            ref.watch(terapiaProvider5));
-                        context.push('/timerZapper$relojNumber');
+                      switch (relojNumber) {
+                        case 1:
+                          ref.read(terapiaProvider1.notifier).state = await ref
+                              .watch(servicesProvider)
+                              .getTerapiaSeleccionada(puntero);
+                          modoSeleccionado
+                              ? timer.startStopTimer(
+                                  'Modo A',
+                                  ref.watch(deviceProvider),
+                                  ref.watch(terapiaProvider1),
+                                  true)
+                              : timer.startStopTimer(
+                                  'Modo B',
+                                  ref.watch(deviceProvider),
+                                  ref.watch(terapiaProvider1),
+                                  true);
+                          await bluetoothProvider.enviarDataBLE(
+                              ref.watch(deviceProvider).mac,
+                              listComandos['ON']!,
+                              ref.watch(terapiaProvider1));
+                          context.push('/timerZapper$relojNumber');
+                        case 2:
+                          ref.read(terapiaProvider2.notifier).state = await ref
+                              .watch(servicesProvider)
+                              .getTerapiaSeleccionada(puntero);
+                          modoSeleccionado
+                              ? timer2.startStopTimer(
+                                  'Modo A',
+                                  ref.watch(deviceProvider),
+                                  ref.watch(terapiaProvider2),
+                                  true)
+                              : timer2.startStopTimer(
+                                  'Modo B',
+                                  ref.watch(deviceProvider),
+                                  ref.watch(terapiaProvider2),
+                                  true);
+                          await bluetoothProvider.enviarDataBLE(
+                              ref.watch(deviceProvider).mac,
+                              listComandos['ON']!,
+                              ref.watch(terapiaProvider2));
+                          context.push('/timerZapper$relojNumber');
+                        case 3:
+                          ref.read(terapiaProvider3.notifier).state = await ref
+                              .watch(servicesProvider)
+                              .getTerapiaSeleccionada(puntero);
+                          modoSeleccionado
+                              ? timer3.startStopTimer(
+                                  'Modo A',
+                                  ref.watch(deviceProvider),
+                                  ref.watch(terapiaProvider3),
+                                  true)
+                              : timer3.startStopTimer(
+                                  'Modo B',
+                                  ref.watch(deviceProvider),
+                                  ref.watch(terapiaProvider3),
+                                  true);
+                          await bluetoothProvider.enviarDataBLE(
+                              ref.watch(deviceProvider).mac,
+                              listComandos['ON']!,
+                              ref.watch(terapiaProvider3));
+                          context.push('/timerZapper$relojNumber');
+                        case 4:
+                          ref.read(terapiaProvider4.notifier).state = await ref
+                              .watch(servicesProvider)
+                              .getTerapiaSeleccionada(puntero);
+                          modoSeleccionado
+                              ? timer4.startStopTimer(
+                                  'Modo A',
+                                  ref.watch(deviceProvider),
+                                  ref.watch(terapiaProvider4),
+                                  true)
+                              : timer4.startStopTimer(
+                                  'Modo B',
+                                  ref.watch(deviceProvider),
+                                  ref.watch(terapiaProvider4),
+                                  true);
+                          await bluetoothProvider.enviarDataBLE(
+                              ref.watch(deviceProvider).mac,
+                              listComandos['ON']!,
+                              ref.watch(terapiaProvider4));
+                          context.push('/timerZapper$relojNumber');
+                        case 5:
+                          ref.read(terapiaProvider5.notifier).state = await ref
+                              .watch(servicesProvider)
+                              .getTerapiaSeleccionada(puntero);
+                          modoSeleccionado
+                              ? timer5.startStopTimer(
+                                  'Modo A',
+                                  ref.watch(deviceProvider),
+                                  ref.watch(terapiaProvider5),
+                                  true)
+                              : timer5.startStopTimer(
+                                  'Modo B',
+                                  ref.watch(deviceProvider),
+                                  ref.watch(terapiaProvider5),
+                                  true);
+                          await bluetoothProvider.enviarDataBLE(
+                              ref.watch(deviceProvider).mac,
+                              listComandos['ON']!,
+                              ref.watch(terapiaProvider5));
+                          context.push('/timerZapper$relojNumber');
+                      }
+                    } else {
+                      print(
+                          '<<<<<<<<<<<<<< DeviveProvider desconectado >>>>>>>>>>>>>>');
                     }
                   },
                   child: const Icon(

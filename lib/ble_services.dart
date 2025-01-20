@@ -10,16 +10,17 @@ import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
+import 'package:flutter_application_1/local_notification_services.dart';
 
 final bleProvider = ChangeNotifierProvider((ref) => BleServices());
 
 class BleServices extends ChangeNotifier {
   Future<bool> bleState() async {
-    bool bluetoothState = false;
+    //bool bluetoothState = false;
     // handle bluetooth on & off
 // note: for iOS the initial state is typically BluetoothAdapterState.unknown
 // note: if you have permissions issues you will get stuck at BluetoothAdapterState.unauthorized
-    StreamSubscription<BluetoothAdapterState> subscription = FlutterBluePlus
+    /* StreamSubscription<BluetoothAdapterState> subscription = FlutterBluePlus
         .adapterState
         .listen((BluetoothAdapterState state) async {
       print('>>>>>>>>>>>>>>>>$state');
@@ -35,8 +36,13 @@ class BleServices extends ChangeNotifier {
         bluetoothState = false;
       }
     });
-    subscription.cancel();
-    return bluetoothState;
+    subscription.cancel(); */
+    if (FlutterBluePlus.adapterStateNow == BluetoothAdapterState.on) {
+      return true;
+    } else {
+      return false;
+    }
+    //return bluetoothState;
   }
 
   Future<void> bleTurnOn() async {
@@ -69,6 +75,17 @@ class BleServices extends ChangeNotifier {
     //FlutterBluePlus.stopScan();
   }
 
+  Stream<OnConnectionStateChangedEvent> get conectionState =>
+      FlutterBluePlus.events.onConnectionStateChanged;
+
+  /* void startss(){
+      conectionState.listen((event) { 
+        if(event.connectionState == BluetoothConnectionState.connected){
+          print('>>>>>>>>>>>Device conected: ${event.device}');
+        }
+      });
+    } */
+
   Stream<List<ScanResult>> get scanResults => FlutterBluePlus.scanResults;
   /* @override
   notifyListeners(); */
@@ -90,12 +107,47 @@ class BleServices extends ChangeNotifier {
     return controller.stream;
   }
 
-  Future<void> conectar(BluetoothDevice device) async {
-    FlutterBluePlus.stopScan();
-    await device.connect();
-    if (device.isConnected) {
-      await scanDevices(0);
+  Future<bool> reConectar(BluetoothDevice device) async {
+    if (await bleState()) {
+      //int count = 0;
+      try {
+        await device.connect(
+            autoConnect: true, mtu: null, timeout: const Duration(seconds: 5));
+        return true;
+        /* await device.connectionState
+        .where((event) => event == BluetoothConnectionState.connected)
+        .first; */
+      } catch (e) {
+        showNotification(device.advName, 'se acabo el timeout');
+        return false;
+      }
+    } else {
+      device.disconnect();
+      showNotification(device.advName,
+          'El Bluetooth de su telefono esta apagado. Enciendalo y reconecte el ${device.advName} manualmente');
+      return false;
     }
+  }
+
+  Future<void> conectar(BluetoothDevice device) async {
+    if (await bleState()) {
+      FlutterBluePlus.stopScan();
+      await device.connect();
+      /* await device.connectionState
+          .where((event) => event == BluetoothConnectionState.connected)
+          .first; */
+      if (device.isConnected) {
+        await scanDevices(0);
+      }
+    } else {
+      await bleTurnOn();
+      await device.connect();
+      if (device.isConnected) {
+        await scanDevices(0);
+        //await Future.delayed(const Duration(seconds: 3));
+      }
+    }
+
     /* int elMTU = await device.requestMtu(512);
     await Future.delayed(const Duration(seconds: 16));
     print('>>>>>>>>>> El MTU negociaodo es: $elMTU'); */
@@ -111,11 +163,20 @@ class BleServices extends ChangeNotifier {
   }
 
   Future<void> desconectar2(String reomteId) async {
-    FlutterBluePlus.stopScan();
-    final BluetoothDevice device = FlutterBluePlus.connectedDevices
-        .firstWhere((element) => element.remoteId.toString() == reomteId);
-    await device.disconnect();
-    await scanDevices(0);
+    if (await bleState()) {
+      FlutterBluePlus.stopScan();
+      final BluetoothDevice device = FlutterBluePlus.connectedDevices
+          .firstWhere((element) => element.remoteId.toString() == reomteId);
+      await device.disconnect();
+      await scanDevices(0);
+    } else {
+      await bleTurnOn();
+      final BluetoothDevice device = FlutterBluePlus.connectedDevices
+          .firstWhere((element) => element.remoteId.toString() == reomteId);
+      await device.disconnect();
+      await scanDevices(0);
+    }
+
     //await scanDevicesConected();
     notifyListeners();
   }

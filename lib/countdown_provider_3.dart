@@ -140,7 +140,7 @@ class CountdownProvider3 extends ChangeNotifier {
 
   void terminarTimer() async {
     _tickSubscription?.cancel();
-    showNotification(device.nombre);
+    showNotification(device.nombre, 'La terapia ha terminado con éxito');
     isRunning = false;
     estado = 'FIN';
     ciclos = 1;

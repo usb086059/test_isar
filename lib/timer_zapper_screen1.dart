@@ -193,9 +193,11 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                           padding: const EdgeInsets.all(0.0),
                                           iconSize: 50,
                                           onPressed: ref
-                                                      .watch(countdownProvider)
-                                                      .estado !=
-                                                  'FIN'
+                                                          .watch(
+                                                              countdownProvider)
+                                                          .estado !=
+                                                      'FIN' &&
+                                                  timer.device.conectado
                                               ? () async {
                                                   modoSeleccionado
                                                       ? timer.startStopTimer(

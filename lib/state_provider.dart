@@ -75,3 +75,7 @@ final relojProvider = StateProvider<List<String>>((ref) => [
       'disponible',
       'disponible',
     ]);
+
+final reConectarProvider = StateProvider<bool>((ref) => false);
+
+final reConectadoProvider = StateProvider<bool>((ref) => false);

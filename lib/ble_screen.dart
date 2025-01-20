@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/ble_services.dart';
@@ -18,6 +20,8 @@ class BleScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    StreamSubscription<OnConnectionStateChangedEvent>?
+        subscriptionStateConection;
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
     var user = FirebaseAuth.instance.currentUser;
@@ -113,10 +117,10 @@ class BleScreen extends ConsumerWidget {
                           onPressed: () async {
                             //await bluetoothProvider.bleState();
                             if (await bluetoothProvider.bleState()) {
-                              await bluetoothProvider.scanDevices(15);
+                              await bluetoothProvider.scanDevices(5);
                             } else {
                               await bluetoothProvider.bleTurnOn();
-                              await bluetoothProvider.scanDevices(15);
+                              await bluetoothProvider.scanDevices(5);
                             }
                           },
                           child: const Text('Escanear Dispositivos')),
@@ -295,6 +299,70 @@ class BleScreen extends ConsumerWidget {
                                 .getAllDeviceConected(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
+                                subscriptionStateConection?.cancel();
+                                subscriptionStateConection = bluetoothProvider
+                                    .conectionState
+                                    .listen((event) async {
+                                  final Device dev = await ref
+                                      .watch(servicesProvider)
+                                      .getDevice(
+                                          event.device.remoteId.toString());
+                                  if (event.connectionState ==
+                                      BluetoothConnectionState.disconnected) {
+                                    dev.conectado = false;
+                                    /* ref
+                                        .read(deviceProvider.notifier)
+                                        .update((state) => state = dev); */
+                                    await ref
+                                        .watch(servicesProvider)
+                                        .editDevice(dev);
+                                    print(
+                                        '<<<<<<<<<<<<<<<EL DISPOSITIVO: ${event.device}');
+
+                                    ref.invalidate(servicesProvider);
+                                    /* if (!ref.watch(reConectadoProvider)) {
+                                      bool reConectado = await bluetoothProvider
+                                          .reConectar(event.device);
+                                      ref
+                                          .read(reConectadoProvider.notifier)
+                                          .update(
+                                              (state) => state = reConectado);
+                                      print('>>>>>RECONECTADO es $reConectado');
+                                    } */
+                                    if (ref.watch(reConectarProvider)) {
+                                      await bluetoothProvider
+                                          .reConectar(event.device);
+                                    }
+                                  }
+                                  if (event.connectionState ==
+                                      BluetoothConnectionState.connected) {
+                                    /* if (ref.watch(reConectadoProvider)) {
+                                      /* ref
+                                          .read(reConectarProvider.notifier)
+                                          .update((state) => false); */
+                                      await event.device.disconnect();
+                                      ref
+                                          .read(reConectadoProvider.notifier)
+                                          .update((state) => state = false);
+                                      await event.device
+                                          .connect(autoConnect: false);
+                                      print(
+                                          '>>>>>RECONECTADOprovider es ${ref.watch(reConectadoProvider)}');
+                                    } */
+                                    ref
+                                        .read(reConectarProvider.notifier)
+                                        .update((state) => true);
+                                    dev.conectado = true;
+                                    /* ref
+                                        .read(deviceProvider.notifier)
+                                        .update((state) => state = dev); */
+                                    await ref
+                                        .watch(servicesProvider)
+                                        .editDevice(dev);
+
+                                    ref.invalidate(servicesProvider);
+                                  }
+                                });
                                 return ListView.builder(
                                     shrinkWrap: true,
                                     itemCount: snapshot.data!.length,
@@ -346,6 +414,10 @@ class BleScreen extends ConsumerWidget {
                                                 await ref
                                                     .watch(servicesProvider)
                                                     .editDevice(data);
+                                                ref
+                                                    .read(reConectarProvider
+                                                        .notifier)
+                                                    .update((state) => false);
                                                 await bluetoothProvider
                                                     .desconectar2(data.mac);
                                               },
