@@ -1,16 +1,13 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
-import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/ble_services.dart';
-import 'package:isar/isar.dart';
 
 final countdownProvider = ChangeNotifierProvider((ref) => CountdownProvider());
 
@@ -52,10 +49,14 @@ class CountdownProvider extends ChangeNotifier {
           event.device.remoteId.toString() == device.mac) {
         _tickSubscription?.pause();
         device.conectado = false;
-        isRunningRespaldo = isRunning;
-        isRunning = false;
-        estadoRespaldo = estado;
-        estado = 'Desconectado';
+        if(isRunning) {
+          isRunningRespaldo = isRunning;
+          isRunning = false;
+        }
+        if(estado != 'Desconectado') {
+          estadoRespaldo = estado;
+          estado = 'Desconectado';
+        }
         //ToDo: Inhabilitar el boton play/pause y volver
         //TODO: enviar comandos bluetooth correspondiente al equipo
         showNotification(device.nombre,
@@ -70,6 +71,7 @@ class CountdownProvider extends ChangeNotifier {
         if (isRunningRespaldo) {
           _startTimer(duration.inSeconds);
           isRunning = true;
+          isRunningRespaldo = false;
         }
         estado = estadoRespaldo;
         showNotification(device.nombre,

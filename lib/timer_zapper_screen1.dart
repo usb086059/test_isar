@@ -296,6 +296,24 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                                                 servicesProvider)
                                                             .getTerapiaSeleccionada(
                                                                 0);
+                                                    ref
+                                                                .read(relojProvider
+                                                                    .notifier)
+                                                                .state[
+                                                            ref
+                                                                .watch(
+                                                                    deviceProvider)
+                                                                .relojAsignado] =
+                                                        'disponible';
+                                                    ref
+                                                        .read(deviceProvider
+                                                            .notifier)
+                                                        .state
+                                                        .relojAsignado = 0;
+                                                    await ref
+                                                        .watch(servicesProvider)
+                                                        .editDevice(ref.watch(
+                                                            deviceProvider));
                                                     context.pop();
                                                   }
                                                 : null,

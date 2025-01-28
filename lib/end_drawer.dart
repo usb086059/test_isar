@@ -62,6 +62,7 @@ class EndDrawer extends ConsumerWidget {
                               .getAllDeviceConRelojAsignado(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
+                              ref.invalidate(servicesProvider);
                               return ListView.builder(
                                   padding: const EdgeInsets.all(0),
                                   itemCount: snapshot.data!.length,

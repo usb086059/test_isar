@@ -193,9 +193,11 @@ class TimerZapperScreen3 extends ConsumerWidget {
                                           padding: const EdgeInsets.all(0.0),
                                           iconSize: 50,
                                           onPressed: ref
-                                                      .watch(countdownProvider3)
-                                                      .estado !=
-                                                  'FIN'
+                                                          .watch(
+                                                              countdownProvider3)
+                                                          .estado !=
+                                                      'FIN' &&
+                                                  timer.device.conectado
                                               ? () async {
                                                   modoSeleccionado
                                                       ? timer.startStopTimer(
@@ -294,6 +296,24 @@ class TimerZapperScreen3 extends ConsumerWidget {
                                                                 servicesProvider)
                                                             .getTerapiaSeleccionada(
                                                                 0);
+                                                    ref
+                                                                .read(relojProvider
+                                                                    .notifier)
+                                                                .state[
+                                                            ref
+                                                                .watch(
+                                                                    deviceProvider)
+                                                                .relojAsignado] =
+                                                        'disponible';
+                                                    ref
+                                                        .read(deviceProvider
+                                                            .notifier)
+                                                        .state
+                                                        .relojAsignado = 0;
+                                                    await ref
+                                                        .watch(servicesProvider)
+                                                        .editDevice(ref.watch(
+                                                            deviceProvider));
                                                     context.pop();
                                                   }
                                                 : null,
