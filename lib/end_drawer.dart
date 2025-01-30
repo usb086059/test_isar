@@ -6,14 +6,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class EndDrawer extends ConsumerWidget {
-  const EndDrawer({
-    super.key,
-    required this.widthScreen,
-    required this.heightScreen,
-  });
+  const EndDrawer(
+      {super.key,
+      required this.widthScreen,
+      required this.heightScreen,
+      required this.location});
 
   final double widthScreen;
   final double heightScreen;
+  final String location;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -74,8 +75,11 @@ class EndDrawer extends ConsumerWidget {
                                           ref
                                               .read(deviceProvider.notifier)
                                               .update((state) => state = data);
-                                          context.push(
-                                              '/timerZapper${data.relojAsignado}');
+                                          if ('/timerZapper${data.relojAsignado}' !=
+                                              location) {
+                                            context.replace(
+                                                '/timerZapper${data.relojAsignado}');
+                                          }
                                         },
                                         child: Text(data.nombre));
                                   });

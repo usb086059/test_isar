@@ -8,8 +8,10 @@ import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/ble_services.dart';
+import 'package:flutter_application_1/services.dart';
 
-final countdownProvider3 = ChangeNotifierProvider((ref) => CountdownProvider3());
+final countdownProvider3 =
+    ChangeNotifierProvider((ref) => CountdownProvider3());
 
 class CountdownProvider3 extends ChangeNotifier {
   Duration duration = const Duration(seconds: 0);
@@ -39,7 +41,7 @@ class CountdownProvider3 extends ChangeNotifier {
     volvioDeTimerZapperScreen = volvio;
   }
 
-   void startStopTimer(String modoTiempo, Device _device, TerapiaTotal _terapia,
+  void startStopTimer(String modoTiempo, Device _device, TerapiaTotal _terapia,
       bool playInicial) async {
     device = _device;
     //device = await Services().getDevice(_device.mac);
@@ -49,11 +51,12 @@ class CountdownProvider3 extends ChangeNotifier {
           event.device.remoteId.toString() == device.mac) {
         _tickSubscription?.pause();
         device.conectado = false;
-        if(isRunning) {
+        Services().editDevice(device);
+        if (isRunning) {
           isRunningRespaldo = isRunning;
           isRunning = false;
         }
-        if(estado != 'Desconectado') {
+        if (estado != 'Desconectado') {
           estadoRespaldo = estado;
           estado = 'Desconectado';
         }
@@ -61,6 +64,9 @@ class CountdownProvider3 extends ChangeNotifier {
         //TODO: enviar comandos bluetooth correspondiente al equipo
         showNotification(device.nombre,
             'El dispositivo ${device.nombre} perdió la conexón Bluetooth.');
+
+        BleServices().reConectar(event.device);
+
         notifyListeners();
         print(
             '********>> isRunning es $isRunning >>> isRunningRespaldo es $isRunningRespaldo >>>> Estado es $estado >>> EstadoRespaldo es $estadoRespaldo');
@@ -68,6 +74,7 @@ class CountdownProvider3 extends ChangeNotifier {
       if (event.connectionState == BluetoothConnectionState.connected &&
           event.device.remoteId.toString() == device.mac) {
         device.conectado = true;
+        Services().editDevice(device);
         if (isRunningRespaldo) {
           _startTimer(duration.inSeconds);
           isRunning = true;

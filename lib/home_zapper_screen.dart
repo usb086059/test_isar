@@ -59,6 +59,8 @@ class HomeZapperScreen extends ConsumerWidget {
     final descripcionEditarTerapiaController =
         TextEditingController(text: ref.watch(terapiaProvider0).info);
 
+    final String location = '/homeZapper';
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Stack(
@@ -78,8 +80,11 @@ class HomeZapperScreen extends ConsumerWidget {
           ),
           Scaffold(
             backgroundColor: Colors.transparent,
-            endDrawer:
-                EndDrawer(widthScreen: widthScreen, heightScreen: heightScreen),
+            endDrawer: EndDrawer(
+              widthScreen: widthScreen,
+              heightScreen: heightScreen,
+              location: location,
+            ),
             endDrawerEnableOpenDragGesture: false,
             appBar: AppBar(
               flexibleSpace: Padding(
@@ -471,6 +476,8 @@ class HomeZapperScreen extends ConsumerWidget {
                               ref.watch(deviceProvider).mac,
                               listComandos['ON']!,
                               ref.watch(terapiaProvider1));
+                          /* ref.read(locationProvider.notifier).state =
+                              '/timerZapper$relojNumber'; */
                           context.push('/timerZapper$relojNumber');
                         case 2:
                           ref.read(terapiaProvider2.notifier).state = await ref

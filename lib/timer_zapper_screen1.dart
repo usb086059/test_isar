@@ -39,6 +39,8 @@ class TimerZapperScreen1 extends ConsumerWidget {
 
     final TerapiaTotal terapia = ref.watch(terapiaProvider1);
 
+    final String location = '/timerZapper1';
+
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
@@ -56,9 +58,9 @@ class TimerZapperScreen1 extends ConsumerWidget {
           await ref
               .watch(servicesProvider)
               .editDevice(ref.watch(deviceProvider));
-          context.pop();
+          context.replace('/bluetooth');
         } else {
-          context.pop();
+          context.replace('/bluetooth');
         }
       },
       child: MaterialApp(
@@ -85,7 +87,10 @@ class TimerZapperScreen1 extends ConsumerWidget {
             Scaffold(
               backgroundColor: Colors.transparent,
               endDrawer: EndDrawer(
-                  widthScreen: widthScreen, heightScreen: heightScreen),
+                widthScreen: widthScreen,
+                heightScreen: heightScreen,
+                location: location,
+              ),
               endDrawerEnableOpenDragGesture: false,
               appBar: AppBar(
                 flexibleSpace: Padding(
@@ -314,7 +319,8 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                                         .watch(servicesProvider)
                                                         .editDevice(ref.watch(
                                                             deviceProvider));
-                                                    context.pop();
+                                                    context
+                                                        .replace('/bluetooth');
                                                   }
                                                 : null,
                                             child: const Text(

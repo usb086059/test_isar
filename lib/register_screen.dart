@@ -347,7 +347,8 @@ class RegisterScreen extends ConsumerWidget {
                                               provincia);
                                           if (context.mounted) {
                                             context.pop();
-                                            context.go('/devices');
+                                            context.pop();
+                                            //context.go('/bluetooth');
                                           }
                                         }
                                       },
