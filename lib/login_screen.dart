@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/auth_google_services.dart';
 import 'package:flutter_application_1/curve_services.dart';
+import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/services.dart';
+import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -19,6 +21,7 @@ class LoginScreen extends ConsumerWidget {
     double anchoMax = MediaQuery.of(context).size.width * 0.95;
     double altoMin = MediaQuery.of(context).size.height * 0.35;
     double altoMax = MediaQuery.of(context).size.height * 0.5; */
+    List<Device> listDeviceConected = [];
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
@@ -123,9 +126,31 @@ class LoginScreen extends ConsumerWidget {
                                           orElse: () => 'no existe');
                                   if (context.mounted) {
                                     context.pop();
+                                    if (ref.watch(primerArranqueProvider) ==
+                                        false) {
+                                      listDeviceConected = await ref
+                                          .watch(servicesProvider)
+                                          .getAllDeviceConected();
+                                      if (listDeviceConected.isNotEmpty) {
+                                        for (var element
+                                            in listDeviceConected) {
+                                          element.conectado = false;
+                                          element.relojAsignado = 0;
+                                          await ref
+                                              .watch(servicesProvider)
+                                              .editDevice(element);
+                                        }
+                                      }
+                                    }
                                     if (estaRegistrado == user.user!.uid) {
+                                      ref
+                                          .read(primerArranqueProvider.notifier)
+                                          .update((state) => true);
                                       context.push('/bluetooth');
                                     } else {
+                                      ref
+                                          .read(primerArranqueProvider.notifier)
+                                          .update((state) => true);
                                       context.push('/register');
                                     }
                                   }
