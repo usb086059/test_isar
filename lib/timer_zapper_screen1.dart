@@ -369,6 +369,8 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold)),
                         const SizedBox(height: 20),
+                        Text(
+                            '******************* ${ref.watch(countdownProvider).myRSSI}'),
                         Container(
                           constraints: BoxConstraints(
                               maxHeight: heightScreen * 0.41,

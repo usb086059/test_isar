@@ -40,7 +40,8 @@ class BleScreen extends ConsumerWidget {
           //return;
         } else {
           print('***************** didPop es false $didPop *************');
-          context.go('/');
+          //context.go('/');
+          //context.pop();
         }
       },
       child: MaterialApp(
@@ -316,7 +317,10 @@ class BleScreen extends ConsumerWidget {
                                   .watch(servicesProvider)
                                   .getAllDeviceConected(),
                               builder: (context, snapshot) {
-                                if (snapshot.hasData) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  print(
+                                      '******************* FUERA DEL LISTEN ********');
                                   subscriptionStateConection?.cancel();
                                   subscriptionStateConection = bluetoothProvider
                                       .conectionState
@@ -328,52 +332,32 @@ class BleScreen extends ConsumerWidget {
                                     if (event.connectionState ==
                                         BluetoothConnectionState.disconnected) {
                                       dev.conectado = false;
-                                      /* ref
-                                          .read(deviceProvider.notifier)
-                                          .update((state) => state = dev); */
                                       await ref
                                           .watch(servicesProvider)
                                           .editDevice(dev);
                                       print(
                                           '<<<<<<<<<<<<<<<EL DISPOSITIVO: ${event.device}');
-
-                                      ref.invalidate(servicesProvider);
-                                      /* if (!ref.watch(reConectadoProvider)) {
-                                        bool reConectado = await bluetoothProvider
-                                            .reConectar(event.device);
-                                        ref
-                                            .read(reConectadoProvider.notifier)
-                                            .update(
-                                                (state) => state = reConectado);
-                                        print('>>>>>RECONECTADO es $reConectado');
-                                      } */
-                                      if (ref.watch(reConectarProvider)) {
+                                      if (!event.device.isAutoConnectEnabled &&
+                                          ref.watch(reConectarProvider)) {
                                         await bluetoothProvider
                                             .reConectar(event.device);
                                       }
+                                      ref.invalidate(servicesProvider);
                                     }
                                     if (event.connectionState ==
                                         BluetoothConnectionState.connected) {
-                                      /* if (ref.watch(reConectadoProvider)) {
-                                        /* ref
-                                            .read(reConectarProvider.notifier)
-                                            .update((state) => false); */
-                                        await event.device.disconnect();
-                                        ref
-                                            .read(reConectadoProvider.notifier)
-                                            .update((state) => state = false);
-                                        await event.device
-                                            .connect(autoConnect: false);
+                                      if (ref
+                                          .watch(countdownProvider)
+                                          .backUpComando
+                                          .isNotEmpty) {
                                         print(
-                                            '>>>>>RECONECTADOprovider es ${ref.watch(reConectadoProvider)}');
-                                      } */
+                                            '<<<<<<<<<< REENVIAR COMANDO >>>>>>>>>>');
+                                      }
                                       ref
                                           .read(reConectarProvider.notifier)
                                           .update((state) => true);
                                       dev.conectado = true;
-                                      /* ref
-                                          .read(deviceProvider.notifier)
-                                          .update((state) => state = dev); */
+
                                       await ref
                                           .watch(servicesProvider)
                                           .editDevice(dev);
@@ -381,6 +365,7 @@ class BleScreen extends ConsumerWidget {
                                       ref.invalidate(servicesProvider);
                                     }
                                   });
+
                                   return ListView.builder(
                                       shrinkWrap: true,
                                       itemCount: snapshot.data!.length,
@@ -389,6 +374,8 @@ class BleScreen extends ConsumerWidget {
                                         return Card(
                                           child: ListTile(
                                             onTap: () async {
+                                              await subscriptionStateConection
+                                                  ?.cancel();
                                               ref
                                                   .read(deviceProvider.notifier)
                                                   .update((state) => data);
@@ -447,7 +434,7 @@ class BleScreen extends ConsumerWidget {
                                       });
                                 } else {
                                   return const Center(
-                                      child: Text('No devices found'));
+                                      child: CircularProgressIndicator());
                                 }
                               }),
                         ),
