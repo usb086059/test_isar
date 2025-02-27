@@ -48,8 +48,6 @@ class CountdownProvider extends ChangeNotifier {
       serviceUuid: Guid('FFE0'),
       characteristicUuid: Guid('FFE1'));
 
-  //bool bussy = false;
-
   void volver(bool volvio) {
     volvioDeTimerZapperScreen = volvio;
   }
@@ -103,8 +101,8 @@ class CountdownProvider extends ChangeNotifier {
       }
       if (event.connectionState == BluetoothConnectionState.connected &&
           event.device.remoteId.toString() == device.mac) {
-        print('*****${BleServices().elbus}');
-        if (!BleServices().elbus) {
+        print('*****${BleServices().isBussy}');
+        if (!BleServices().isBussy) {
           print(
               '********************************** AVISO DE RECONEXION **************');
           await BleServices().descubrirServicios(event.device);
@@ -145,27 +143,22 @@ class CountdownProvider extends ChangeNotifier {
   }
 
   void enviarComando(String comando) async {
-    print(BleServices().elbus);
+    print(BleServices().isBussy);
     backUpComando = comando;
     print(
         '**************************************************** bacupComando ********* $backUpComando');
-    if (!BleServices().elbus) {
+    if (!BleServices().isBussy) {
       final bool enviado = await BleServices()
           .enviarDataBLE(device.mac, listComandos[comando]!, terapia);
-      //await Future.delayed(const Duration(milliseconds: 100));
 
       if (enviado) {
-        backUpComando = '';
-        //subscriptionStateConection?.resume();
+        //backUpComando = '';
         print(
             '*********************************************** COMANDO ENVIADO y Subscription Resume() ************');
-        //bussy = false;
       } else {
         //ToDo: Avisar que no se envió el comando correctacmente e intentar reenviar hasta que se haga correctamente
         print(
             '*********************************************** No hubo respuesta');
-        //subscriptionStateConection?.resume();
-        //bussy = false;
       }
     }
   }

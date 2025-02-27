@@ -20,13 +20,13 @@ BluetoothCharacteristic caracteristica = BluetoothCharacteristic(
     serviceUuid: Guid('FFE0'),
     characteristicUuid: Guid('FFE1'));
 
-bool bus = false;
+bool bussy = false;
 
 class BleServices extends ChangeNotifier {
   StreamSubscription<List<int>>? subscriptionCaracteristica;
 
-  bool get elbus {
-    return bus;
+  bool get isBussy {
+    return bussy;
   }
 
   Future<bool> bleState() async {
@@ -212,8 +212,7 @@ class BleServices extends ChangeNotifier {
 
   Future<bool> enviarDataBLE(
       String remoteId, String comando, TerapiaTotal terapia) async {
-    //CountdownProvider().setBussy = true;
-    bus = true;
+    bussy = true;
 
     if (comando == listComandos['ON']! && terapia.frecMin == terapia.frecMax) {
       comando = '${listComandos['fija']!}$comando';
@@ -299,14 +298,14 @@ class BleServices extends ChangeNotifier {
       print('>>>>>>>>>>$frecMax');
       print('>>>>>>>>>>$comando');
       //CountdownProvider().setBussy = false;
-      bus = false;
+      bussy = false;
       return true;
     } else {
       respuesta.clear();
       subscriptionCaracteristica?.cancel();
       device.cancelWhenDisconnected(subscriptionCaracteristica!);
       //CountdownProvider().setBussy = false;
-      bus = false;
+      bussy = false;
       return false;
     }
     /* print(
