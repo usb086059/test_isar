@@ -8,6 +8,7 @@ import 'package:flutter_application_1/countdown_provider.dart';
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/end_drawer.dart';
 import 'package:flutter_application_1/gradient_services.dart';
+import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/state_provider.dart';
 
@@ -223,6 +224,17 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                                     if (timer.estado
                                                         .contains('Ciclo')) {
                                                       await bluetoothProvider
+                                                          .sendCommand(PackComando(
+                                                              deviceMac: ref
+                                                                  .watch(
+                                                                      deviceProvider)
+                                                                  .mac,
+                                                              comando:
+                                                                  listComandos[
+                                                                      'play']!,
+                                                              terapia: ref.watch(
+                                                                  terapiaProvider1)));
+                                                      /* await bluetoothProvider
                                                           .enviarDataBLE(
                                                               ref
                                                                   .watch(
@@ -231,10 +243,21 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                                               listComandos[
                                                                   'play']!,
                                                               ref.watch(
-                                                                  terapiaProvider1));
+                                                                  terapiaProvider1)); */
                                                     }
                                                   } else {
                                                     await bluetoothProvider
+                                                        .sendCommand(PackComando(
+                                                            deviceMac: ref
+                                                                .watch(
+                                                                    deviceProvider)
+                                                                .mac,
+                                                            comando:
+                                                                listComandos[
+                                                                    'pause']!,
+                                                            terapia: ref.watch(
+                                                                terapiaProvider1)));
+                                                    /* await bluetoothProvider
                                                         .enviarDataBLE(
                                                             ref
                                                                 .watch(
@@ -243,7 +266,7 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                                             listComandos[
                                                                 'pause']!,
                                                             ref.watch(
-                                                                terapiaProvider1));
+                                                                terapiaProvider1)); */
                                                   }
                                                 }
                                               : null,

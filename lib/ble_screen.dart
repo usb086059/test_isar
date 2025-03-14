@@ -346,13 +346,13 @@ class BleScreen extends ConsumerWidget {
                                     }
                                     if (event.connectionState ==
                                         BluetoothConnectionState.connected) {
-                                      if (ref
+                                      /* if (ref
                                           .watch(countdownProvider)
                                           .backUpComando
                                           .isNotEmpty) {
                                         print(
                                             '<<<<<<<<<< REENVIAR COMANDO >>>>>>>>>>');
-                                      }
+                                      } */
                                       ref
                                           .read(reConectarProvider.notifier)
                                           .update((state) => true);

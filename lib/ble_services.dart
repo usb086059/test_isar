@@ -12,6 +12,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
+import 'package:flutter_application_1/pack_comando.dart';
 
 final bleProvider = ChangeNotifierProvider((ref) => BleServices());
 
@@ -22,11 +23,19 @@ BluetoothCharacteristic caracteristica = BluetoothCharacteristic(
 
 bool bussy = false;
 
+List<PackComando> commandQueue = [];
+List<PackComando> listBackupCommand = [];
+bool isSending = false;
+
 class BleServices extends ChangeNotifier {
   StreamSubscription<List<int>>? subscriptionCaracteristica;
 
   bool get isBussy {
     return bussy;
+  }
+
+  List<PackComando> get getListBackupComando {
+    return listBackupCommand;
   }
 
   Future<bool> bleState() async {
@@ -210,8 +219,40 @@ class BleServices extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> processShipmentCommand() async {
+    isSending = true;
+    while (commandQueue.isNotEmpty) {
+      PackComando packCommandFirst = commandQueue.first;
+      if (!bussy) {
+        packCommandFirst.enviado = await enviarDataBLE(
+            packCommandFirst.deviceMac,
+            packCommandFirst.comando,
+            packCommandFirst.terapia);
+        print('**************** termino enviarDataTable');
+        commandQueue.removeAt(0);
+        if (!packCommandFirst.enviado) {
+          listBackupCommand.add(packCommandFirst);
+          print('**************** no se envio el comando');
+          print('**************** listBackupCommand => ${listBackupCommand}');
+          //ToDo: Avisar que no se envió el comando o determinar...
+          //todo: ... un metodo para evitar que el While se pegue
+        }
+      }
+    }
+    isSending = false;
+    print('**************** termino el bucle While');
+  }
+
+  Future<void> sendCommand(PackComando packComando) async {
+    commandQueue.add(packComando);
+    if (!isSending) {
+      processShipmentCommand();
+    }
+  }
+
   Future<bool> enviarDataBLE(
       String remoteId, String comando, TerapiaTotal terapia) async {
+    BluetoothDevice device = BluetoothDevice.fromId(remoteId);
     bussy = true;
 
     if (comando == listComandos['ON']! && terapia.frecMin == terapia.frecMax) {
@@ -220,8 +261,12 @@ class BleServices extends ChangeNotifier {
     String frecMin = '${listComandos['Fmin']!}${terapia.frecMin.toString()}*';
     String frecMax = '${listComandos['Fmax']!}${terapia.frecMax.toString()}*';
 
-    final BluetoothDevice device = FlutterBluePlus.connectedDevices
-        .firstWhere((element) => element.remoteId.toString() == remoteId);
+    try {
+      device = FlutterBluePlus.connectedDevices
+          .firstWhere((element) => element.remoteId.toString() == remoteId);
+    } catch (e) {
+      print('***************** ERROR: el equipo esta desconectado');
+    }
 
     /* List<BluetoothService> listServicios = await device.discoverServices();
 

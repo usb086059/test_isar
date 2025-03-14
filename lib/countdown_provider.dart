@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/backup_comando.dart';
+import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
@@ -41,7 +41,7 @@ class CountdownProvider extends ChangeNotifier {
       BluetoothDevice(remoteId: const DeviceIdentifier("str"));
   int myRSSI = 0;
   bool equipoConectado = false;
-  String backUpComando = '';
+  //String backUpComando = '';
 
   BluetoothCharacteristic caracteristica = BluetoothCharacteristic(
       remoteId: const DeviceIdentifier('str'),
@@ -106,10 +106,17 @@ class CountdownProvider extends ChangeNotifier {
           print(
               '********************************** AVISO DE RECONEXION **************');
           await BleServices().descubrirServicios(event.device);
-          if (backUpComando.isNotEmpty) {
+          /* if (BleServices().getListBackupComando.isNotEmpty) {
             enviarComando(backUpComando);
-          }
+          } */
           avisoReconexion();
+          String _command = '';
+          if (estado.contains('Ciclo')) {
+            isRunning ? enviarComando('play') : enviarComando('pause');
+          }
+          if (estado.contains('Reposo')) _command = 'pause';
+          if (estado.contains('FIN')) _command = 'fin';
+          if (_command.isNotEmpty) enviarComando(_command);
           notifyListeners();
         }
       }
@@ -143,7 +150,15 @@ class CountdownProvider extends ChangeNotifier {
   }
 
   void enviarComando(String comando) async {
-    print(BleServices().isBussy);
+    //backUpComando = comando;
+    PackComando packCommand = PackComando(
+      deviceMac: device.mac,
+      comando: listComandos[comando]!,
+      terapia: terapia,
+    );
+    BleServices().sendCommand(packCommand);
+
+    /* print(BleServices().isBussy);
     backUpComando = comando;
     print(
         '**************************************************** bacupComando ********* $backUpComando');
@@ -160,7 +175,7 @@ class CountdownProvider extends ChangeNotifier {
         print(
             '*********************************************** No hubo respuesta');
       }
-    }
+    } */
   }
 
   void _startTimer(int seconds) async {
