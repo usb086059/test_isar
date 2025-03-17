@@ -11,6 +11,7 @@ import 'package:flutter_application_1/editar_terapia.dart';
 import 'package:flutter_application_1/eliminar_terapia.dart';
 import 'package:flutter_application_1/end_drawer.dart';
 import 'package:flutter_application_1/gradient_services.dart';
+import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/countdown_provider.dart';
 import 'package:flutter_application_1/countdown_provider_2.dart';
@@ -472,10 +473,14 @@ class HomeZapperScreen extends ConsumerWidget {
                                   ref.watch(deviceProvider),
                                   ref.watch(terapiaProvider1),
                                   true);
-                          await bluetoothProvider.enviarDataBLE(
+                          await bluetoothProvider.sendCommand(PackComando(
+                              deviceMac: ref.watch(deviceProvider).mac,
+                              comando: listComandos['ON']!,
+                              terapia: ref.watch(terapiaProvider1)));
+                          /* await bluetoothProvider.enviarDataBLE(
                               ref.watch(deviceProvider).mac,
                               listComandos['ON']!,
-                              ref.watch(terapiaProvider1));
+                              ref.watch(terapiaProvider1)); */
                           /* ref.read(locationProvider.notifier).state =
                               '/timerZapper$relojNumber'; */
                           context.push('/timerZapper$relojNumber');
@@ -494,10 +499,14 @@ class HomeZapperScreen extends ConsumerWidget {
                                   ref.watch(deviceProvider),
                                   ref.watch(terapiaProvider2),
                                   true);
-                          await bluetoothProvider.enviarDataBLE(
+                          await bluetoothProvider.sendCommand(PackComando(
+                              deviceMac: ref.watch(deviceProvider).mac,
+                              comando: listComandos['ON']!,
+                              terapia: ref.watch(terapiaProvider2)));
+                          /* await bluetoothProvider.enviarDataBLE(
                               ref.watch(deviceProvider).mac,
                               listComandos['ON']!,
-                              ref.watch(terapiaProvider2));
+                              ref.watch(terapiaProvider2)); */
                           context.push('/timerZapper$relojNumber');
                         case 3:
                           ref.read(terapiaProvider3.notifier).state = await ref
@@ -514,10 +523,14 @@ class HomeZapperScreen extends ConsumerWidget {
                                   ref.watch(deviceProvider),
                                   ref.watch(terapiaProvider3),
                                   true);
-                          await bluetoothProvider.enviarDataBLE(
+                          await bluetoothProvider.sendCommand(PackComando(
+                              deviceMac: ref.watch(deviceProvider).mac,
+                              comando: listComandos['ON']!,
+                              terapia: ref.watch(terapiaProvider3)));
+                          /* await bluetoothProvider.enviarDataBLE(
                               ref.watch(deviceProvider).mac,
                               listComandos['ON']!,
-                              ref.watch(terapiaProvider3));
+                              ref.watch(terapiaProvider3)); */
                           context.push('/timerZapper$relojNumber');
                         case 4:
                           ref.read(terapiaProvider4.notifier).state = await ref
@@ -534,10 +547,14 @@ class HomeZapperScreen extends ConsumerWidget {
                                   ref.watch(deviceProvider),
                                   ref.watch(terapiaProvider4),
                                   true);
-                          await bluetoothProvider.enviarDataBLE(
+                          await bluetoothProvider.sendCommand(PackComando(
+                              deviceMac: ref.watch(deviceProvider).mac,
+                              comando: listComandos['ON']!,
+                              terapia: ref.watch(terapiaProvider4)));
+                          /* await bluetoothProvider.enviarDataBLE(
                               ref.watch(deviceProvider).mac,
                               listComandos['ON']!,
-                              ref.watch(terapiaProvider4));
+                              ref.watch(terapiaProvider4)); */
                           context.push('/timerZapper$relojNumber');
                         case 5:
                           ref.read(terapiaProvider5.notifier).state = await ref
@@ -554,10 +571,14 @@ class HomeZapperScreen extends ConsumerWidget {
                                   ref.watch(deviceProvider),
                                   ref.watch(terapiaProvider5),
                                   true);
-                          await bluetoothProvider.enviarDataBLE(
+                          await bluetoothProvider.sendCommand(PackComando(
+                              deviceMac: ref.watch(deviceProvider).mac,
+                              comando: listComandos['ON']!,
+                              terapia: ref.watch(terapiaProvider5)));
+                          /* await bluetoothProvider.enviarDataBLE(
                               ref.watch(deviceProvider).mac,
                               listComandos['ON']!,
-                              ref.watch(terapiaProvider5));
+                              ref.watch(terapiaProvider5)); */
                           context.push('/timerZapper$relojNumber');
                       }
                     } else {

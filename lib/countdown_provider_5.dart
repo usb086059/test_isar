@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
@@ -36,58 +37,73 @@ class CountdownProvider5 extends ChangeNotifier {
   StreamSubscription<OnConnectionStateChangedEvent>? subscriptionStateConection;
   String estadoRespaldo = '';
   bool isRunningRespaldo = false;
+  BluetoothDevice myBlue =
+      BluetoothDevice(remoteId: const DeviceIdentifier("str"));
 
   void volver(bool volvio) {
     volvioDeTimerZapperScreen = volvio;
   }
 
+  void avisoDesconexion() {
+    print('****************************** AvisoDesconexion');
+    _tickSubscription?.cancel();
+    device.conectado = false;
+    Services().editDevice(device);
+    if (isRunning) {
+      isRunningRespaldo = isRunning;
+      isRunning = false;
+    }
+    if (estado != 'Desconectado') {
+      estadoRespaldo = estado;
+      estado = 'Desconectado';
+    }
+    showNotification(device.nombre,
+        'El dispositivo ${device.nombre} perdió la conexón Bluetooth.');
+  }
+
+  void avisoReconexion() {
+    device.conectado = true;
+    Services().editDevice(device);
+    if (isRunningRespaldo) {
+      _startTimer(duration.inSeconds);
+      isRunning = true;
+      isRunningRespaldo = false;
+    }
+    estado = estadoRespaldo;
+    showNotification(device.nombre,
+        'El dispositivo ${device.nombre} fue reconectado al Bluetooth.');
+  }
+
   void startStopTimer(String modoTiempo, Device _device, TerapiaTotal _terapia,
       bool playInicial) async {
     device = _device;
-    //device = await Services().getDevice(_device.mac);
     subscriptionStateConection?.cancel();
-    subscriptionStateConection = BleServices().conectionState.listen((event) {
+    subscriptionStateConection =
+        BleServices().conectionState.listen((event) async {
       if (event.connectionState == BluetoothConnectionState.disconnected &&
           event.device.remoteId.toString() == device.mac) {
-        _tickSubscription?.pause();
-        device.conectado = false;
-        Services().editDevice(device);
-        if (isRunning) {
-          isRunningRespaldo = isRunning;
-          isRunning = false;
+        avisoDesconexion();
+        if (!event.device.isAutoConnectEnabled) {
+          await BleServices().reConectar(event.device);
         }
-        if (estado != 'Desconectado') {
-          estadoRespaldo = estado;
-          estado = 'Desconectado';
-        }
-        //ToDo: Inhabilitar el boton play/pause y volver
-        //TODO: enviar comandos bluetooth correspondiente al equipo
-        showNotification(device.nombre,
-            'El dispositivo ${device.nombre} perdió la conexón Bluetooth.');
-
-        BleServices().reConectar(event.device);
-
         notifyListeners();
-        print(
-            '********>> isRunning es $isRunning >>> isRunningRespaldo es $isRunningRespaldo >>>> Estado es $estado >>> EstadoRespaldo es $estadoRespaldo');
       }
       if (event.connectionState == BluetoothConnectionState.connected &&
           event.device.remoteId.toString() == device.mac) {
-        device.conectado = true;
-        Services().editDevice(device);
-        if (isRunningRespaldo) {
-          _startTimer(duration.inSeconds);
-          isRunning = true;
-          isRunningRespaldo = false;
+        if (!BleServices().isBussy) {
+          print(
+              '********************************** AVISO DE RECONEXION **************');
+          await BleServices().descubrirServicios(event.device);
+          avisoReconexion();
+          String _command = '';
+          if (estado.contains('Ciclo')) {
+            isRunning ? enviarComando('play') : enviarComando('pause');
+          }
+          if (estado.contains('Reposo')) _command = 'pause';
+          if (estado.contains('FIN')) _command = 'fin';
+          if (_command.isNotEmpty) enviarComando(_command);
+          notifyListeners();
         }
-        estado = estadoRespaldo;
-        showNotification(device.nombre,
-            'El dispositivo ${device.nombre} fue reconectado al Bluetooth.');
-        //ToDo: Habilitar el boton play/pause y volver
-        //TODO: enviar comandos bluetooth correspondiente al equipo
-        notifyListeners();
-        print(
-            '>>>>>>>> isRunning es $isRunning >>> isRunningRespaldo es $isRunningRespaldo >>>> Estado es $estado >>> EstadoRespaldo es $estadoRespaldo');
       }
     });
 
@@ -119,8 +135,12 @@ class CountdownProvider5 extends ChangeNotifier {
   }
 
   void enviarComando(String comando) async {
-    await BleServices()
-        .enviarDataBLE(device.mac, listComandos[comando]!, terapia);
+    PackComando packCommand = PackComando(
+      deviceMac: device.mac,
+      comando: listComandos[comando]!,
+      terapia: terapia,
+    );
+    BleServices().sendCommand(packCommand);
   }
 
   void _startTimer(int seconds) {
@@ -201,8 +221,10 @@ class CountdownProvider5 extends ChangeNotifier {
     estado = 'FIN';
     ciclos = 1;
     volvioDeTimerZapperScreen = true;
-    await BleServices()
-        .enviarDataBLE(device.mac, listComandos['fin']!, terapia);
+    await BleServices().sendCommand(PackComando(
+        deviceMac: device.mac,
+        comando: listComandos['fin']!,
+        terapia: terapia));
     notifyListeners();
   }
 }

@@ -234,16 +234,6 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                                                       'play']!,
                                                               terapia: ref.watch(
                                                                   terapiaProvider1)));
-                                                      /* await bluetoothProvider
-                                                          .enviarDataBLE(
-                                                              ref
-                                                                  .watch(
-                                                                      deviceProvider)
-                                                                  .mac,
-                                                              listComandos[
-                                                                  'play']!,
-                                                              ref.watch(
-                                                                  terapiaProvider1)); */
                                                     }
                                                   } else {
                                                     await bluetoothProvider
@@ -257,16 +247,6 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                                                     'pause']!,
                                                             terapia: ref.watch(
                                                                 terapiaProvider1)));
-                                                    /* await bluetoothProvider
-                                                        .enviarDataBLE(
-                                                            ref
-                                                                .watch(
-                                                                    deviceProvider)
-                                                                .mac,
-                                                            listComandos[
-                                                                'pause']!,
-                                                            ref.watch(
-                                                                terapiaProvider1)); */
                                                   }
                                                 }
                                               : null,
@@ -392,8 +372,6 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold)),
                         const SizedBox(height: 20),
-                        Text(
-                            '******************* ${ref.watch(countdownProvider).myRSSI}'),
                         Container(
                           constraints: BoxConstraints(
                               maxHeight: heightScreen * 0.41,

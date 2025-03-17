@@ -8,6 +8,7 @@ import 'package:flutter_application_1/countdown_provider_3.dart';
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/end_drawer.dart';
 import 'package:flutter_application_1/gradient_services.dart';
+import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/state_provider.dart';
 
@@ -223,27 +224,29 @@ class TimerZapperScreen3 extends ConsumerWidget {
                                                     if (timer.estado
                                                         .contains('Ciclo')) {
                                                       await bluetoothProvider
-                                                          .enviarDataBLE(
-                                                              ref
+                                                          .sendCommand(PackComando(
+                                                              deviceMac: ref
                                                                   .watch(
                                                                       deviceProvider)
                                                                   .mac,
-                                                              listComandos[
-                                                                  'play']!,
-                                                              ref.watch(
-                                                                  terapiaProvider3));
+                                                              comando:
+                                                                  listComandos[
+                                                                      'play']!,
+                                                              terapia: ref.watch(
+                                                                  terapiaProvider3)));
                                                     }
                                                   } else {
                                                     await bluetoothProvider
-                                                        .enviarDataBLE(
-                                                            ref
+                                                        .sendCommand(PackComando(
+                                                            deviceMac: ref
                                                                 .watch(
                                                                     deviceProvider)
                                                                 .mac,
-                                                            listComandos[
-                                                                'pause']!,
-                                                            ref.watch(
-                                                                terapiaProvider3));
+                                                            comando:
+                                                                listComandos[
+                                                                    'pause']!,
+                                                            terapia: ref.watch(
+                                                                terapiaProvider3)));
                                                   }
                                                 }
                                               : null,

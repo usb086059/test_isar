@@ -36,17 +36,8 @@ class CountdownProvider extends ChangeNotifier {
   StreamSubscription<OnConnectionStateChangedEvent>? subscriptionStateConection;
   String estadoRespaldo = '';
   bool isRunningRespaldo = false;
-  //List<BackupComando> listBackupComando = [];
   BluetoothDevice myBlue =
       BluetoothDevice(remoteId: const DeviceIdentifier("str"));
-  int myRSSI = 0;
-  bool equipoConectado = false;
-  //String backUpComando = '';
-
-  BluetoothCharacteristic caracteristica = BluetoothCharacteristic(
-      remoteId: const DeviceIdentifier('str'),
-      serviceUuid: Guid('FFE0'),
-      characteristicUuid: Guid('FFE1'));
 
   void volver(bool volvio) {
     volvioDeTimerZapperScreen = volvio;
@@ -56,7 +47,6 @@ class CountdownProvider extends ChangeNotifier {
     print('****************************** AvisoDesconexion');
     _tickSubscription?.cancel();
     device.conectado = false;
-    equipoConectado = device.conectado;
     Services().editDevice(device);
     if (isRunning) {
       isRunningRespaldo = isRunning;
@@ -72,7 +62,6 @@ class CountdownProvider extends ChangeNotifier {
 
   void avisoReconexion() {
     device.conectado = true;
-    equipoConectado = device.conectado;
     Services().editDevice(device);
     if (isRunningRespaldo) {
       _startTimer(duration.inSeconds);
@@ -87,7 +76,6 @@ class CountdownProvider extends ChangeNotifier {
   void startStopTimer(String modoTiempo, Device _device, TerapiaTotal _terapia,
       bool playInicial) async {
     device = _device;
-    equipoConectado = device.conectado;
     subscriptionStateConection?.cancel();
     subscriptionStateConection =
         BleServices().conectionState.listen((event) async {
@@ -101,14 +89,10 @@ class CountdownProvider extends ChangeNotifier {
       }
       if (event.connectionState == BluetoothConnectionState.connected &&
           event.device.remoteId.toString() == device.mac) {
-        print('*****${BleServices().isBussy}');
         if (!BleServices().isBussy) {
           print(
               '********************************** AVISO DE RECONEXION **************');
           await BleServices().descubrirServicios(event.device);
-          /* if (BleServices().getListBackupComando.isNotEmpty) {
-            enviarComando(backUpComando);
-          } */
           avisoReconexion();
           String _command = '';
           if (estado.contains('Ciclo')) {
@@ -150,32 +134,12 @@ class CountdownProvider extends ChangeNotifier {
   }
 
   void enviarComando(String comando) async {
-    //backUpComando = comando;
     PackComando packCommand = PackComando(
       deviceMac: device.mac,
       comando: listComandos[comando]!,
       terapia: terapia,
     );
     BleServices().sendCommand(packCommand);
-
-    /* print(BleServices().isBussy);
-    backUpComando = comando;
-    print(
-        '**************************************************** bacupComando ********* $backUpComando');
-    if (!BleServices().isBussy) {
-      final bool enviado = await BleServices()
-          .enviarDataBLE(device.mac, listComandos[comando]!, terapia);
-
-      if (enviado) {
-        //backUpComando = '';
-        print(
-            '*********************************************** COMANDO ENVIADO y Subscription Resume() ************');
-      } else {
-        //ToDo: Avisar que no se envió el comando correctacmente e intentar reenviar hasta que se haga correctamente
-        print(
-            '*********************************************** No hubo respuesta');
-      }
-    } */
   }
 
   void _startTimer(int seconds) async {
@@ -220,17 +184,6 @@ class CountdownProvider extends ChangeNotifier {
     });
   }
 
-  BluetoothCharacteristic get getCaracteristica {
-    print(
-        '**************************************  ****************** $caracteristica');
-    return caracteristica;
-  }
-
-  /* set setBussy(bool value) {
-    bussy = value;
-    print(bussy);
-  } */
-
   Color get ciclosLeftColor {
     Color colorCiclo;
     if ((ciclos == 1 && estado != 'FIN') || ciclos == 3 || ciclos == 5) {
@@ -267,8 +220,10 @@ class CountdownProvider extends ChangeNotifier {
     estado = 'FIN';
     ciclos = 1;
     volvioDeTimerZapperScreen = true;
-    await BleServices()
-        .enviarDataBLE(device.mac, listComandos['fin']!, terapia);
+    await BleServices().sendCommand(PackComando(
+        deviceMac: device.mac,
+        comando: listComandos['fin']!,
+        terapia: terapia));
     notifyListeners();
   }
 }
