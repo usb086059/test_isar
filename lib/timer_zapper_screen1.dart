@@ -374,8 +374,8 @@ class TimerZapperScreen1 extends ConsumerWidget {
                         const SizedBox(height: 20),
                         Container(
                           constraints: BoxConstraints(
-                              maxHeight: heightScreen * 0.41,
-                              minHeight: heightScreen * 0.41,
+                              maxHeight: heightScreen * 0.35,
+                              minHeight: heightScreen * 0.35,
                               minWidth: widthScreen * 0.95,
                               maxWidth: widthScreen * 0.95),
                           //color: Colors.grey[200],
