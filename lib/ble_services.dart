@@ -3,23 +3,25 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/battery_levels.dart';
+//import 'package:flutter_application_1/caracteristicas.dart';
 import 'package:flutter_application_1/comandos.dart';
-import 'package:flutter_application_1/countdown_provider.dart';
-import 'package:flutter_application_1/device.dart';
-import 'package:flutter_application_1/state_provider.dart';
+//import 'package:flutter_application_1/countdown_provider.dart';
+//import 'package:flutter_application_1/device.dart';
+//import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
+//import 'package:isar/isar.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
 import 'package:flutter_application_1/pack_comando.dart';
 
 final bleProvider = ChangeNotifierProvider((ref) => BleServices());
 
-BluetoothCharacteristic caracteristica = BluetoothCharacteristic(
-    remoteId: const DeviceIdentifier('str'),
+/* BluetoothCharacteristic caracteristica = BluetoothCharacteristic(
+    remoteId: const DeviceIdentifier('disponible'),
     serviceUuid: Guid('FFE0'),
-    characteristicUuid: Guid('FFE1'));
+    characteristicUuid: Guid('FFE1')); */
 
 bool bussy = false;
 
@@ -27,12 +29,80 @@ List<PackComando> commandQueue = [];
 List<PackComando> listBackupCommand = [];
 bool isSending = false;
 
-class BleServices extends ChangeNotifier {
-  StreamSubscription<List<int>>? subscriptionCaracteristica;
+/* ************************************** */
+List<BluetoothCharacteristic> listCaracteristicas = [
+  BluetoothCharacteristic(
+      remoteId: const DeviceIdentifier('disponible'),
+      serviceUuid: Guid('FFE0'),
+      characteristicUuid: Guid('FFE1')),
+  BluetoothCharacteristic(
+      remoteId: const DeviceIdentifier('disponible'),
+      serviceUuid: Guid('FFE0'),
+      characteristicUuid: Guid('FFE1')),
+  BluetoothCharacteristic(
+      remoteId: const DeviceIdentifier('disponible'),
+      serviceUuid: Guid('FFE0'),
+      characteristicUuid: Guid('FFE1')),
+  BluetoothCharacteristic(
+      remoteId: const DeviceIdentifier('disponible'),
+      serviceUuid: Guid('FFE0'),
+      characteristicUuid: Guid('FFE1')),
+  BluetoothCharacteristic(
+      remoteId: const DeviceIdentifier('disponible'),
+      serviceUuid: Guid('FFE0'),
+      characteristicUuid: Guid('FFE1')),
+];
+List<List<int>> respuestas = [
+  [],
+  [],
+  [],
+  [],
+  [],
+];
+int caseNumber = 0;
+bool deviceDisconnected = false;
+StreamSubscription<List<int>>? subscriptionCaracteristica0;
+StreamSubscription<List<int>>? subscriptionCaracteristica1;
+StreamSubscription<List<int>>? subscriptionCaracteristica2;
+StreamSubscription<List<int>>? subscriptionCaracteristica3;
+StreamSubscription<List<int>>? subscriptionCaracteristica4;
+String bateriaxxx = batteryLevels[1];
 
+/* ***************************************** */
+
+class BleServices extends ChangeNotifier {
+  BleServices() {
+    print('****************** Constructor de BleServices llamado');
+  }
+  //StreamSubscription<List<int>>? subscriptionCaracteristica;
+  List<String> bleServicesBatery = [
+    batteryLevels[0],
+    batteryLevels[0],
+    batteryLevels[0],
+    batteryLevels[0],
+    batteryLevels[0],
+    batteryLevels[0],
+  ];
   bool get isBussy {
     return bussy;
   }
+
+  /*  set setBleservicesBatery(String valor) {
+    bleServicesBatery = valor;
+    notifyListeners();
+  } */
+
+  String getBatteryLevelForBlescreen(String remoteId) {
+    for (int i = 0; i < 5; i++) {
+      if (listCaracteristicas[i].remoteId.toString() == remoteId) {
+        return bleServicesBatery[i];
+      }
+    }
+    return bleServicesBatery[5];
+  }
+  /*  String get getBleservicesBatery {
+    return bleServicesBatery;
+  } */
 
   List<PackComando> get getListBackupComando {
     return listBackupCommand;
@@ -168,9 +238,16 @@ class BleServices extends ChangeNotifier {
       await device.connect();
       if (device.isConnected) {
         await scanDevices(0);
+        await descubrirServicios(device);
         //await Future.delayed(const Duration(seconds: 3));
       }
     }
+    /* _pulso?.cancel();
+    _pulso = Stream<int>.periodic(const Duration(seconds: 3), (sec) => sec)
+        .listen((event) async {
+      notifyListeners();
+      print('******** PeriodicBleServices: ${event}');
+    }); */
 
     /* int elMTU = await device.requestMtu(512);
     await Future.delayed(const Duration(seconds: 16));
@@ -178,22 +255,166 @@ class BleServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  set setCaracteristica(BluetoothCharacteristic _caracteristica) {
+  /*  set setCaracteristica(BluetoothCharacteristic _caracteristica) {
     caracteristica = _caracteristica;
+  } */
+
+  void escuchas() {
+    switch (caseNumber) {
+      case 0:
+        subscriptionCaracteristica0?.cancel();
+        if (!deviceDisconnected) {
+          subscriptionCaracteristica0 =
+              listCaracteristicas[0].onValueReceived.listen((event) async {
+            if (!String.fromCharCodes(event).contains('*')) {
+              respuestas[0].clear();
+            }
+            respuestas[0].clear();
+            respuestas[0].addAll(event);
+            List<String> listString =
+                String.fromCharCodes(respuestas[0]).split('*');
+            listString.removeLast();
+            for (String element in listString) {
+              final int? batteryLevel = int.tryParse(element);
+              if (batteryLevel != null) {
+                print('**************** batteryLevel: $batteryLevel');
+                bleServicesBatery[0] = selectBatteryLevelImage(batteryLevel);
+                print(
+                    '**************** batteryLevelAddress: $bleServicesBatery');
+              } else {
+                print('***************** batterLevel ES NULO');
+              }
+            }
+            print(
+                '************* respuesta BOTON: ${String.fromCharCodes(respuestas[0])}');
+            print('************* respuesta BOTON: ${listString}');
+            notifyListeners();
+          });
+        }
+        break;
+      case 1:
+        subscriptionCaracteristica1?.cancel();
+        if (!deviceDisconnected) {
+          subscriptionCaracteristica1 =
+              listCaracteristicas[1].onValueReceived.listen((event) {
+            if (!String.fromCharCodes(event).contains('*')) {
+              respuestas[1].clear();
+            }
+            respuestas[1].clear();
+            respuestas[1].addAll(event);
+            List<String> listString1 =
+                String.fromCharCodes(respuestas[1]).split('*');
+            listString1.removeLast();
+            for (String element in listString1) {
+              final int? batteryLevel1 = int.tryParse(element);
+              if (batteryLevel1 != null) {
+                print('**************** batteryLevel 1: $batteryLevel1');
+                bleServicesBatery[1] = selectBatteryLevelImage(batteryLevel1);
+                print(
+                    '**************** batteryLevelAddress: $bleServicesBatery');
+              } else {
+                print('***************** batterLevel ES NULO');
+              }
+            }
+            print(
+                '************* respuesta BOTON: ${String.fromCharCodes(respuestas[1])}');
+            print('************* respuesta BOTON: ${listString1}');
+            notifyListeners();
+          });
+        }
+      case 2:
+        subscriptionCaracteristica2?.cancel();
+        if (!deviceDisconnected) {
+          subscriptionCaracteristica2 =
+              listCaracteristicas[caseNumber].onValueReceived.listen((event) {
+            respuestas[caseNumber].clear();
+            respuestas[caseNumber].addAll(event);
+          });
+        }
+      case 3:
+        subscriptionCaracteristica3?.cancel();
+        if (!deviceDisconnected) {
+          subscriptionCaracteristica3 =
+              listCaracteristicas[caseNumber].onValueReceived.listen((event) {
+            respuestas[caseNumber].clear();
+            respuestas[caseNumber].addAll(event);
+          });
+        }
+      case 4:
+        subscriptionCaracteristica4?.cancel();
+        if (!deviceDisconnected) {
+          subscriptionCaracteristica4 =
+              listCaracteristicas[caseNumber].onValueReceived.listen((event) {
+            respuestas[caseNumber].clear();
+            respuestas[caseNumber].addAll(event);
+          });
+        }
+    }
+  }
+
+  Future<void> caracteristicas(
+      BluetoothDevice device, bool disconnected) async {
+    deviceDisconnected = disconnected;
+    if (disconnected) {
+      for (int i = 0; i < 5; i++) {
+        if (listCaracteristicas[i].remoteId == device.remoteId) {
+          listCaracteristicas[i] = BluetoothCharacteristic(
+              remoteId: const DeviceIdentifier('disponible'),
+              serviceUuid: Guid('FFE0'),
+              characteristicUuid: Guid('FFE1'));
+          caseNumber = i;
+          escuchas();
+          i = 5;
+        }
+      }
+      return;
+    } else {
+      BluetoothCharacteristic caracteristicaBase = BluetoothCharacteristic(
+          remoteId: device.remoteId,
+          serviceUuid: Guid('FFE0'),
+          characteristicUuid: Guid('FFE1'));
+      await caracteristicaBase.setNotifyValue(true);
+      for (int i = 0; i < 5; i++) {
+        if (listCaracteristicas[i].remoteId.toString() == 'disponible') {
+          listCaracteristicas[i] = caracteristicaBase;
+          caseNumber = i;
+          print('*********************** caseNumber: $caseNumber');
+          escuchas();
+          i = 5;
+        }
+      }
+      return;
+    }
   }
 
   Future<void> descubrirServicios(BluetoothDevice device) async {
     List<BluetoothService> listServicios = await device.discoverServices();
-    caracteristica = BluetoothCharacteristic(
+    print('******** Servicios: ${listServicios.length}');
+    /* caracteristica = BluetoothCharacteristic(
         remoteId: device.remoteId,
         serviceUuid: Guid('FFE0'),
         characteristicUuid: Guid('FFE1'));
-    await caracteristica.setNotifyValue(true);
+    await caracteristica.setNotifyValue(true); */
+    await caracteristicas(device, false);
+
+    print('**************** BleServicesBattery: $bleServicesBatery');
+    await Future.delayed(const Duration(seconds: 1));
+    await sendCommand(PackComando(
+        deviceMac: device.remoteId.toString(),
+        comando: '*', //solo para activar el envio de nivel de bateria
+        terapia: TerapiaTotal(
+            nombre: '',
+            frecMin: 1,
+            frecMax: 1,
+            info: 'Agregue una breve descripción de la terapia',
+            editable: false,
+            idTerapiaPersonal: 0)));
+    notifyListeners();
   }
 
-  BluetoothCharacteristic get gCaracteristica {
+  /* BluetoothCharacteristic get gCaracteristica {
     return caracteristica;
-  }
+  } */
 
   Future<void> desconectar(BluetoothDevice device) async {
     FlutterBluePlus.stopScan();
@@ -207,6 +428,7 @@ class BleServices extends ChangeNotifier {
       FlutterBluePlus.stopScan();
       final BluetoothDevice device = FlutterBluePlus.connectedDevices
           .firstWhere((element) => element.remoteId.toString() == reomteId);
+      print('************** Device **** $device');
       await device.disconnect();
       await scanDevices(0);
     } else {
@@ -233,7 +455,8 @@ class BleServices extends ChangeNotifier {
         if (!packCommandFirst.enviado) {
           listBackupCommand.add(packCommandFirst);
           print('**************** no se envio el comando');
-          print('**************** listBackupCommand => ${listBackupCommand}');
+          print(
+              '**************** listBackupCommand => ${listBackupCommand.length}');
           //ToDo: Avisar que no se envió el comando o determinar...
           //todo: ... un metodo para evitar que el While se pegue
         }
@@ -253,6 +476,8 @@ class BleServices extends ChangeNotifier {
   Future<bool> enviarDataBLE(
       String remoteId, String comando, TerapiaTotal terapia) async {
     BluetoothDevice device = BluetoothDevice.fromId(remoteId);
+    int indiceRespuesta = listCaracteristicas
+        .indexWhere((element) => element.remoteId == device.remoteId);
     bussy = true;
 
     if (comando == listComandos['ON']! && terapia.frecMin == terapia.frecMax) {
@@ -276,69 +501,72 @@ class BleServices extends ChangeNotifier {
         characteristicUuid: Guid('FFE1'));
 
     await caracteristica.setNotifyValue(true); */
-    List<int> respuesta = [];
+    //List<int> respuesta = [];
     print(
-        '********************************* respuesta *************** ${String.fromCharCodes(respuesta)}');
-    subscriptionCaracteristica?.cancel();
+        '********************************* respuesta *************** ${String.fromCharCodes(respuestas[indiceRespuesta])}');
+    /* subscriptionCaracteristica?.cancel();
     subscriptionCaracteristica = caracteristica.onValueReceived.listen((event) {
       respuesta.clear();
       respuesta.addAll(event);
       //subscriptionCaracteristica?.cancel();
       print(
-          '********************************************************* este es event ${event} ************');
-    });
+          '*************************************** este es event ${event} ***');
+    }); */
 
     print(
-        '********************NotifyValue ************** ${caracteristica.isNotifying}');
+        '********************NotifyValue ************** ${listCaracteristicas[indiceRespuesta].isNotifying}');
 
     const int delayEntreEnviosPaquete = 30;
 
     if (comando.contains(listComandos['ON']!)) {
       for (int i = 1; i <= frecMin.length; i++) {
-        await caracteristica.write(frecMin.substring(i - 1, i).codeUnits,
+        await listCaracteristicas[indiceRespuesta].write(
+            frecMin.substring(i - 1, i).codeUnits,
             withoutResponse: true);
         await Future.delayed(
             const Duration(milliseconds: delayEntreEnviosPaquete));
       }
-      await Future.delayed(const Duration(milliseconds: 100));
-      if (frecMin == String.fromCharCodes(respuesta)) {
-        respuesta.clear();
+      await Future.delayed(const Duration(milliseconds: 200));
+      if (String.fromCharCodes(respuestas[indiceRespuesta]).contains(frecMin)) {
+        //respuesta.clear();
         for (int i = 1; i <= frecMax.length; i++) {
-          await caracteristica.write(frecMax.substring(i - 1, i).codeUnits,
+          await listCaracteristicas[indiceRespuesta].write(
+              frecMax.substring(i - 1, i).codeUnits,
               withoutResponse: true);
           await Future.delayed(
               const Duration(milliseconds: delayEntreEnviosPaquete));
         }
-        await Future.delayed(const Duration(milliseconds: 100));
-        if (frecMax == String.fromCharCodes(respuesta)) {
-          respuesta.clear();
+        await Future.delayed(const Duration(milliseconds: 200));
+        if (String.fromCharCodes(respuestas[indiceRespuesta])
+            .contains(frecMax)) {
+          //respuesta.clear();
         } else {
-          subscriptionCaracteristica?.cancel();
-          device.cancelWhenDisconnected(subscriptionCaracteristica!);
+          /* subscriptionCaracteristica?.cancel();
+          device.cancelWhenDisconnected(subscriptionCaracteristica!); */
           return false;
         }
       } else {
-        subscriptionCaracteristica?.cancel();
-        device.cancelWhenDisconnected(subscriptionCaracteristica!);
+        /* subscriptionCaracteristica?.cancel();
+        device.cancelWhenDisconnected(subscriptionCaracteristica!); */
         return false; //comandoEnviado;
       }
     }
 
     for (int i = 1; i <= comando.length; i++) {
-      await caracteristica.write(comando.substring(i - 1, i).codeUnits,
-          withoutResponse: true);
+      await listCaracteristicas[indiceRespuesta]
+          .write(comando.substring(i - 1, i).codeUnits, withoutResponse: true);
       await Future.delayed(
           const Duration(milliseconds: delayEntreEnviosPaquete));
       print(
-          '********************************* i del for comando *************** $i');
+          '**********comando: $comando  <> *********************** i del for comando: $i');
     }
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 200));
     print(
-        '********************************* respuesta DESPUES DEL FOR *************** ${String.fromCharCodes(respuesta)}');
-    if (comando == String.fromCharCodes(respuesta)) {
-      respuesta.clear();
-      subscriptionCaracteristica?.cancel();
-      device.cancelWhenDisconnected(subscriptionCaracteristica!);
+        '********************************* respuesta DESPUES DEL FOR: ${String.fromCharCodes(respuestas[indiceRespuesta])}');
+    if (String.fromCharCodes(respuestas[indiceRespuesta]).contains(comando)) {
+      //respuesta.clear();
+      /* subscriptionCaracteristica?.cancel();
+      device.cancelWhenDisconnected(subscriptionCaracteristica!); */
       print('>>>>>>>>>>$frecMin');
       print('>>>>>>>>>>$frecMax');
       print('>>>>>>>>>>$comando');
@@ -346,9 +574,9 @@ class BleServices extends ChangeNotifier {
       bussy = false;
       return true;
     } else {
-      respuesta.clear();
-      subscriptionCaracteristica?.cancel();
-      device.cancelWhenDisconnected(subscriptionCaracteristica!);
+      //respuesta.clear();
+      /* subscriptionCaracteristica?.cancel();
+      device.cancelWhenDisconnected(subscriptionCaracteristica!); */
       //CountdownProvider().setBussy = false;
       bussy = false;
       return false;

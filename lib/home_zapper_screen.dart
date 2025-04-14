@@ -137,7 +137,25 @@ class HomeZapperScreen extends ConsumerWidget {
                               color: Colors.transparent,
                             ))),
                   );
-                })
+                }),
+                Container(
+                  padding: const EdgeInsets.all(0),
+                  margin: EdgeInsets.symmetric(
+                    horizontal: widthScreen * 0.008,
+                    //vertical: heightScreen * 0.01
+                  ),
+                  height: heightScreen * 0.06,
+                  width: widthScreen * 0.04,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          invertColors: false,
+                          fit: BoxFit.fill,
+                          image: AssetImage(
+                              bluetoothProvider.getBatteryLevelForBlescreen(
+                                  ref.read(deviceProvider).mac)))),
+                  /* child: Text(
+                          '${container.read(bleProvider).getBleservicesBatery.length}') */
+                )
               ],
             ),
             body: Container(

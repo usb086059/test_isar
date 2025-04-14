@@ -2,12 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:flutter_application_1/battery_levels.dart';
 import 'package:flutter_application_1/ble_services.dart';
 import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/countdown_provider.dart';
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/end_drawer.dart';
 import 'package:flutter_application_1/gradient_services.dart';
+//import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/state_provider.dart';
@@ -41,6 +43,7 @@ class TimerZapperScreen1 extends ConsumerWidget {
     final TerapiaTotal terapia = ref.watch(terapiaProvider1);
 
     final String location = '/timerZapper1';
+    //final batteryProvider = ref.watch(batteryServicesProvider);
 
     return PopScope(
       canPop: false,
@@ -48,20 +51,10 @@ class TimerZapperScreen1 extends ConsumerWidget {
         if (didPop) {
           return;
         } else if (ref.watch(countdownProvider).estado == 'FIN') {
-          ref.read(selectModoProvider.notifier).state = false;
-          ref.read(indexTerapiaProvider.notifier).state = 0;
-          ref.read(terapiaProvider1.notifier).state =
-              await ref.watch(servicesProvider).getTerapiaSeleccionada(0);
-          ref
-              .read(relojProvider.notifier)
-              .state[ref.watch(deviceProvider).relojAsignado] = 'disponible';
-          ref.read(deviceProvider.notifier).state.relojAsignado = 0;
-          await ref
-              .watch(servicesProvider)
-              .editDevice(ref.watch(deviceProvider));
-          context.replace('/bluetooth');
+          await cerrarTimerScreen(ref);
+          context.pop();
         } else {
-          context.replace('/bluetooth');
+          context.pop();
         }
       },
       child: MaterialApp(
@@ -136,7 +129,22 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                 color: Colors.transparent,
                               ))),
                     );
-                  })
+                  }),
+                  Container(
+                    padding: const EdgeInsets.all(0),
+                    margin: EdgeInsets.symmetric(
+                      horizontal: widthScreen * 0.008,
+                      //vertical: heightScreen * 0.01
+                    ),
+                    height: heightScreen * 0.06,
+                    width: widthScreen * 0.04,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            invertColors: false,
+                            fit: BoxFit.fill,
+                            image: AssetImage(
+                                bluetoothProvider.bleServicesBatery[0]))),
+                  )
                 ],
               ),
               body: Container(
@@ -285,45 +293,11 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                                         .estado ==
                                                     'FIN'
                                                 ? () async {
-                                                    ref
-                                                        .read(selectModoProvider
-                                                            .notifier)
-                                                        .state = false;
-                                                    ref
-                                                        .read(
-                                                            indexTerapiaProvider
-                                                                .notifier)
-                                                        .state = 0;
-                                                    ref
-                                                            .read(
-                                                                terapiaProvider1
-                                                                    .notifier)
-                                                            .state =
-                                                        await ref
-                                                            .watch(
-                                                                servicesProvider)
-                                                            .getTerapiaSeleccionada(
-                                                                0);
-                                                    ref
-                                                                .read(relojProvider
-                                                                    .notifier)
-                                                                .state[
-                                                            ref
-                                                                .watch(
-                                                                    deviceProvider)
-                                                                .relojAsignado] =
-                                                        'disponible';
-                                                    ref
-                                                        .read(deviceProvider
-                                                            .notifier)
-                                                        .state
-                                                        .relojAsignado = 0;
-                                                    await ref
-                                                        .watch(servicesProvider)
-                                                        .editDevice(ref.watch(
-                                                            deviceProvider));
-                                                    context
-                                                        .replace('/bluetooth');
+                                                    await cerrarTimerScreen(
+                                                        ref);
+                                                    if (context.mounted) {
+                                                      context.pop();
+                                                    }
                                                   }
                                                 : null,
                                             child: const Text(
@@ -359,7 +333,25 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                 )
                               ],
                             )),
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 30),
+                        TextButton.icon(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.transparent),
+                                iconColor:
+                                    MaterialStateProperty.all(Colors.white),
+                                side: MaterialStateProperty.all(
+                                    BorderSide(color: Colors.white))),
+                            onPressed: () async {
+                              ref.read(countdownProvider).cancelarTimer();
+                              await cerrarTimerScreen(ref);
+                              context.pop();
+                            },
+                            icon: const Icon(Icons.cancel),
+                            label: const Text(
+                              'Cancelar Terapia',
+                              style: TextStyle(color: Colors.white),
+                            )),
                         Text(terapia.nombre,
                             style: const TextStyle(
                                 color: Colors.white,
@@ -374,8 +366,8 @@ class TimerZapperScreen1 extends ConsumerWidget {
                         const SizedBox(height: 20),
                         Container(
                           constraints: BoxConstraints(
-                              maxHeight: heightScreen * 0.35,
-                              minHeight: heightScreen * 0.35,
+                              maxHeight: heightScreen * 0.30,
+                              minHeight: heightScreen * 0.30,
                               minWidth: widthScreen * 0.95,
                               maxWidth: widthScreen * 0.95),
                           //color: Colors.grey[200],
@@ -465,6 +457,18 @@ class TimerZapperScreen1 extends ConsumerWidget {
       }
     }
     return listWordsConSaltoDeLinea.join('');
+  }
+
+  Future<void> cerrarTimerScreen(WidgetRef ref) async {
+    ref.read(selectModoProvider.notifier).state = false;
+    ref.read(indexTerapiaProvider.notifier).state = 0;
+    ref.read(terapiaProvider1.notifier).state =
+        await ref.read(servicesProvider).getTerapiaSeleccionada(0);
+    ref
+        .read(relojProvider.notifier)
+        .state[ref.read(deviceProvider).relojAsignado] = 'disponible';
+    ref.read(deviceProvider.notifier).state.relojAsignado = 0;
+    await ref.read(servicesProvider).editDevice(ref.read(deviceProvider));
   }
 }
 

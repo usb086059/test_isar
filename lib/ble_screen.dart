@@ -2,30 +2,36 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:flutter_application_1/battery_levels.dart';
 import 'package:flutter_application_1/ble_services.dart';
+//import 'package:flutter_application_1/caracteristicas.dart';
 import 'package:flutter_application_1/countdown_provider.dart';
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/end_drawer.dart';
 import 'package:flutter_application_1/gradient_services.dart';
+//import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_application_1/state_provider.dart';
-import 'package:isar/isar.dart';
+//import 'package:isar/isar.dart';
 
 class BleScreen extends ConsumerWidget {
   const BleScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print(
+        '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< **** Construyendo bleScreen **** >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    //final bluetoothProvider = ref.watch(bleProvider);
     StreamSubscription<OnConnectionStateChangedEvent>?
         subscriptionStateConection;
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
     var user = FirebaseAuth.instance.currentUser;
-    final bluetoothProvider = ref.watch(bleProvider);
+
     List<BluetoothDevice> listaDC = [];
     final formKey = GlobalKey<FormState>();
     TextEditingController nombreDeviceController = TextEditingController();
@@ -113,7 +119,11 @@ class BleScreen extends ConsumerWidget {
                                 color: Colors.transparent,
                               ))),
                     );
-                  })
+                  }),
+                  SizedBox(
+                    height: heightScreen * 0.06,
+                    width: widthScreen * 0.056,
+                  ),
                 ],
               ),
               body: Container(
@@ -134,11 +144,11 @@ class BleScreen extends ConsumerWidget {
                         ElevatedButton(
                             onPressed: () async {
                               //await bluetoothProvider.bleState();
-                              if (await bluetoothProvider.bleState()) {
-                                await bluetoothProvider.scanDevices(5);
+                              if (await ref.read(bleProvider).bleState()) {
+                                await ref.read(bleProvider).scanDevices(5);
                               } else {
-                                await bluetoothProvider.bleTurnOn();
-                                await bluetoothProvider.scanDevices(5);
+                                await ref.read(bleProvider).bleTurnOn();
+                                await ref.read(bleProvider).scanDevices(5);
                               }
                             },
                             child: const Text('Escanear Dispositivos')),
@@ -150,7 +160,7 @@ class BleScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.all(Radius.circular(30)),
                           ),
                           child: StreamBuilder<List<ScanResult>>(
-                              stream: bluetoothProvider.scanResults,
+                              stream: ref.read(bleProvider).scanResults,
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   return ListView.builder(
@@ -162,7 +172,7 @@ class BleScreen extends ConsumerWidget {
                                           child: ListTile(
                                             onTap: () async {
                                               if (!await ref
-                                                  .watch(servicesProvider)
+                                                  .read(servicesProvider)
                                                   .getDeviceExists(data
                                                       .device.remoteId
                                                       .toString())) {
@@ -260,7 +270,9 @@ class BleScreen extends ConsumerWidget {
                                                                           true,
                                                                       relojAsignado:
                                                                           0));
-                                                                  await bluetoothProvider
+                                                                  await ref
+                                                                      .read(
+                                                                          bleProvider)
                                                                       .conectar(
                                                                           data.device);
                                                                   context.pop();
@@ -273,19 +285,20 @@ class BleScreen extends ConsumerWidget {
                                                     });
                                               } else {
                                                 final Device dev = await ref
-                                                    .watch(servicesProvider)
+                                                    .read(servicesProvider)
                                                     .getDevice(data
                                                         .device.remoteId
                                                         .toString());
                                                 dev.conectado = true;
                                                 await ref
-                                                    .watch(servicesProvider)
+                                                    .read(servicesProvider)
                                                     .editDevice(dev);
                                                 ref
                                                     .read(
                                                         deviceProvider.notifier)
                                                     .update((state) => dev);
-                                                await bluetoothProvider
+                                                await ref
+                                                    .read(bleProvider)
                                                     .conectar(data.device);
                                               }
                                             },
@@ -322,24 +335,29 @@ class BleScreen extends ConsumerWidget {
                                   print(
                                       '******************* FUERA DEL LISTEN ********');
                                   subscriptionStateConection?.cancel();
-                                  subscriptionStateConection = bluetoothProvider
+                                  subscriptionStateConection = ref
+                                      .read(bleProvider)
                                       .conectionState
                                       .listen((event) async {
                                     final Device dev = await ref
-                                        .watch(servicesProvider)
+                                        .read(servicesProvider)
                                         .getDevice(
                                             event.device.remoteId.toString());
                                     if (event.connectionState ==
                                         BluetoothConnectionState.disconnected) {
+                                      await ref
+                                          .read(bleProvider)
+                                          .caracteristicas(event.device, true);
                                       dev.conectado = false;
                                       await ref
-                                          .watch(servicesProvider)
+                                          .read(servicesProvider)
                                           .editDevice(dev);
                                       print(
                                           '<<<<<<<<<<<<<<<EL DISPOSITIVO: ${event.device}');
                                       if (!event.device.isAutoConnectEnabled &&
-                                          ref.watch(reConectarProvider)) {
-                                        await bluetoothProvider
+                                          ref.read(reConectarProvider)) {
+                                        await ref
+                                            .read(bleProvider)
                                             .reConectar(event.device);
                                       }
                                       ref.invalidate(servicesProvider);
@@ -353,14 +371,21 @@ class BleScreen extends ConsumerWidget {
                                         print(
                                             '<<<<<<<<<< REENVIAR COMANDO >>>>>>>>>>');
                                       } */
+                                      print('''******************************
+                                     ******************************
+                                     ******************************''');
                                       ref
                                           .read(reConectarProvider.notifier)
                                           .update((state) => true);
                                       dev.conectado = true;
 
                                       await ref
-                                          .watch(servicesProvider)
+                                          .read(servicesProvider)
                                           .editDevice(dev);
+
+                                      /* await ref
+                                          .read(bleProvider)
+                                          .descubrirServicios(event.device); */
 
                                       ref.invalidate(servicesProvider);
                                     }
@@ -380,7 +405,7 @@ class BleScreen extends ConsumerWidget {
                                                   .read(deviceProvider.notifier)
                                                   .update((state) => data);
                                               ref
-                                                  .watch(countdownProvider)
+                                                  .read(countdownProvider)
                                                   .volver(false);
                                               ref
                                                   .read(selectModoProvider
@@ -395,13 +420,40 @@ class BleScreen extends ConsumerWidget {
                                                           .notifier)
                                                       .state =
                                                   await ref
-                                                      .watch(servicesProvider)
+                                                      .read(servicesProvider)
                                                       .getTerapiaSeleccionada(
                                                           0);
                                               if (context.mounted) {
-                                                context.push('/homeZapper');
+                                                if (data.relojAsignado > 0) {
+                                                  context.push(
+                                                      '/timerZapper${data.relojAsignado}');
+                                                } else {
+                                                  context.push('/homeZapper');
+                                                }
                                               }
                                             },
+                                            leading: Consumer(
+                                                builder: (context, ref, _) {
+                                              return Container(
+                                                padding:
+                                                    const EdgeInsets.all(0),
+                                                margin: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      widthScreen * 0.008,
+                                                  //vertical: heightScreen * 0.01
+                                                ),
+                                                height: heightScreen * 0.06,
+                                                width: widthScreen * 0.04,
+                                                decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                        invertColors: false,
+                                                        fit: BoxFit.fill,
+                                                        image: AssetImage(ref
+                                                            .watch(bleProvider)
+                                                            .getBatteryLevelForBlescreen(
+                                                                data.mac)))),
+                                              );
+                                            }),
                                             title: Text(data.nombre),
                                             subtitle:
                                                 Text('Equipo: ${data.tipo}'),
@@ -418,13 +470,14 @@ class BleScreen extends ConsumerWidget {
                                                   }
                                                   data.conectado = false;
                                                   await ref
-                                                      .watch(servicesProvider)
+                                                      .read(servicesProvider)
                                                       .editDevice(data);
                                                   ref
                                                       .read(reConectarProvider
                                                           .notifier)
                                                       .update((state) => false);
-                                                  await bluetoothProvider
+                                                  await ref
+                                                      .read(bleProvider)
                                                       .desconectar2(data.mac);
                                                 },
                                                 child:

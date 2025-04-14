@@ -1,19 +1,31 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+//import 'package:flutter_application_1/battery_levels.dart';
+//import 'package:flutter_application_1/caracteristicas.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
+import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/ble_services.dart';
 import 'package:flutter_application_1/services.dart';
 
-final countdownProvider = ChangeNotifierProvider((ref) => CountdownProvider());
+final countdownProvider =
+    ChangeNotifierProvider((ref) => CountdownProvider(ref));
 
 class CountdownProvider extends ChangeNotifier {
+  final Ref ref;
+  CountdownProvider(this.ref) {
+    print('''wwwwwwwwwwwwwwwwwwwwwwwwwww
+    wwwwwwwwwwwwwwwwwwwwwwwww
+    wwwwwwwwwwwwwwwwwwwww''');
+  }
+
   Duration duration = const Duration(seconds: 0);
   Duration tiempoModoA = const Duration(seconds: 10);
   Duration tiempoModoB = const Duration(seconds: 6);
@@ -38,6 +50,22 @@ class CountdownProvider extends ChangeNotifier {
   bool isRunningRespaldo = false;
   BluetoothDevice myBlue =
       BluetoothDevice(remoteId: const DeviceIdentifier("str"));
+  //String batLevel = 'assets/icons/bateriaMarco.png';
+
+  /* set setTimerBat(String value) {
+    batLevel = value;
+    notifyListeners();
+  } */
+
+  /* String get getBatlevel {
+    return batLevel;
+  } */
+
+  /* void updateBat(String value) {
+    container.read(countdownProvider.notifier).batLevel = value;
+    notifyListeners();
+    print('**************** updateBat: $batLevel');
+  } */
 
   void volver(bool volvio) {
     volvioDeTimerZapperScreen = volvio;
@@ -78,21 +106,29 @@ class CountdownProvider extends ChangeNotifier {
     device = _device;
     subscriptionStateConection?.cancel();
     subscriptionStateConection =
-        BleServices().conectionState.listen((event) async {
+        ref.read(bleProvider).conectionState.listen((event) async {
       if (event.connectionState == BluetoothConnectionState.disconnected &&
           event.device.remoteId.toString() == device.mac) {
+        //await BleServices().caracteristicas(event.device, true);
+        //await container.read(bleProvider).caracteristicas(event.device, true);
+        await ref.read(bleProvider).caracteristicas(event.device, true);
         avisoDesconexion();
-        if (!event.device.isAutoConnectEnabled) {
-          await BleServices().reConectar(event.device);
+        if (!event.device.isAutoConnectEnabled &&
+            ref.read(reConectadoProvider)) {
+          //await BleServices().reConectar(event.device);
+          //await container.read(bleProvider).reConectar(event.device);
+          await ref.read(bleProvider).reConectar(event.device);
         }
         notifyListeners();
       }
       if (event.connectionState == BluetoothConnectionState.connected &&
           event.device.remoteId.toString() == device.mac) {
-        if (!BleServices().isBussy) {
+        if (!ref.read(bleProvider).isBussy) {
           print(
               '********************************** AVISO DE RECONEXION **************');
-          await BleServices().descubrirServicios(event.device);
+          //await BleServices().descubrirServicios(event.device);
+          //await container.read(bleProvider).descubrirServicios(event.device);
+          await ref.read(bleProvider).descubrirServicios(event.device);
           avisoReconexion();
           String _command = '';
           if (estado.contains('Ciclo')) {
@@ -139,7 +175,9 @@ class CountdownProvider extends ChangeNotifier {
       comando: listComandos[comando]!,
       terapia: terapia,
     );
-    BleServices().sendCommand(packCommand);
+    //await BleServices().sendCommand(packCommand);
+    //await container.read(bleProvider).sendCommand(packCommand);
+    await ref.read(bleProvider).sendCommand(packCommand);
   }
 
   void _startTimer(int seconds) async {
@@ -220,7 +258,22 @@ class CountdownProvider extends ChangeNotifier {
     estado = 'FIN';
     ciclos = 1;
     volvioDeTimerZapperScreen = true;
-    await BleServices().sendCommand(PackComando(
+    await ref.read(bleProvider).sendCommand(PackComando(
+        deviceMac: device.mac,
+        comando: listComandos['fin']!,
+        terapia: terapia));
+    notifyListeners();
+  }
+
+  void cancelarTimer() async {
+    _tickSubscription?.cancel();
+    subscriptionStateConection?.cancel();
+    showNotification(device.nombre, 'La terapia se ha cancelado con éxito');
+    isRunning = false;
+    estado = 'FIN';
+    ciclos = 1;
+    volvioDeTimerZapperScreen = true;
+    await ref.read(bleProvider).sendCommand(PackComando(
         deviceMac: device.mac,
         comando: listComandos['fin']!,
         terapia: terapia));

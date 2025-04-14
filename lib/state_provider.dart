@@ -1,5 +1,7 @@
+import 'package:flutter_application_1/battery_levels.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/terapia_total.dart';
+//import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final counterProvider = StateProvider<int>((ref) => 0);
@@ -81,3 +83,29 @@ final reConectarProvider = StateProvider<bool>((ref) => false);
 final reConectadoProvider = StateProvider<bool>((ref) => false);
 
 final primerArranqueProvider = StateProvider<bool>((ref) => false);
+
+final batteryLevelProvider = StateProvider<String>((ref) => batteryLevels[0]);
+
+/* final characteristicsProvider =
+    StateProvider<List<BluetoothCharacteristic>>((ref) => [
+          BluetoothCharacteristic(
+              remoteId: const DeviceIdentifier('disponible'),
+              serviceUuid: Guid('FFE0'),
+              characteristicUuid: Guid('FFE1')),
+          BluetoothCharacteristic(
+              remoteId: const DeviceIdentifier('disponible'),
+              serviceUuid: Guid('FFE0'),
+              characteristicUuid: Guid('FFE1')),
+          BluetoothCharacteristic(
+              remoteId: const DeviceIdentifier('disponible'),
+              serviceUuid: Guid('FFE0'),
+              characteristicUuid: Guid('FFE1')),
+          BluetoothCharacteristic(
+              remoteId: const DeviceIdentifier('disponible'),
+              serviceUuid: Guid('FFE0'),
+              characteristicUuid: Guid('FFE1')),
+          BluetoothCharacteristic(
+              remoteId: const DeviceIdentifier('disponible'),
+              serviceUuid: Guid('FFE0'),
+              characteristicUuid: Guid('FFE1')),
+        ]); */
