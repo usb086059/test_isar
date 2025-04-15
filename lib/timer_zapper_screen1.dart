@@ -52,7 +52,9 @@ class TimerZapperScreen1 extends ConsumerWidget {
           return;
         } else if (ref.watch(countdownProvider).estado == 'FIN') {
           await cerrarTimerScreen(ref);
-          context.pop();
+          if (context.mounted) {
+            context.pop();
+          }
         } else {
           context.pop();
         }
@@ -345,7 +347,9 @@ class TimerZapperScreen1 extends ConsumerWidget {
                             onPressed: () async {
                               ref.read(countdownProvider).cancelarTimer();
                               await cerrarTimerScreen(ref);
-                              context.pop();
+                              if (context.mounted) {
+                                context.pop();
+                              }
                             },
                             icon: const Icon(Icons.cancel),
                             label: const Text(
@@ -469,6 +473,7 @@ class TimerZapperScreen1 extends ConsumerWidget {
         .state[ref.read(deviceProvider).relojAsignado] = 'disponible';
     ref.read(deviceProvider.notifier).state.relojAsignado = 0;
     await ref.read(servicesProvider).editDevice(ref.read(deviceProvider));
+    ref.invalidate(servicesProvider);
   }
 }
 

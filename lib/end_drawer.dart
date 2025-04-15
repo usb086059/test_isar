@@ -44,7 +44,7 @@ class EndDrawer extends ConsumerWidget {
                 decoration: const BoxDecoration(color: Colors.white),
                 child: Column(
                   children: [
-                    Container(
+                    /* Container(
                         width: widthScreen * 0.3,
                         color: Colors.green,
                         child: const Text(
@@ -88,7 +88,7 @@ class EndDrawer extends ConsumerWidget {
                                   child: Text('No devices found'));
                             }
                           }),
-                    ),
+                    ), */
                     TextButton(
                         onPressed: () {},
                         child: const Text(

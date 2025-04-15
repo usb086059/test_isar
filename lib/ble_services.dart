@@ -87,6 +87,10 @@ class BleServices extends ChangeNotifier {
     return bussy;
   }
 
+  List<BluetoothCharacteristic> get getListCaracteristicas {
+    return listCaracteristicas;
+  }
+
   /*  set setBleservicesBatery(String valor) {
     bleServicesBatery = valor;
     notifyListeners();
@@ -367,24 +371,34 @@ class BleServices extends ChangeNotifier {
           i = 5;
         }
       }
-      return;
+      //return;
     } else {
-      BluetoothCharacteristic caracteristicaBase = BluetoothCharacteristic(
-          remoteId: device.remoteId,
-          serviceUuid: Guid('FFE0'),
-          characteristicUuid: Guid('FFE1'));
-      await caracteristicaBase.setNotifyValue(true);
+      bool characteristicExist = false;
       for (int i = 0; i < 5; i++) {
-        if (listCaracteristicas[i].remoteId.toString() == 'disponible') {
-          listCaracteristicas[i] = caracteristicaBase;
-          caseNumber = i;
-          print('*********************** caseNumber: $caseNumber');
-          escuchas();
+        if (listCaracteristicas[i].remoteId == device.remoteId) {
+          characteristicExist = true;
           i = 5;
         }
       }
-      return;
+      if (!characteristicExist) {
+        BluetoothCharacteristic caracteristicaBase = BluetoothCharacteristic(
+            remoteId: device.remoteId,
+            serviceUuid: Guid('FFE0'),
+            characteristicUuid: Guid('FFE1'));
+        await caracteristicaBase.setNotifyValue(true);
+        for (int i = 0; i < 5; i++) {
+          if (listCaracteristicas[i].remoteId.toString() == 'disponible') {
+            listCaracteristicas[i] = caracteristicaBase;
+            caseNumber = i;
+            print('*********************** caseNumber: $caseNumber');
+            escuchas();
+            i = 5;
+          }
+        }
+        //return;
+      }
     }
+    return;
   }
 
   Future<void> descubrirServicios(BluetoothDevice device) async {

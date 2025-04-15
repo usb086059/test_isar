@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 //import 'package:flutter_application_1/battery_levels.dart';
 //import 'package:flutter_application_1/caracteristicas.dart';
-import 'package:flutter_application_1/main.dart';
+//import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/device.dart';
@@ -75,7 +75,7 @@ class CountdownProvider extends ChangeNotifier {
     print('****************************** AvisoDesconexion');
     _tickSubscription?.cancel();
     device.conectado = false;
-    Services().editDevice(device);
+    //Services().editDevice(device);
     if (isRunning) {
       isRunningRespaldo = isRunning;
       isRunning = false;
@@ -90,7 +90,7 @@ class CountdownProvider extends ChangeNotifier {
 
   void avisoReconexion() {
     device.conectado = true;
-    Services().editDevice(device);
+    //Services().editDevice(device);
     if (isRunningRespaldo) {
       _startTimer(duration.inSeconds);
       isRunning = true;
@@ -109,25 +109,18 @@ class CountdownProvider extends ChangeNotifier {
         ref.read(bleProvider).conectionState.listen((event) async {
       if (event.connectionState == BluetoothConnectionState.disconnected &&
           event.device.remoteId.toString() == device.mac) {
-        //await BleServices().caracteristicas(event.device, true);
-        //await container.read(bleProvider).caracteristicas(event.device, true);
-        await ref.read(bleProvider).caracteristicas(event.device, true);
+        //await ref.read(bleProvider).caracteristicas(event.device, true);
         avisoDesconexion();
-        if (!event.device.isAutoConnectEnabled &&
+        /* if (!event.device.isAutoConnectEnabled &&
             ref.read(reConectadoProvider)) {
-          //await BleServices().reConectar(event.device);
-          //await container.read(bleProvider).reConectar(event.device);
           await ref.read(bleProvider).reConectar(event.device);
-        }
+        } */
         notifyListeners();
       }
       if (event.connectionState == BluetoothConnectionState.connected &&
           event.device.remoteId.toString() == device.mac) {
         if (!ref.read(bleProvider).isBussy) {
-          print(
-              '********************************** AVISO DE RECONEXION **************');
-          //await BleServices().descubrirServicios(event.device);
-          //await container.read(bleProvider).descubrirServicios(event.device);
+          print('*************************** AVISO DE RECONEXION **');
           await ref.read(bleProvider).descubrirServicios(event.device);
           avisoReconexion();
           String _command = '';
