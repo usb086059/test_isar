@@ -1,19 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-//import 'package:flutter_application_1/battery_levels.dart';
-//import 'package:flutter_application_1/caracteristicas.dart';
-//import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
-import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/ble_services.dart';
-import 'package:flutter_application_1/services.dart';
 
 final countdownProvider =
     ChangeNotifierProvider((ref) => CountdownProvider(ref));
@@ -115,7 +110,7 @@ class CountdownProvider extends ChangeNotifier {
             ref.read(reConectadoProvider)) {
           await ref.read(bleProvider).reConectar(event.device);
         } */
-        notifyListeners();
+        //notifyListeners();
       }
       if (event.connectionState == BluetoothConnectionState.connected &&
           event.device.remoteId.toString() == device.mac) {
@@ -130,9 +125,10 @@ class CountdownProvider extends ChangeNotifier {
           if (estado.contains('Reposo')) _command = 'pause';
           if (estado.contains('FIN')) _command = 'fin';
           if (_command.isNotEmpty) enviarComando(_command);
-          notifyListeners();
+          //notifyListeners();
         }
       }
+      notifyListeners();
     });
 
     if (device.conectado) {
@@ -266,10 +262,12 @@ class CountdownProvider extends ChangeNotifier {
     estado = 'FIN';
     ciclos = 1;
     volvioDeTimerZapperScreen = true;
-    await ref.read(bleProvider).sendCommand(PackComando(
-        deviceMac: device.mac,
-        comando: listComandos['fin']!,
-        terapia: terapia));
+    if (device.conectado) {
+      await ref.read(bleProvider).sendCommand(PackComando(
+          deviceMac: device.mac,
+          comando: listComandos['fin']!,
+          terapia: terapia));
+    }
     notifyListeners();
   }
 }

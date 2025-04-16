@@ -2,20 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:flutter_application_1/battery_levels.dart';
 import 'package:flutter_application_1/ble_services.dart';
 import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/countdown_provider.dart';
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/end_drawer.dart';
 import 'package:flutter_application_1/gradient_services.dart';
-//import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/state_provider.dart';
-
 import 'package:flutter_application_1/terapia_total.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -42,8 +38,7 @@ class TimerZapperScreen1 extends ConsumerWidget {
 
     final TerapiaTotal terapia = ref.watch(terapiaProvider1);
 
-    final String location = '/timerZapper1';
-    //final batteryProvider = ref.watch(batteryServicesProvider);
+    const String location = '/timerZapper1';
 
     return PopScope(
       canPop: false,
@@ -343,7 +338,7 @@ class TimerZapperScreen1 extends ConsumerWidget {
                                 iconColor:
                                     MaterialStateProperty.all(Colors.white),
                                 side: MaterialStateProperty.all(
-                                    BorderSide(color: Colors.white))),
+                                    const BorderSide(color: Colors.white))),
                             onPressed: () async {
                               ref.read(countdownProvider).cancelarTimer();
                               await cerrarTimerScreen(ref);

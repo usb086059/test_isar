@@ -9,12 +9,14 @@ import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/ble_services.dart';
-import 'package:flutter_application_1/services.dart';
 
 final countdownProvider2 =
-    ChangeNotifierProvider((ref) => CountdownProvider2());
+    ChangeNotifierProvider((ref) => CountdownProvider2(ref));
 
 class CountdownProvider2 extends ChangeNotifier {
+  final Ref ref;
+  CountdownProvider2(this.ref);
+
   Duration duration = const Duration(seconds: 0);
   Duration tiempoModoA = const Duration(seconds: 10);
   Duration tiempoModoB = const Duration(seconds: 6);
@@ -48,7 +50,7 @@ class CountdownProvider2 extends ChangeNotifier {
     print('****************************** AvisoDesconexion');
     _tickSubscription?.cancel();
     device.conectado = false;
-    Services().editDevice(device);
+    //Services().editDevice(device);
     if (isRunning) {
       isRunningRespaldo = isRunning;
       isRunning = false;
@@ -63,7 +65,7 @@ class CountdownProvider2 extends ChangeNotifier {
 
   void avisoReconexion() {
     device.conectado = true;
-    Services().editDevice(device);
+    //Services().editDevice(device);
     if (isRunningRespaldo) {
       _startTimer(duration.inSeconds);
       isRunning = true;
@@ -79,21 +81,18 @@ class CountdownProvider2 extends ChangeNotifier {
     device = _device;
     subscriptionStateConection?.cancel();
     subscriptionStateConection =
-        BleServices().conectionState.listen((event) async {
+        ref.read(bleProvider).conectionState.listen((event) async {
       if (event.connectionState == BluetoothConnectionState.disconnected &&
           event.device.remoteId.toString() == device.mac) {
         avisoDesconexion();
-        if (!event.device.isAutoConnectEnabled) {
-          await BleServices().reConectar(event.device);
-        }
-        notifyListeners();
+        //notifyListeners();
       }
       if (event.connectionState == BluetoothConnectionState.connected &&
           event.device.remoteId.toString() == device.mac) {
-        if (!BleServices().isBussy) {
+        if (!ref.read(bleProvider).isBussy) {
           print(
               '********************************** AVISO DE RECONEXION **************');
-          await BleServices().descubrirServicios(event.device);
+          await ref.read(bleProvider).descubrirServicios(event.device);
           avisoReconexion();
           String _command = '';
           if (estado.contains('Ciclo')) {
@@ -102,9 +101,10 @@ class CountdownProvider2 extends ChangeNotifier {
           if (estado.contains('Reposo')) _command = 'pause';
           if (estado.contains('FIN')) _command = 'fin';
           if (_command.isNotEmpty) enviarComando(_command);
-          notifyListeners();
+          //notifyListeners();
         }
       }
+      notifyListeners();
     });
 
     if (device.conectado) {
@@ -140,7 +140,7 @@ class CountdownProvider2 extends ChangeNotifier {
       comando: listComandos[comando]!,
       terapia: terapia,
     );
-    BleServices().sendCommand(packCommand);
+    ref.read(bleProvider).sendCommand(packCommand);
   }
 
   void _startTimer(int seconds) {
@@ -221,10 +221,27 @@ class CountdownProvider2 extends ChangeNotifier {
     estado = 'FIN';
     ciclos = 1;
     volvioDeTimerZapperScreen = true;
-    await BleServices().sendCommand(PackComando(
+    await ref.read(bleProvider).sendCommand(PackComando(
         deviceMac: device.mac,
         comando: listComandos['fin']!,
         terapia: terapia));
+    notifyListeners();
+  }
+
+  void cancelarTimer() async {
+    _tickSubscription?.cancel();
+    subscriptionStateConection?.cancel();
+    showNotification(device.nombre, 'La terapia se ha cancelado con éxito');
+    isRunning = false;
+    estado = 'FIN';
+    ciclos = 1;
+    volvioDeTimerZapperScreen = true;
+    if (device.conectado) {
+      await ref.read(bleProvider).sendCommand(PackComando(
+          deviceMac: device.mac,
+          comando: listComandos['fin']!,
+          terapia: terapia));
+    }
     notifyListeners();
   }
 }
