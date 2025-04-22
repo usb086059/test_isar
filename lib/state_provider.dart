@@ -86,26 +86,4 @@ final primerArranqueProvider = StateProvider<bool>((ref) => false);
 
 final batteryLevelProvider = StateProvider<String>((ref) => batteryLevels[0]);
 
-/* final characteristicsProvider =
-    StateProvider<List<BluetoothCharacteristic>>((ref) => [
-          BluetoothCharacteristic(
-              remoteId: const DeviceIdentifier('disponible'),
-              serviceUuid: Guid('FFE0'),
-              characteristicUuid: Guid('FFE1')),
-          BluetoothCharacteristic(
-              remoteId: const DeviceIdentifier('disponible'),
-              serviceUuid: Guid('FFE0'),
-              characteristicUuid: Guid('FFE1')),
-          BluetoothCharacteristic(
-              remoteId: const DeviceIdentifier('disponible'),
-              serviceUuid: Guid('FFE0'),
-              characteristicUuid: Guid('FFE1')),
-          BluetoothCharacteristic(
-              remoteId: const DeviceIdentifier('disponible'),
-              serviceUuid: Guid('FFE0'),
-              characteristicUuid: Guid('FFE1')),
-          BluetoothCharacteristic(
-              remoteId: const DeviceIdentifier('disponible'),
-              serviceUuid: Guid('FFE0'),
-              characteristicUuid: Guid('FFE1')),
-        ]); */
+final cerroSesion = StateProvider<bool>((ref) => false);

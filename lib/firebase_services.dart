@@ -1,4 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:firebase_auth/firebase_auth.dart";
+import "package:flutter/material.dart";
 //import "package:flutter/material.dart";
 //import "package:go_router/go_router.dart";
 
@@ -67,4 +69,16 @@ Future<void> addUser(
     'País': pais,
     'Estado / Provincia': provincia,
   });
+}
+
+ImageProvider<Object> userImage(User? user) {
+  ImageProvider<Object> imagen = const AssetImage('assets/logo-google-G.png');
+  if (user != null) {
+    if (user.photoURL == null || user.photoURL!.isEmpty) {
+      imagen = const AssetImage('assets/icons/iconoCircular.png');
+    } else {
+      imagen = NetworkImage(user.photoURL!);
+    }
+  }
+  return imagen;
 }

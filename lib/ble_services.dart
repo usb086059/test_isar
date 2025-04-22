@@ -246,6 +246,7 @@ class BleServices extends ChangeNotifier {
         //await Future.delayed(const Duration(seconds: 3));
       }
     }
+    //await Future.delayed(const Duration(seconds: 3));
     /* _pulso?.cancel();
     _pulso = Stream<int>.periodic(const Duration(seconds: 3), (sec) => sec)
         .listen((event) async {

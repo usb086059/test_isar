@@ -10,6 +10,7 @@ import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/editar_terapia.dart';
 import 'package:flutter_application_1/eliminar_terapia.dart';
 import 'package:flutter_application_1/end_drawer.dart';
+import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/services.dart';
@@ -124,8 +125,7 @@ class HomeZapperScreen extends ConsumerWidget {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: NetworkImage(user!.photoURL!))),
+                            fit: BoxFit.fill, image: userImage(user))),
                     child: Center(
                         child: IconButton(
                             //highlightColor: Colors.black,

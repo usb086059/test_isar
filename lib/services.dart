@@ -187,6 +187,7 @@ class Services {
     final isar = await db;
     final Device? device =
         await isar.devices.where().filter().macEqualTo(mac).findFirst();
+    //print('*********444444444444444444444444 ${device!.conectado}');
     return device!;
   }
 

@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/auth_google_services.dart';
+import 'package:flutter_application_1/ble_services.dart';
+import 'package:flutter_application_1/countdown_provider.dart';
+import 'package:flutter_application_1/countdown_provider_2.dart';
+import 'package:flutter_application_1/countdown_provider_3.dart';
+import 'package:flutter_application_1/countdown_provider_4.dart';
+import 'package:flutter_application_1/countdown_provider_5.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/state_provider.dart';
@@ -90,7 +97,73 @@ class EndDrawer extends ConsumerWidget {
                           }),
                     ), */
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          final List<Device> listDeviceWithRelojAsignado =
+                              await ref
+                                  .read(servicesProvider)
+                                  .getAllDeviceConRelojAsignado();
+                          if (listDeviceWithRelojAsignado.isNotEmpty) {
+                            print(
+                                '*************** ${listDeviceWithRelojAsignado.length}');
+                            for (Device element
+                                in listDeviceWithRelojAsignado) {
+                              switch (element.relojAsignado) {
+                                case 1:
+                                  ref.read(countdownProvider).cancelarTimer();
+                                  await cerrar(ref, element);
+                                  break;
+                                case 2:
+                                  ref.read(countdownProvider2).cancelarTimer();
+                                  await cerrar(ref, element);
+                                  break;
+                                case 3:
+                                  ref.read(countdownProvider3).cancelarTimer();
+                                  await cerrar(ref, element);
+                                  break;
+                                case 4:
+                                  ref.read(countdownProvider4).cancelarTimer();
+                                  await cerrar(ref, element);
+                                  break;
+                                case 5:
+                                  ref.read(countdownProvider5).cancelarTimer();
+                                  await cerrar(ref, element);
+                                  break;
+                                default:
+                                  break;
+                              }
+                            }
+                          }
+                          await Future.delayed(const Duration(seconds: 2));
+                          final List<Device> listDevicesConnected = await ref
+                              .read(servicesProvider)
+                              .getAllDeviceConected();
+                          if (listDevicesConnected.isNotEmpty) {
+                            for (Device element in listDevicesConnected) {
+                              element.conectado = false;
+                              await ref
+                                  .read(servicesProvider)
+                                  .editDevice(element);
+                              ref
+                                  .read(reConectarProvider.notifier)
+                                  .update((state) => false);
+                              await ref
+                                  .read(bleProvider)
+                                  .desconectar2(element.mac);
+                              await Future.delayed(const Duration(seconds: 1));
+                            }
+                          }
+                          ref.invalidate(servicesProvider);
+                          await Future.delayed(const Duration(seconds: 1));
+                          await signOutWithGoogle();
+                          ref
+                              .read(cerroSesion.notifier)
+                              .update((state) => true);
+                          if (context.mounted) {
+                            context.push('/');
+                            //context.pop();
+                            //context.pushReplacement('/');
+                          }
+                        },
                         child: const Text(
                           'Cerrar Sesión',
                           textAlign: TextAlign.center,
@@ -103,5 +176,11 @@ class EndDrawer extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> cerrar(WidgetRef ref, Device device) async {
+    ref.read(relojProvider.notifier).state[device.relojAsignado] = 'disponible';
+    device.relojAsignado = 0;
+    await ref.read(servicesProvider).editDevice(device);
   }
 }

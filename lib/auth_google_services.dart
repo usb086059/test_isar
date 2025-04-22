@@ -20,3 +20,15 @@ Future<UserCredential> signInWithGoogle() async {
   // Once signed in, return the UserCredential
   return await FirebaseAuth.instance.signInWithCredential(credential);
 }
+
+Future<void> signOutWithGoogle() async {
+  try {
+    await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
+    print('Sesión cerrada exitosamente (Firebase y Google).');
+    // Navegar a la pantalla de inicio de sesión
+  } catch (e) {
+    print('Error al cerrar sesión con Google: $e');
+    // Manejar el error (mostrar mensaje al usuario, etc.)
+  }
+}

@@ -7,6 +7,7 @@ import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/countdown_provider_3.dart';
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/end_drawer.dart';
+import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/services.dart';
@@ -113,8 +114,7 @@ class TimerZapperScreen3 extends ConsumerWidget {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: NetworkImage(user!.photoURL!))),
+                              fit: BoxFit.fill, image: userImage(user))),
                       child: Center(
                           child: IconButton(
                               //highlightColor: Colors.black,

@@ -9,6 +9,7 @@ import 'package:flutter_application_1/countdown_provider.dart';
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/end_drawer.dart';
+import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
 //import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/services.dart';
@@ -30,7 +31,7 @@ class BleScreen extends ConsumerWidget {
         subscriptionStateConection;
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
-    var user = FirebaseAuth.instance.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
 
     List<BluetoothDevice> listaDC = [];
     final formKey = GlobalKey<FormState>();
@@ -107,7 +108,9 @@ class BleScreen extends ConsumerWidget {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                               fit: BoxFit.fill,
-                              image: NetworkImage(user!.photoURL!))),
+                              image: userImage(
+                                  user) //NetworkImage(user!.photoURL!)
+                              )),
                       child: Center(
                           child: IconButton(
                               //highlightColor: Colors.black,
@@ -124,6 +127,23 @@ class BleScreen extends ConsumerWidget {
                     height: heightScreen * 0.06,
                     width: widthScreen * 0.056,
                   ),
+/*                   Container(
+                    padding: const EdgeInsets.all(0),
+                    margin: EdgeInsets.symmetric(
+                      horizontal: widthScreen * 0.008,
+                      //vertical: heightScreen * 0.01
+                    ),
+                    height: heightScreen * 0.06,
+                    width: widthScreen * 0.04,
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            invertColors: false,
+                            fit: BoxFit.fill,
+                            image:
+                                AssetImage('assets/icons/cerrarSesion.png'))),
+                    /* child: Text(
+                          '${container.read(bleProvider).getBleservicesBatery.length}') */
+                  ) */
                 ],
               ),
               body: Container(
@@ -419,25 +439,14 @@ class BleScreen extends ConsumerWidget {
                                               ref
                                                   .read(deviceProvider.notifier)
                                                   .update((state) => data);
-                                              ref
-                                                  .read(countdownProvider)
-                                                  .volver(false);
-                                              ref
-                                                  .read(selectModoProvider
-                                                      .notifier)
-                                                  .state = false;
-                                              ref
-                                                  .read(indexTerapiaProvider
-                                                      .notifier)
-                                                  .state = 0;
-                                              ref
+                                              /* ref
                                                       .read(terapiaProvider1
                                                           .notifier)
                                                       .state =
                                                   await ref
                                                       .read(servicesProvider)
                                                       .getTerapiaSeleccionada(
-                                                          0);
+                                                          0); */
                                               if (context.mounted) {
                                                 print(
                                                     '***************** Reloj Asignado: ${data.relojAsignado}');
@@ -445,6 +454,17 @@ class BleScreen extends ConsumerWidget {
                                                   context.push(
                                                       '/timerZapper${data.relojAsignado}');
                                                 } else {
+                                                  ref
+                                                      .read(countdownProvider)
+                                                      .volver(false);
+                                                  ref
+                                                      .read(selectModoProvider
+                                                          .notifier)
+                                                      .state = false;
+                                                  ref
+                                                      .read(indexTerapiaProvider
+                                                          .notifier)
+                                                      .state = 0;
                                                   context.push('/homeZapper');
                                                 }
                                               }
@@ -519,4 +539,16 @@ class BleScreen extends ConsumerWidget {
       ),
     );
   }
+
+  /* ImageProvider<Object> userImage(User? user) {
+    ImageProvider<Object> imagen = const AssetImage('assets/logo-google-G.png');
+    if (user != null) {
+      if (user.photoURL == null || user.photoURL!.isEmpty) {
+        imagen = const AssetImage('assets/icons/iconoCircular.png');
+      } else {
+        imagen = NetworkImage(user.photoURL!);
+      }
+    }
+    return imagen;
+  } */
 }

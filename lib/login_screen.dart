@@ -126,10 +126,10 @@ class LoginScreen extends ConsumerWidget {
                                           orElse: () => 'no existe');
                                   if (context.mounted) {
                                     context.pop();
-                                    if (ref.watch(primerArranqueProvider) ==
+                                    if (ref.read(primerArranqueProvider) ==
                                         false) {
                                       listDeviceConected = await ref
-                                          .watch(servicesProvider)
+                                          .read(servicesProvider)
                                           .getAllDeviceConected();
                                       if (listDeviceConected.isNotEmpty) {
                                         for (var element
@@ -137,7 +137,7 @@ class LoginScreen extends ConsumerWidget {
                                           element.conectado = false;
                                           element.relojAsignado = 0;
                                           await ref
-                                              .watch(servicesProvider)
+                                              .read(servicesProvider)
                                               .editDevice(element);
                                         }
                                       }
@@ -146,7 +146,11 @@ class LoginScreen extends ConsumerWidget {
                                       ref
                                           .read(primerArranqueProvider.notifier)
                                           .update((state) => true);
-                                      context.push('/bluetooth');
+                                      if (ref.read(cerroSesion)) {
+                                        context.pop();
+                                      } else {
+                                        context.push('/bluetooth');
+                                      }
                                     } else {
                                       ref
                                           .read(primerArranqueProvider.notifier)
