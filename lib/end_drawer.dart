@@ -104,6 +104,17 @@ class EndDrawer extends ConsumerWidget {
                     ), */
                     TextButton(
                         onPressed: () async {
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) {
+                                return Center(
+                                    child: CircularProgressIndicator(
+                                  color:
+                                      const Color.fromARGB(255, 50, 102, 175),
+                                  backgroundColor: Colors.purple[300],
+                                ));
+                              });
                           final List<Device> listDeviceWithRelojAsignado =
                               await ref
                                   .read(servicesProvider)
@@ -165,9 +176,9 @@ class EndDrawer extends ConsumerWidget {
                               .read(cerroSesion.notifier)
                               .update((state) => true);
                           if (context.mounted) {
+                            Navigator.pop(context);
+                            context.pop();
                             context.push('/');
-                            //context.pop();
-                            //context.pushReplacement('/');
                           }
                         },
                         child: const Text(

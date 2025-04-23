@@ -107,6 +107,7 @@ class LoginScreen extends ConsumerWidget {
                                       Colors.transparent)),
                               onPressed: () async {
                                 showDialog(
+                                    barrierDismissible: false,
                                     context: context,
                                     builder: (context) {
                                       return Center(
