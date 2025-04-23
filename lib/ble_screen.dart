@@ -11,6 +11,7 @@ import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/end_drawer.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
+import 'package:flutter_application_1/navigation_bar_redes.dart';
 //import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -69,381 +70,391 @@ class BleScreen extends ConsumerWidget {
               ),
             ),
             Scaffold(
-              backgroundColor: Colors.transparent,
-              endDrawer: EndDrawer(
-                widthScreen: widthScreen,
-                heightScreen: heightScreen,
-                location: location,
-              ),
-              endDrawerEnableOpenDragGesture: false,
-              appBar: AppBar(
-                flexibleSpace: const Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Stack(
-                    //TODO: quitar el Stack porque quedó un solo hijo
-                    children: [
-                      Center(
-                        child: Text(
-                          'EQUIPOS',
-                          style: TextStyle(
-                            fontSize: 35,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                backgroundColor: Colors.transparent,
+                endDrawer: EndDrawer(
+                  widthScreen: widthScreen,
+                  heightScreen: heightScreen,
+                  location: location,
+                ),
+                endDrawerEnableOpenDragGesture: false,
+                appBar: AppBar(
+                  flexibleSpace: const Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Stack(
+                      //TODO: quitar el Stack porque quedó un solo hijo
+                      children: [
+                        Center(
+                          child: Text(
+                            'EQUIPOS',
+                            style: TextStyle(
+                              fontSize: 35,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                backgroundColor: Colors.transparent,
-                centerTitle: true,
-                actions: [
-                  Container(
-                    padding: const EdgeInsets.all(0),
-                    margin: const EdgeInsets.all(0),
-                    height: heightScreen * 0.1,
-                    width: widthScreen * 0.15,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image:
-                                userImage(user) //NetworkImage(user!.photoURL!)
-                            )),
-                  ),
-                  /* SizedBox(
+                  backgroundColor: Colors.transparent,
+                  centerTitle: true,
+                  actions: [
+                    Container(
+                      padding: const EdgeInsets.all(0),
+                      margin: const EdgeInsets.all(0),
+                      height: heightScreen * 0.1,
+                      width: widthScreen * 0.15,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: userImage(
+                                  user) //NetworkImage(user!.photoURL!)
+                              )),
+                    ),
+                    /* SizedBox(
                     height: heightScreen * 0.06,
                     width: widthScreen * 0.056,
                   ), */
-                  Builder(builder: (context) {
-                    return Container(
-                      padding: const EdgeInsets.all(0),
-                      margin: EdgeInsets.symmetric(
-                        horizontal: widthScreen * 0.008,
-                        //vertical: heightScreen * 0.01
-                      ),
-                      height: heightScreen * 0.06,
-                      width: widthScreen * 0.04,
-                      /* decoration: const BoxDecoration(
+                    Builder(builder: (context) {
+                      return Container(
+                        padding: const EdgeInsets.all(0),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: widthScreen * 0.008,
+                          //vertical: heightScreen * 0.01
+                        ),
+                        height: heightScreen * 0.06,
+                        width: widthScreen * 0.04,
+                        /* decoration: const BoxDecoration(
                             image: DecorationImage(
                                 invertColors: true,
                                 fit: BoxFit.fill,
                                 image: AssetImage('assets/icons/letra-x.png'))), */
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: IconButton(
-                            padding: EdgeInsets.zero,
-                            //highlightColor: Colors.black,
-                            onPressed: () {
-                              Scaffold.of(context).openEndDrawer();
-                            },
-                            icon: const Icon(
-                              //Icons.cancel_presentation,
-                              //Icons.more_vert,
-                              Icons.menu,
-                              size: 60,
-                              color: Colors.white,
-                              //color: Colors.transparent,
-                            )),
-                      ),
-                    );
-                  })
-                ],
-              ),
-              body: Container(
-                height: heightScreen,
-                width: widthScreen,
-                color: Colors.transparent,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 8, bottom: 16, left: 16, right: 16),
-                    child: Column(
-                      children: [
-                        /* const Text('ESCANEAR DISPOSITIVOS',
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: IconButton(
+                              padding: EdgeInsets.zero,
+                              //highlightColor: Colors.black,
+                              onPressed: () {
+                                Scaffold.of(context).openEndDrawer();
+                              },
+                              icon: const Icon(
+                                //Icons.cancel_presentation,
+                                //Icons.more_vert,
+                                Icons.menu,
+                                size: 60,
+                                color: Colors.white,
+                                //color: Colors.transparent,
+                              )),
+                        ),
+                      );
+                    })
+                  ],
+                ),
+                body: Container(
+                  height: heightScreen,
+                  width: widthScreen,
+                  color: Colors.transparent,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 8, bottom: 16, left: 16, right: 16),
+                      child: Column(
+                        children: [
+                          /* const Text('ESCANEAR DISPOSITIVOS',
                             style: TextStyle(
                                 fontSize: 20,
                                 color: Color.fromARGB(255, 50, 102, 175),
                                 fontWeight: FontWeight.bold)), */
-                        ElevatedButton(
-                            onPressed: () async {
-                              //await bluetoothProvider.bleState();
-                              if (await ref.read(bleProvider).bleState()) {
-                                await ref.read(bleProvider).scanDevices(5);
-                              } else {
-                                await ref.read(bleProvider).bleTurnOn();
-                                await ref.read(bleProvider).scanDevices(5);
-                              }
-                            },
-                            child: const Text('Escanear Dispositivos')),
-                        Container(
-                          constraints: BoxConstraints(
-                              maxHeight: heightScreen * 0.2,
-                              maxWidth: widthScreen * 0.95),
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                          ),
-                          child: StreamBuilder<List<ScanResult>>(
-                              stream: ref.read(bleProvider).scanResults,
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: snapshot.data!.length,
-                                      itemBuilder: (context, index) {
-                                        final data = snapshot.data![index];
-                                        return Card(
-                                          child: ListTile(
-                                            onTap: () async {
-                                              if (!await ref
-                                                  .read(servicesProvider)
-                                                  .getDeviceExists(data
-                                                      .device.remoteId
-                                                      .toString())) {
-                                                if (!context.mounted) return;
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return AlertDialog(
-                                                        content: Column(
-                                                          children: [
-                                                            const Text(
-                                                                'Asigne un nombre al equipo'),
-                                                            Form(
-                                                              key: formKey,
-                                                              child:
-                                                                  TextFormField(
-                                                                autovalidateMode:
-                                                                    AutovalidateMode
-                                                                        .onUserInteraction,
-                                                                textCapitalization:
-                                                                    TextCapitalization
-                                                                        .characters,
-                                                                maxLength: 10,
-                                                                cursorColor:
-                                                                    Colors.blue,
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .blue),
-                                                                controller:
-                                                                    nombreDeviceController,
-                                                                keyboardType:
-                                                                    TextInputType
-                                                                        .text,
-                                                                /* decoration: formDecorationTerapia(
+                          ElevatedButton(
+                              onPressed: () async {
+                                //await bluetoothProvider.bleState();
+                                if (await ref.read(bleProvider).bleState()) {
+                                  await ref.read(bleProvider).scanDevices(5);
+                                } else {
+                                  await ref.read(bleProvider).bleTurnOn();
+                                  await ref.read(bleProvider).scanDevices(5);
+                                }
+                              },
+                              child: const Text('Escanear Dispositivos')),
+                          Container(
+                            constraints: BoxConstraints(
+                                maxHeight: heightScreen * 0.2,
+                                maxWidth: widthScreen * 0.95),
+                            decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
+                            ),
+                            child: StreamBuilder<List<ScanResult>>(
+                                stream: ref.read(bleProvider).scanResults,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: snapshot.data!.length,
+                                        itemBuilder: (context, index) {
+                                          final data = snapshot.data![index];
+                                          return Card(
+                                            child: ListTile(
+                                              onTap: () async {
+                                                if (!await ref
+                                                    .read(servicesProvider)
+                                                    .getDeviceExists(data
+                                                        .device.remoteId
+                                                        .toString())) {
+                                                  if (!context.mounted) return;
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          content: Column(
+                                                            children: [
+                                                              const Text(
+                                                                  'Asigne un nombre al equipo'),
+                                                              Form(
+                                                                key: formKey,
+                                                                child:
+                                                                    TextFormField(
+                                                                  autovalidateMode:
+                                                                      AutovalidateMode
+                                                                          .onUserInteraction,
+                                                                  textCapitalization:
+                                                                      TextCapitalization
+                                                                          .characters,
+                                                                  maxLength: 10,
+                                                                  cursorColor:
+                                                                      Colors
+                                                                          .blue,
+                                                                  style: const TextStyle(
+                                                                      color: Colors
+                                                                          .blue),
+                                                                  controller:
+                                                                      nombreDeviceController,
+                                                                  keyboardType:
+                                                                      TextInputType
+                                                                          .text,
+                                                                  /* decoration: formDecorationTerapia(
                                                                                                       'Nombre', '', null), */
-                                                                validator:
-                                                                    (value) {
-                                                                  if (value ==
-                                                                          null ||
-                                                                      value
-                                                                          .isEmpty) {
-                                                                    return 'Requerido';
-                                                                  }
-                                                                  return null;
-                                                                },
+                                                                  validator:
+                                                                      (value) {
+                                                                    if (value ==
+                                                                            null ||
+                                                                        value
+                                                                            .isEmpty) {
+                                                                      return 'Requerido';
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        actions: [
-                                                          TextButton(
-                                                              onPressed: () {
-                                                                /* ref
+                                                            ],
+                                                          ),
+                                                          actions: [
+                                                            TextButton(
+                                                                onPressed: () {
+                                                                  /* ref
                                                                   .watch(
                                                                       origenHomeZapperProvider
                                                                           .notifier)
                                                                   .state = true; */
-                                                                context.pop();
-                                                              },
-                                                              child: const Text(
-                                                                  'Volver')),
-                                                          TextButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                if (formKey
-                                                                    .currentState!
-                                                                    .validate()) {
-                                                                  await ref.watch(servicesProvider).addDevice(Device(
-                                                                      tipo: data
-                                                                          .device
-                                                                          .advName,
-                                                                      mac: data
-                                                                          .device
-                                                                          .remoteId
-                                                                          .toString(),
-                                                                      nombre: nombreDeviceController
-                                                                          .text
-                                                                          .toUpperCase(),
-                                                                      conectado:
-                                                                          true,
-                                                                      relojAsignado:
-                                                                          0));
-                                                                  ref.read(deviceProvider.notifier).update((state) => Device(
-                                                                      tipo: data
-                                                                          .device
-                                                                          .advName,
-                                                                      mac: data
-                                                                          .device
-                                                                          .remoteId
-                                                                          .toString(),
-                                                                      nombre: nombreDeviceController
-                                                                          .text
-                                                                          .toUpperCase(),
-                                                                      conectado:
-                                                                          true,
-                                                                      relojAsignado:
-                                                                          0));
-                                                                  await ref
-                                                                      .read(
-                                                                          bleProvider)
-                                                                      .conectar(
-                                                                          data.device);
                                                                   context.pop();
-                                                                }
-                                                              },
-                                                              child: const Text(
-                                                                  'Conectar'))
-                                                        ],
-                                                      );
-                                                    });
-                                              } else {
-                                                final Device dev = await ref
-                                                    .read(servicesProvider)
-                                                    .getDevice(data
-                                                        .device.remoteId
-                                                        .toString());
-                                                dev.conectado = true;
-                                                await ref
-                                                    .read(servicesProvider)
-                                                    .editDevice(dev);
-                                                ref
-                                                    .read(
-                                                        deviceProvider.notifier)
-                                                    .update((state) => dev);
-                                                await ref
-                                                    .read(bleProvider)
-                                                    .conectar(data.device);
-                                              }
-                                            },
-                                            title: Text(data.device.advName),
-                                            subtitle: Text(data.device.remoteId
-                                                .toString()),
-                                          ),
-                                        );
-                                      });
-                                } else {
-                                  return const Center(
-                                      child: Text('No devices found'));
-                                }
-                              }),
-                        ),
-                        const Divider(height: 10, color: Colors.blue),
-                        ElevatedButton(
-                            onPressed: () async {},
-                            child: const Text('Dispositivos Conectados')),
-                        Container(
-                          constraints: BoxConstraints(
-                              maxHeight: heightScreen * 0.6,
-                              maxWidth: widthScreen * 0.95),
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                                                                },
+                                                                child: const Text(
+                                                                    'Volver')),
+                                                            TextButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  if (formKey
+                                                                      .currentState!
+                                                                      .validate()) {
+                                                                    await ref.watch(servicesProvider).addDevice(Device(
+                                                                        tipo: data
+                                                                            .device
+                                                                            .advName,
+                                                                        mac: data
+                                                                            .device
+                                                                            .remoteId
+                                                                            .toString(),
+                                                                        nombre: nombreDeviceController
+                                                                            .text
+                                                                            .toUpperCase(),
+                                                                        conectado:
+                                                                            true,
+                                                                        relojAsignado:
+                                                                            0));
+                                                                    ref.read(deviceProvider.notifier).update((state) => Device(
+                                                                        tipo: data
+                                                                            .device
+                                                                            .advName,
+                                                                        mac: data
+                                                                            .device
+                                                                            .remoteId
+                                                                            .toString(),
+                                                                        nombre: nombreDeviceController
+                                                                            .text
+                                                                            .toUpperCase(),
+                                                                        conectado:
+                                                                            true,
+                                                                        relojAsignado:
+                                                                            0));
+                                                                    await ref
+                                                                        .read(
+                                                                            bleProvider)
+                                                                        .conectar(
+                                                                            data.device);
+                                                                    context
+                                                                        .pop();
+                                                                  }
+                                                                },
+                                                                child: const Text(
+                                                                    'Conectar'))
+                                                          ],
+                                                        );
+                                                      });
+                                                } else {
+                                                  final Device dev = await ref
+                                                      .read(servicesProvider)
+                                                      .getDevice(data
+                                                          .device.remoteId
+                                                          .toString());
+                                                  dev.conectado = true;
+                                                  await ref
+                                                      .read(servicesProvider)
+                                                      .editDevice(dev);
+                                                  ref
+                                                      .read(deviceProvider
+                                                          .notifier)
+                                                      .update((state) => dev);
+                                                  await ref
+                                                      .read(bleProvider)
+                                                      .conectar(data.device);
+                                                }
+                                              },
+                                              title: Text(data.device.advName),
+                                              subtitle: Text(data
+                                                  .device.remoteId
+                                                  .toString()),
+                                            ),
+                                          );
+                                        });
+                                  } else {
+                                    return const Center(
+                                        child: Text('No devices found'));
+                                  }
+                                }),
                           ),
-                          child: FutureBuilder<List<Device>>(
-                              future: ref
-                                  .watch(servicesProvider)
-                                  .getAllDeviceConected(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  print(
-                                      '******************* FUERA DEL LISTEN ********');
-                                  subscriptionStateConection?.cancel();
-                                  subscriptionStateConection = ref
-                                      .read(bleProvider)
-                                      .conectionState
-                                      .listen((event) async {
+                          const Divider(height: 10, color: Colors.blue),
+                          ElevatedButton(
+                              onPressed: () async {},
+                              child: const Text('Dispositivos Conectados')),
+                          Container(
+                            constraints: BoxConstraints(
+                                maxHeight: heightScreen * 0.6,
+                                maxWidth: widthScreen * 0.95),
+                            decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
+                            ),
+                            child: FutureBuilder<List<Device>>(
+                                future: ref
+                                    .watch(servicesProvider)
+                                    .getAllDeviceConected(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    print(
+                                        '******************* FUERA DEL LISTEN ********');
                                     subscriptionStateConection?.cancel();
-                                    final Device dev = await ref
-                                        .read(servicesProvider)
-                                        .getDevice(
-                                            event.device.remoteId.toString());
-                                    if (event.connectionState ==
-                                        BluetoothConnectionState.disconnected) {
-                                      await ref
-                                          .read(bleProvider)
-                                          .caracteristicas(event.device, true);
-                                      dev.conectado = false;
-                                      await ref
+                                    subscriptionStateConection = ref
+                                        .read(bleProvider)
+                                        .conectionState
+                                        .listen((event) async {
+                                      subscriptionStateConection?.cancel();
+                                      final Device dev = await ref
                                           .read(servicesProvider)
-                                          .editDevice(dev);
-                                      print(
-                                          '<<<<<<<<<<<<<<<EL DISPOSITIVO: ${event.device}');
-                                      if (!event.device.isAutoConnectEnabled &&
-                                          ref.read(reConectarProvider)) {
+                                          .getDevice(
+                                              event.device.remoteId.toString());
+                                      if (event.connectionState ==
+                                          BluetoothConnectionState
+                                              .disconnected) {
                                         await ref
                                             .read(bleProvider)
-                                            .reConectar(event.device);
+                                            .caracteristicas(
+                                                event.device, true);
+                                        dev.conectado = false;
+                                        await ref
+                                            .read(servicesProvider)
+                                            .editDevice(dev);
+                                        print(
+                                            '<<<<<<<<<<<<<<<EL DISPOSITIVO: ${event.device}');
+                                        if (!event
+                                                .device.isAutoConnectEnabled &&
+                                            ref.read(reConectarProvider)) {
+                                          await ref
+                                              .read(bleProvider)
+                                              .reConectar(event.device);
+                                        }
+                                        //ref.invalidate(servicesProvider);
                                       }
-                                      //ref.invalidate(servicesProvider);
-                                    }
-                                    if (event.connectionState ==
-                                        BluetoothConnectionState.connected) {
-                                      /* if (ref
+                                      if (event.connectionState ==
+                                          BluetoothConnectionState.connected) {
+                                        /* if (ref
                                           .watch(countdownProvider)
                                           .backUpComando
                                           .isNotEmpty) {
                                         print(
                                             '<<<<<<<<<< REENVIAR COMANDO >>>>>>>>>>');
                                       } */
-                                      print(
-                                          '***********>>>>> estoy en event.connected');
-                                      ref
-                                          .read(reConectarProvider.notifier)
-                                          .update((state) => true);
-                                      dev.conectado = true;
+                                        print(
+                                            '***********>>>>> estoy en event.connected');
+                                        ref
+                                            .read(reConectarProvider.notifier)
+                                            .update((state) => true);
+                                        dev.conectado = true;
 
-                                      await ref
-                                          .read(servicesProvider)
-                                          .editDevice(dev);
-                                      if (event.device.isAutoConnectEnabled) {
-                                        bool characteristicExist = false;
-                                        for (int i = 0; i < 5; i++) {
-                                          if (ref
-                                                  .read(bleProvider)
-                                                  .getListCaracteristicas[i]
-                                                  .remoteId ==
-                                              event.device.remoteId) {
-                                            characteristicExist = true;
-                                            i = 5;
+                                        await ref
+                                            .read(servicesProvider)
+                                            .editDevice(dev);
+                                        if (event.device.isAutoConnectEnabled) {
+                                          bool characteristicExist = false;
+                                          for (int i = 0; i < 5; i++) {
+                                            if (ref
+                                                    .read(bleProvider)
+                                                    .getListCaracteristicas[i]
+                                                    .remoteId ==
+                                                event.device.remoteId) {
+                                              characteristicExist = true;
+                                              i = 5;
+                                            }
+                                          }
+                                          if (!characteristicExist &&
+                                              dev.relojAsignado == 0) {
+                                            await ref
+                                                .read(bleProvider)
+                                                .descubrirServicios(
+                                                    event.device);
                                           }
                                         }
-                                        if (!characteristicExist &&
-                                            dev.relojAsignado == 0) {
-                                          await ref
-                                              .read(bleProvider)
-                                              .descubrirServicios(event.device);
-                                        }
+
+                                        //ref.invalidate(servicesProvider);
                                       }
+                                      ref.invalidate(servicesProvider);
+                                    });
 
-                                      //ref.invalidate(servicesProvider);
-                                    }
-                                    ref.invalidate(servicesProvider);
-                                  });
-
-                                  return ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: snapshot.data!.length,
-                                      itemBuilder: (context, index) {
-                                        final data = snapshot.data![index];
-                                        return Card(
-                                          child: ListTile(
-                                            onTap: () async {
-                                              //await subscriptionStateConection?.cancel();
-                                              ref
-                                                  .read(deviceProvider.notifier)
-                                                  .update((state) => data);
-                                              /* ref
+                                    return ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: snapshot.data!.length,
+                                        itemBuilder: (context, index) {
+                                          final data = snapshot.data![index];
+                                          return Card(
+                                            child: ListTile(
+                                              onTap: () async {
+                                                //await subscriptionStateConection?.cancel();
+                                                ref
+                                                    .read(
+                                                        deviceProvider.notifier)
+                                                    .update((state) => data);
+                                                /* ref
                                                       .read(terapiaProvider1
                                                           .notifier)
                                                       .state =
@@ -451,93 +462,97 @@ class BleScreen extends ConsumerWidget {
                                                       .read(servicesProvider)
                                                       .getTerapiaSeleccionada(
                                                           0); */
-                                              if (context.mounted) {
-                                                print(
-                                                    '***************** Reloj Asignado: ${data.relojAsignado}');
-                                                if (data.relojAsignado > 0) {
-                                                  context.push(
-                                                      '/timerZapper${data.relojAsignado}');
-                                                } else {
-                                                  ref
-                                                      .read(countdownProvider)
-                                                      .volver(false);
-                                                  ref
-                                                      .read(selectModoProvider
-                                                          .notifier)
-                                                      .state = false;
-                                                  ref
-                                                      .read(indexTerapiaProvider
-                                                          .notifier)
-                                                      .state = 0;
-                                                  context.push('/homeZapper');
-                                                }
-                                              }
-                                            },
-                                            leading: Consumer(
-                                                builder: (context, ref, _) {
-                                              return Container(
-                                                padding:
-                                                    const EdgeInsets.all(0),
-                                                margin: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      widthScreen * 0.008,
-                                                  //vertical: heightScreen * 0.01
-                                                ),
-                                                height: heightScreen * 0.06,
-                                                width: widthScreen * 0.04,
-                                                decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                        invertColors: false,
-                                                        fit: BoxFit.fill,
-                                                        image: AssetImage(ref
-                                                            .watch(bleProvider)
-                                                            .getBatteryLevelForBlescreen(
-                                                                data.mac)))),
-                                              );
-                                            }),
-                                            title: Text(data.nombre),
-                                            subtitle:
-                                                Text('Equipo: ${data.tipo}'),
-                                            trailing: TextButton(
-                                                onPressed: () async {
+                                                if (context.mounted) {
+                                                  print(
+                                                      '***************** Reloj Asignado: ${data.relojAsignado}');
                                                   if (data.relojAsignado > 0) {
+                                                    context.push(
+                                                        '/timerZapper${data.relojAsignado}');
+                                                  } else {
                                                     ref
-                                                                .read(relojProvider
-                                                                    .notifier)
-                                                                .state[
-                                                            data.relojAsignado] =
-                                                        'disponible';
-                                                    data.relojAsignado = 0;
+                                                        .read(countdownProvider)
+                                                        .volver(false);
+                                                    ref
+                                                        .read(selectModoProvider
+                                                            .notifier)
+                                                        .state = false;
+                                                    ref
+                                                        .read(
+                                                            indexTerapiaProvider
+                                                                .notifier)
+                                                        .state = 0;
+                                                    context.push('/homeZapper');
                                                   }
-                                                  data.conectado = false;
-                                                  await ref
-                                                      .read(servicesProvider)
-                                                      .editDevice(data);
-                                                  ref
-                                                      .read(reConectarProvider
-                                                          .notifier)
-                                                      .update((state) => false);
-                                                  await ref
-                                                      .read(bleProvider)
-                                                      .desconectar2(data.mac);
-                                                },
-                                                child:
-                                                    const Text('Desconectar')),
-                                          ),
-                                        );
-                                      });
-                                } else {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                }
-                              }),
-                        ),
-                      ],
+                                                }
+                                              },
+                                              leading: Consumer(
+                                                  builder: (context, ref, _) {
+                                                return Container(
+                                                  padding:
+                                                      const EdgeInsets.all(0),
+                                                  margin: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        widthScreen * 0.008,
+                                                    //vertical: heightScreen * 0.01
+                                                  ),
+                                                  height: heightScreen * 0.06,
+                                                  width: widthScreen * 0.04,
+                                                  decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                          invertColors: false,
+                                                          fit: BoxFit.fill,
+                                                          image: AssetImage(ref
+                                                              .watch(
+                                                                  bleProvider)
+                                                              .getBatteryLevelForBlescreen(
+                                                                  data.mac)))),
+                                                );
+                                              }),
+                                              title: Text(data.nombre),
+                                              subtitle:
+                                                  Text('Equipo: ${data.tipo}'),
+                                              trailing: TextButton(
+                                                  onPressed: () async {
+                                                    if (data.relojAsignado >
+                                                        0) {
+                                                      ref
+                                                                  .read(relojProvider
+                                                                      .notifier)
+                                                                  .state[
+                                                              data.relojAsignado] =
+                                                          'disponible';
+                                                      data.relojAsignado = 0;
+                                                    }
+                                                    data.conectado = false;
+                                                    await ref
+                                                        .read(servicesProvider)
+                                                        .editDevice(data);
+                                                    ref
+                                                        .read(reConectarProvider
+                                                            .notifier)
+                                                        .update(
+                                                            (state) => false);
+                                                    await ref
+                                                        .read(bleProvider)
+                                                        .desconectar2(data.mac);
+                                                  },
+                                                  child: const Text(
+                                                      'Desconectar')),
+                                            ),
+                                          );
+                                        });
+                                  } else {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                }),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+                bottomNavigationBar: const NavigationBarRedes()),
           ],
         ),
       ),

@@ -4,11 +4,12 @@ import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
+import 'package:flutter_application_1/navigation_bar_redes.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
+//import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -27,7 +28,7 @@ class LoginScreen extends ConsumerWidget {
       onPopInvoked: (didPop) {
         print('************* didPop es $didPop **************');
         if (didPop) {
-          context.go('/'); //return;
+          //context.go('/'); //return;
         } else {
           print('************* didPop es $didPop **************');
           //context.go('/');
@@ -49,217 +50,138 @@ class LoginScreen extends ConsumerWidget {
               ),
             ),
             Scaffold(
-              backgroundColor: Colors.transparent,
-              appBar: AppBar(
                 backgroundColor: Colors.transparent,
-              ),
-              body: Container(
-                height: heightScreen,
-                width: widthScreen,
-                color: Colors.transparent,
-                child: SingleChildScrollView(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 50),
-                        Image.asset(
-                          'assets/logoEnNegro1080.png',
-                          scale: 3.5,
-                        ),
-                        const SizedBox(height: 100),
-                        Container(
-                          constraints: BoxConstraints(
-                              maxHeight: heightScreen * 0.1,
-                              minHeight: heightScreen * 0.1,
-                              minWidth: widthScreen * 0.95,
-                              maxWidth: widthScreen * 0.95),
-                          child: Image.asset(
-                            'assets/8.png',
-                            //color: Colors.white,
-                            scale: 20,
+                appBar: AppBar(
+                  backgroundColor: Colors.transparent,
+                ),
+                body: Container(
+                  height: heightScreen,
+                  width: widthScreen,
+                  color: Colors.transparent,
+                  child: SingleChildScrollView(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 50),
+                          Image.asset(
+                            'assets/logoEnNegro1080.png',
+                            scale: 3.5,
                           ),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          constraints: BoxConstraints(
-                              maxHeight: heightScreen * 0.14,
-                              minHeight: heightScreen * 0.14,
-                              minWidth: widthScreen * 0.95,
-                              maxWidth: widthScreen * 0.95),
-                          child: Image.asset(
-                            'assets/10.png',
-                            scale: 18,
+                          const SizedBox(height: 100),
+                          Container(
+                            constraints: BoxConstraints(
+                                maxHeight: heightScreen * 0.1,
+                                minHeight: heightScreen * 0.1,
+                                minWidth: widthScreen * 0.95,
+                                maxWidth: widthScreen * 0.95),
+                            child: Image.asset(
+                              'assets/8.png',
+                              //color: Colors.white,
+                              scale: 20,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 90),
-                        Container(
-                          padding: const EdgeInsets.only(
-                              left: 12, right: 12, top: 5, bottom: 18),
-                          decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image:
-                                      AssetImage('assets/icons/icono9.png'))),
-                          child: FilledButton.tonalIcon(
-                              style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      Colors.transparent)),
-                              onPressed: () async {
-                                showDialog(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (context) {
-                                      return Center(
-                                          child: CircularProgressIndicator(
-                                        color: const Color.fromARGB(
-                                            255, 50, 102, 175),
-                                        backgroundColor: Colors.purple[300],
-                                      ));
-                                    });
-                                final user = await signInWithGoogle();
-                                if (user.user != null) {
-                                  final List googleID = await getGoogleID();
-                                  final String estaRegistrado =
-                                      await googleID.firstWhere(
-                                          (element) =>
-                                              element == user.user!.uid,
-                                          orElse: () => 'no existe');
-                                  if (context.mounted) {
-                                    context.pop();
-                                    if (ref.read(primerArranqueProvider) ==
-                                        false) {
-                                      listDeviceConected = await ref
-                                          .read(servicesProvider)
-                                          .getAllDeviceConected();
-                                      if (listDeviceConected.isNotEmpty) {
-                                        for (var element
-                                            in listDeviceConected) {
-                                          element.conectado = false;
-                                          element.relojAsignado = 0;
-                                          await ref
-                                              .read(servicesProvider)
-                                              .editDevice(element);
+                          Container(
+                            alignment: Alignment.center,
+                            constraints: BoxConstraints(
+                                maxHeight: heightScreen * 0.14,
+                                minHeight: heightScreen * 0.14,
+                                minWidth: widthScreen * 0.95,
+                                maxWidth: widthScreen * 0.95),
+                            child: Image.asset(
+                              'assets/10.png',
+                              scale: 18,
+                            ),
+                          ),
+                          const SizedBox(height: 90),
+                          Container(
+                            padding: const EdgeInsets.only(
+                                left: 12, right: 12, top: 5, bottom: 18),
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image:
+                                        AssetImage('assets/icons/icono9.png'))),
+                            child: FilledButton.tonalIcon(
+                                style: const ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        Colors.transparent)),
+                                onPressed: () async {
+                                  showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Center(
+                                            child: CircularProgressIndicator(
+                                          color: const Color.fromARGB(
+                                              255, 50, 102, 175),
+                                          backgroundColor: Colors.purple[300],
+                                        ));
+                                      });
+                                  final user = await signInWithGoogle();
+                                  if (user.user != null) {
+                                    final List googleID = await getGoogleID();
+                                    final String estaRegistrado =
+                                        await googleID.firstWhere(
+                                            (element) =>
+                                                element == user.user!.uid,
+                                            orElse: () => 'no existe');
+                                    if (context.mounted) {
+                                      context.pop();
+                                      if (ref.read(primerArranqueProvider) ==
+                                          false) {
+                                        listDeviceConected = await ref
+                                            .read(servicesProvider)
+                                            .getAllDeviceConected();
+                                        if (listDeviceConected.isNotEmpty) {
+                                          for (var element
+                                              in listDeviceConected) {
+                                            element.conectado = false;
+                                            element.relojAsignado = 0;
+                                            await ref
+                                                .read(servicesProvider)
+                                                .editDevice(element);
+                                          }
                                         }
                                       }
-                                    }
-                                    if (estaRegistrado == user.user!.uid) {
-                                      ref
-                                          .read(primerArranqueProvider.notifier)
-                                          .update((state) => true);
-                                      if (ref.read(cerroSesion)) {
-                                        context.pop();
+                                      if (estaRegistrado == user.user!.uid) {
+                                        ref
+                                            .read(
+                                                primerArranqueProvider.notifier)
+                                            .update((state) => true);
+                                        if (ref.read(cerroSesion)) {
+                                          context.pop();
+                                        } else {
+                                          context.push('/bluetooth');
+                                        }
                                       } else {
-                                        context.push('/bluetooth');
+                                        ref
+                                            .read(
+                                                primerArranqueProvider.notifier)
+                                            .update((state) => true);
+                                        context.push('/register');
                                       }
-                                    } else {
-                                      ref
-                                          .read(primerArranqueProvider.notifier)
-                                          .update((state) => true);
-                                      context.push('/register');
                                     }
                                   }
-                                }
-                              },
-                              icon: Image.asset('assets/logo-google-G.png',
-                                  scale: 20),
-                              label: const Text(
-                                'Inicie sesión con Google',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 50, 102, 175),
-                                    fontWeight: FontWeight.bold),
-                              )),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              bottomNavigationBar: SizedBox(
-                  height: 100,
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: () async {
-                              final String whatsapp =
-                                  await getContacto('whatsapp');
-                              myLaunchUrl(whatsapp);
-                            },
-                            icon: Image.asset(
-                              'assets/icons/icono10.png',
-                              scale: 10,
-                            ),
-                            color: Colors.red,
-                            iconSize: 40,
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              final String instagram =
-                                  await getContacto('instagram');
-                              myLaunchUrl(instagram);
-                            },
-                            icon: Image.asset(
-                              'assets/icons/icono11.png',
-                              scale: 10,
-                            ),
-                            color: Colors.blue,
-                            iconSize: 40,
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              final String facebook =
-                                  await getContacto('facebook');
-                              myLaunchUrl(facebook);
-                            },
-                            icon: Image.asset('assets/icons/icono12.png',
-                                scale: 10),
-                            color: Colors.blue,
-                            iconSize: 40,
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              final String youtube =
-                                  await getContacto('youtube');
-                              myLaunchUrl(youtube);
-                            },
-                            icon: Image.asset(
-                              'assets/icons/icono13.png',
-                              scale: 10,
-                            ),
-                            color: Colors.blue,
-                            iconSize: 40,
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              final String web = await getContacto('web');
-                              myLaunchUrl(web);
-                            },
-                            icon: Image.asset('assets/icons/icono14.png',
-                                scale: 10),
-                            color: Colors.blue,
-                            iconSize: 40,
+                                },
+                                icon: Image.asset('assets/logo-google-G.png',
+                                    scale: 20),
+                                label: const Text(
+                                  'Inicie sesión con Google',
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 50, 102, 175),
+                                      fontWeight: FontWeight.bold),
+                                )),
                           ),
                         ],
                       ),
-                    ],
-                  )),
-            ),
+                    ),
+                  ),
+                ),
+                bottomNavigationBar: const NavigationBarRedes()),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> myLaunchUrl(String urlContacto) async {
-    final Uri url = Uri.parse(urlContacto);
-    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      throw Exception('No se encontró el URL $url');
-    }
   }
 }
