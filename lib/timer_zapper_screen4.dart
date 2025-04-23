@@ -78,12 +78,6 @@ class TimerZapperScreen4 extends ConsumerWidget {
             ),
             Scaffold(
               backgroundColor: Colors.transparent,
-              endDrawer: EndDrawer(
-                widthScreen: widthScreen,
-                heightScreen: heightScreen,
-                location: location,
-              ),
-              endDrawerEnableOpenDragGesture: false,
               appBar: AppBar(
                 flexibleSpace: Padding(
                   padding: const EdgeInsets.only(top: 20),
@@ -105,28 +99,16 @@ class TimerZapperScreen4 extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 centerTitle: true,
                 actions: [
-                  Builder(builder: (context) {
-                    return Container(
-                      padding: const EdgeInsets.all(0),
-                      margin: const EdgeInsets.all(0),
-                      height: heightScreen * 0.1,
-                      width: widthScreen * 0.15,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.fill, image: userImage(user))),
-                      child: Center(
-                          child: IconButton(
-                              //highlightColor: Colors.black,
-                              onPressed: () {
-                                Scaffold.of(context).openEndDrawer();
-                              },
-                              icon: const Icon(
-                                Icons.menu,
-                                color: Colors.transparent,
-                              ))),
-                    );
-                  }),
+                  Container(
+                    padding: const EdgeInsets.all(0),
+                    margin: const EdgeInsets.all(0),
+                    height: heightScreen * 0.1,
+                    width: widthScreen * 0.15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            fit: BoxFit.fill, image: userImage(user))),
+                  ),
                   Container(
                     padding: const EdgeInsets.all(0),
                     margin: EdgeInsets.symmetric(

@@ -98,31 +98,19 @@ class BleScreen extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 centerTitle: true,
                 actions: [
-                  Builder(builder: (context) {
-                    return Container(
-                      padding: const EdgeInsets.all(0),
-                      margin: const EdgeInsets.all(0),
-                      height: heightScreen * 0.1,
-                      width: widthScreen * 0.15,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: userImage(
-                                  user) //NetworkImage(user!.photoURL!)
-                              )),
-                      child: Center(
-                          child: IconButton(
-                              //highlightColor: Colors.black,
-                              onPressed: () {
-                                //Scaffold.of(context).openEndDrawer();
-                              },
-                              icon: const Icon(
-                                Icons.menu,
-                                color: Colors.transparent,
-                              ))),
-                    );
-                  }),
+                  Container(
+                    padding: const EdgeInsets.all(0),
+                    margin: const EdgeInsets.all(0),
+                    height: heightScreen * 0.1,
+                    width: widthScreen * 0.15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image:
+                                userImage(user) //NetworkImage(user!.photoURL!)
+                            )),
+                  ),
                   /* SizedBox(
                     height: heightScreen * 0.06,
                     width: widthScreen * 0.056,
