@@ -30,15 +30,17 @@ class EndDrawer extends ConsumerWidget {
         .where((element) => element != 'disponible')
         .toList(); */
     return Drawer(
+      elevation: 0,
       width: widthScreen * 0.3,
       backgroundColor: Colors.transparent,
       child: Container(
         height: heightScreen,
-        //color: Colors.transparent,
+        color: Colors.transparent,
         child: Column(
           children: [
             Container(
-              height: heightScreen * 0.111,
+              //height: heightScreen * 0.111,
+              height: heightScreen * 0.045,
               //color: Colors.transparent,
             ),
             ClipRRect(
@@ -46,19 +48,23 @@ class EndDrawer extends ConsumerWidget {
                   topLeft: Radius.circular(30),
                   bottomLeft: Radius.circular(30)),
               child: Container(
-                height: heightScreen * 0.41,
+                //height: heightScreen * 0.41,
+                height: heightScreen * 0.29,
                 //color: Colors.white,
                 decoration: const BoxDecoration(color: Colors.white),
                 child: Column(
                   children: [
-                    /* Container(
+                    Container(
                         width: widthScreen * 0.3,
-                        color: Colors.green,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        //color: Colors.amberAccent[100],
+                        color: Colors.purple[900],
                         child: const Text(
-                          'RELOJES',
+                          '¡Si cierra la sesión, se cancelarán todas las terapias y se desconectarán todos los equipos!',
+                          style: TextStyle(color: Colors.white),
                           textAlign: TextAlign.center,
                         )),
-                    Container(
+                    /* Container(
                       //padding: EdgeInsets.all(0),
                       //margin: EdgeInsets.all(0),
                       //alignment: Alignment.topCenter,
@@ -166,6 +172,7 @@ class EndDrawer extends ConsumerWidget {
                         },
                         child: const Text(
                           'Cerrar Sesión',
+                          style: TextStyle(fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         )),
                   ],

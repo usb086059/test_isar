@@ -115,7 +115,7 @@ class BleScreen extends ConsumerWidget {
                           child: IconButton(
                               //highlightColor: Colors.black,
                               onPressed: () {
-                                Scaffold.of(context).openEndDrawer();
+                                //Scaffold.of(context).openEndDrawer();
                               },
                               icon: const Icon(
                                 Icons.menu,
@@ -123,27 +123,43 @@ class BleScreen extends ConsumerWidget {
                               ))),
                     );
                   }),
-                  SizedBox(
+                  /* SizedBox(
                     height: heightScreen * 0.06,
                     width: widthScreen * 0.056,
-                  ),
-/*                   Container(
-                    padding: const EdgeInsets.all(0),
-                    margin: EdgeInsets.symmetric(
-                      horizontal: widthScreen * 0.008,
-                      //vertical: heightScreen * 0.01
-                    ),
-                    height: heightScreen * 0.06,
-                    width: widthScreen * 0.04,
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            invertColors: false,
-                            fit: BoxFit.fill,
-                            image:
-                                AssetImage('assets/icons/cerrarSesion.png'))),
-                    /* child: Text(
-                          '${container.read(bleProvider).getBleservicesBatery.length}') */
-                  ) */
+                  ), */
+                  Builder(builder: (context) {
+                    return Container(
+                      padding: const EdgeInsets.all(0),
+                      margin: EdgeInsets.symmetric(
+                        horizontal: widthScreen * 0.008,
+                        //vertical: heightScreen * 0.01
+                      ),
+                      height: heightScreen * 0.06,
+                      width: widthScreen * 0.04,
+                      /* decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                invertColors: true,
+                                fit: BoxFit.fill,
+                                image: AssetImage('assets/icons/letra-x.png'))), */
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: IconButton(
+                            padding: EdgeInsets.zero,
+                            //highlightColor: Colors.black,
+                            onPressed: () {
+                              Scaffold.of(context).openEndDrawer();
+                            },
+                            icon: const Icon(
+                              //Icons.cancel_presentation,
+                              //Icons.more_vert,
+                              Icons.menu,
+                              size: 60,
+                              color: Colors.white,
+                              //color: Colors.transparent,
+                            )),
+                      ),
+                    );
+                  })
                 ],
               ),
               body: Container(
