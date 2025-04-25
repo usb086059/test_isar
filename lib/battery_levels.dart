@@ -10,7 +10,7 @@ final batteryServicesProvider =
     ChangeNotifierProvider((ref) => BatteryServices()); */
 
 final List<String> batteryLevels = [
-  'assets/icons/bateriaMarco.png',
+  'assets/icons/bateriaAzulMarco.png',
   'assets/icons/bateria0.png',
   'assets/icons/bateria25.png',
   'assets/icons/bateria50.png',
@@ -18,14 +18,17 @@ final List<String> batteryLevels = [
   'assets/icons/bateria100.png'
 ];
 
-/* class BatteryServices extends ChangeNotifier {
-  BatteryServices() {
-    print('****************** Constructor de BatteryServices llamado');
-  } */
+/* final List<String> batteryLevelsAzul = [
+  'assets/icons/bateriaAzulMarco.png',
+  'assets/icons/bateriaAzul0.png',
+  'assets/icons/bateriaAzul25.png',
+  'assets/icons/bateriaAzul50.png',
+  'assets/icons/bateriaAzul75.png',
+  'assets/icons/bateriaAzul100.png'
+]; */
+
 String batteryLevelx = batteryLevels[0];
-/* String get getBattery {
-    return batteryLevelx;
-  } */
+//String batteryLevelxAzul = batteryLevels[0];
 
 String selectBatteryLevelImage(int caseNumber) {
   print('**************** bateryLevelDireccion: $batteryLevelx');
@@ -44,42 +47,25 @@ String selectBatteryLevelImage(int caseNumber) {
   if (caseNumber == 100) {
     batteryLevelx = batteryLevels[5];
   }
-  //container.read(batteryServicesProvider).notifyListeners();
-  /* try {
-      notifyListeners();
-      print('**************** bateryLevelLuego del Notify: $batteryLevelx');
-    } catch (e) {
-      print('********************* notifyError: $e');
-    } */
-  //notifyListeners();
-  //print('**************** bateryLevelLuego del Notify: $batteryLevelx');
-/*     switch (caseNumber) {
-      case 0:
-        batteryLevel = batteryLevels[1];
-        notifyListeners();
-        break;
-      case 25:
-        batteryLevel = batteryLevels[2];
-        notifyListeners();
-        break;
-      case 50:
-        batteryLevel = batteryLevels[3];
-        print('**************** Nivel 50 >>> caseNumber: $batteryLevel');
-        notifyListeners();
-        break;
-      case 75:
-        batteryLevel = batteryLevels[4];
-        notifyListeners();
-        break;
-      case 100:
-        batteryLevel = batteryLevels[5];
-        notifyListeners();
-        break;
-      default:
-        batteryLevel = batteryLevels[0];
-        notifyListeners();
-        break;
-    } */
   return batteryLevelx;
 }
-//}
+
+/* String selectBatteryLevelImageAzul(int caseNumber) {
+  print('**************** bateryLevelDireccion: $batteryLevelxAzul');
+  if (caseNumber == 0) {
+    batteryLevelxAzul = batteryLevels[1];
+  }
+  if (caseNumber == 25) {
+    batteryLevelxAzul = batteryLevels[2];
+  }
+  if (caseNumber == 50) {
+    batteryLevelxAzul = batteryLevels[3];
+  }
+  if (caseNumber == 75) {
+    batteryLevelxAzul = batteryLevels[4];
+  }
+  if (caseNumber == 100) {
+    batteryLevelxAzul = batteryLevels[5];
+  }
+  return batteryLevelxAzul;
+} */

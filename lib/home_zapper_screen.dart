@@ -132,9 +132,8 @@ class HomeZapperScreen extends ConsumerWidget {
                       image: DecorationImage(
                           invertColors: false,
                           fit: BoxFit.fill,
-                          image: AssetImage(
-                              bluetoothProvider.getBatteryLevelForBlescreen(
-                                  ref.read(deviceProvider).mac)))),
+                          image: AssetImage(bluetoothProvider
+                              .getBatteryLevel(ref.read(deviceProvider).mac)))),
                 )
               ],
             ),

@@ -7,13 +7,14 @@ class NavigationBarRedes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: 100,
+    return Container(
+        height: 70,
+        color: Colors.transparent,
         child: Column(
           children: [
-            const SizedBox(
-              height: 30,
-            ),
+            /* const SizedBox(
+              height: 0,
+            ), */
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

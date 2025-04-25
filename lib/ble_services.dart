@@ -66,7 +66,7 @@ StreamSubscription<List<int>>? subscriptionCaracteristica1;
 StreamSubscription<List<int>>? subscriptionCaracteristica2;
 StreamSubscription<List<int>>? subscriptionCaracteristica3;
 StreamSubscription<List<int>>? subscriptionCaracteristica4;
-String bateriaxxx = batteryLevels[1];
+//String bateriaxxx = batteryLevels[1];
 
 /* ***************************************** */
 
@@ -76,6 +76,14 @@ class BleServices extends ChangeNotifier {
   }
   //StreamSubscription<List<int>>? subscriptionCaracteristica;
   List<String> bleServicesBatery = [
+    batteryLevels[0],
+    batteryLevels[0],
+    batteryLevels[0],
+    batteryLevels[0],
+    batteryLevels[0],
+    batteryLevels[0],
+  ];
+  List<String> bleServicesBateryAzul = [
     batteryLevels[0],
     batteryLevels[0],
     batteryLevels[0],
@@ -96,10 +104,19 @@ class BleServices extends ChangeNotifier {
     notifyListeners();
   } */
 
-  String getBatteryLevelForBlescreen(String remoteId) {
+  String getBatteryLevel(String remoteId) {
     for (int i = 0; i < 5; i++) {
       if (listCaracteristicas[i].remoteId.toString() == remoteId) {
         return bleServicesBatery[i];
+      }
+    }
+    return bleServicesBatery[5];
+  }
+
+  String getBatteryLevelAzul(String remoteId) {
+    for (int i = 0; i < 5; i++) {
+      if (listCaracteristicas[i].remoteId.toString() == remoteId) {
+        return bleServicesBateryAzul[i];
       }
     }
     return bleServicesBatery[5];
@@ -284,6 +301,8 @@ class BleServices extends ChangeNotifier {
               if (batteryLevel != null) {
                 print('**************** batteryLevel: $batteryLevel');
                 bleServicesBatery[0] = selectBatteryLevelImage(batteryLevel);
+                bleServicesBateryAzul[0] =
+                    bleServicesBatery[0].replaceRange(20, 20, 'Azul');
                 print(
                     '**************** batteryLevelAddress: $bleServicesBatery');
               } else {
@@ -315,6 +334,8 @@ class BleServices extends ChangeNotifier {
               if (batteryLevel1 != null) {
                 print('**************** batteryLevel 1: $batteryLevel1');
                 bleServicesBatery[1] = selectBatteryLevelImage(batteryLevel1);
+                bleServicesBateryAzul[1] =
+                    bleServicesBatery[1].replaceRange(20, 20, 'Azul');
                 print(
                     '**************** batteryLevelAddress: $bleServicesBatery');
               } else {

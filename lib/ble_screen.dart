@@ -39,6 +39,7 @@ class BleScreen extends ConsumerWidget {
     TextEditingController nombreDeviceController = TextEditingController();
 
     final String location = '/bluetooth';
+    ScrollController scroll = ScrollController();
 
     return PopScope(
       canPop: false,
@@ -107,10 +108,7 @@ class BleScreen extends ConsumerWidget {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: userImage(
-                                  user) //NetworkImage(user!.photoURL!)
-                              )),
+                              fit: BoxFit.fill, image: userImage(user))),
                     ),
                     /* SizedBox(
                     height: heightScreen * 0.06,
@@ -158,25 +156,36 @@ class BleScreen extends ConsumerWidget {
                   child: SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          top: 8, bottom: 16, left: 16, right: 16),
+                          top: 2, bottom: 16, left: 16, right: 16),
                       child: Column(
                         children: [
-                          /* const Text('ESCANEAR DISPOSITIVOS',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Color.fromARGB(255, 50, 102, 175),
-                                fontWeight: FontWeight.bold)), */
-                          ElevatedButton(
-                              onPressed: () async {
-                                //await bluetoothProvider.bleState();
-                                if (await ref.read(bleProvider).bleState()) {
-                                  await ref.read(bleProvider).scanDevices(5);
-                                } else {
-                                  await ref.read(bleProvider).bleTurnOn();
-                                  await ref.read(bleProvider).scanDevices(5);
-                                }
-                              },
-                              child: const Text('Escanear Dispositivos')),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('BUSCAR DISPOSITIVOS',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Color.fromARGB(255, 50, 102, 175),
+                                      fontWeight: FontWeight.bold)),
+                              IconButton.filled(
+                                  onPressed: () async {
+                                    //await bluetoothProvider.bleState();
+                                    if (await ref
+                                        .read(bleProvider)
+                                        .bleState()) {
+                                      await ref
+                                          .read(bleProvider)
+                                          .scanDevices(5);
+                                    } else {
+                                      await ref.read(bleProvider).bleTurnOn();
+                                      await ref
+                                          .read(bleProvider)
+                                          .scanDevices(5);
+                                    }
+                                  },
+                                  icon: const Icon(Icons.search))
+                            ],
+                          ),
                           Container(
                             constraints: BoxConstraints(
                                 maxHeight: heightScreen * 0.2,
@@ -194,9 +203,24 @@ class BleScreen extends ConsumerWidget {
                                         itemCount: snapshot.data!.length,
                                         itemBuilder: (context, index) {
                                           final data = snapshot.data![index];
-                                          return Card(
-                                            child: ListTile(
-                                              onTap: () async {
+                                          return Container(
+                                            padding: const EdgeInsets.only(
+                                                top: 10,
+                                                bottom: 26,
+                                                left: 16,
+                                                right: 16),
+                                            decoration: const BoxDecoration(
+                                                //borderRadius: BorderRadius.circular(45),
+                                                image: DecorationImage(
+                                                    fit: BoxFit.fill,
+                                                    image: AssetImage(
+                                                        'assets/icons/icono9.png'))),
+                                            child: FilledButton(
+                                              style: const ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStatePropertyAll(
+                                                          Colors.transparent)),
+                                              onPressed: () async {
                                                 if (!await ref
                                                     .read(servicesProvider)
                                                     .getDeviceExists(data
@@ -234,7 +258,7 @@ class BleScreen extends ConsumerWidget {
                                                                       TextInputType
                                                                           .text,
                                                                   /* decoration: formDecorationTerapia(
-                                                                                                      'Nombre', '', null), */
+                                                                                                        'Nombre', '', null), */
                                                                   validator:
                                                                       (value) {
                                                                     if (value ==
@@ -253,10 +277,10 @@ class BleScreen extends ConsumerWidget {
                                                             TextButton(
                                                                 onPressed: () {
                                                                   /* ref
-                                                                  .watch(
-                                                                      origenHomeZapperProvider
-                                                                          .notifier)
-                                                                  .state = true; */
+                                                                    .watch(
+                                                                        origenHomeZapperProvider
+                                                                            .notifier)
+                                                                    .state = true; */
                                                                   context.pop();
                                                                 },
                                                                 child: const Text(
@@ -330,10 +354,34 @@ class BleScreen extends ConsumerWidget {
                                                       .conectar(data.device);
                                                 }
                                               },
-                                              title: Text(data.device.advName),
-                                              subtitle: Text(data
-                                                  .device.remoteId
-                                                  .toString()),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(data.device.advName,
+                                                      style: const TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              50,
+                                                              102,
+                                                              175),
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  Text(
+                                                      data.device.remoteId
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              50,
+                                                              102,
+                                                              175),
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                ],
+                                              ),
                                             ),
                                           );
                                         });
@@ -343,10 +391,16 @@ class BleScreen extends ConsumerWidget {
                                   }
                                 }),
                           ),
-                          const Divider(height: 10, color: Colors.blue),
-                          ElevatedButton(
-                              onPressed: () async {},
-                              child: const Text('Dispositivos Conectados')),
+                          Divider(height: 10, color: Colors.blue[50]),
+                          Divider(height: 10, color: Colors.blue[50]),
+                          Divider(height: 10, color: Colors.blue[50]),
+                          const Text(
+                            'DISPOSITIVOS CONECTADOS',
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 50, 102, 175),
+                                fontWeight: FontWeight.bold),
+                          ),
                           Container(
                             constraints: BoxConstraints(
                                 maxHeight: heightScreen * 0.6,
@@ -446,22 +500,37 @@ class BleScreen extends ConsumerWidget {
                                         itemCount: snapshot.data!.length,
                                         itemBuilder: (context, index) {
                                           final data = snapshot.data![index];
-                                          return Card(
-                                            child: ListTile(
-                                              onTap: () async {
+                                          return Container(
+                                            padding: const EdgeInsets.only(
+                                                top: 10,
+                                                bottom: 26,
+                                                left: 16,
+                                                right: 16),
+                                            decoration: const BoxDecoration(
+                                                //borderRadius: BorderRadius.circular(45),
+                                                image: DecorationImage(
+                                                    fit: BoxFit.fill,
+                                                    image: AssetImage(
+                                                        'assets/icons/icono9.png'))),
+                                            child: FilledButton(
+                                              style: const ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStatePropertyAll(
+                                                          Colors.transparent)),
+                                              onPressed: () async {
                                                 //await subscriptionStateConection?.cancel();
                                                 ref
                                                     .read(
                                                         deviceProvider.notifier)
                                                     .update((state) => data);
                                                 /* ref
-                                                      .read(terapiaProvider1
-                                                          .notifier)
-                                                      .state =
-                                                  await ref
-                                                      .read(servicesProvider)
-                                                      .getTerapiaSeleccionada(
-                                                          0); */
+                                                        .read(terapiaProvider1
+                                                            .notifier)
+                                                        .state =
+                                                    await ref
+                                                        .read(servicesProvider)
+                                                        .getTerapiaSeleccionada(
+                                                            0); */
                                                 if (context.mounted) {
                                                   print(
                                                       '***************** Reloj Asignado: ${data.relojAsignado}');
@@ -485,59 +554,146 @@ class BleScreen extends ConsumerWidget {
                                                   }
                                                 }
                                               },
-                                              leading: Consumer(
-                                                  builder: (context, ref, _) {
-                                                return Container(
-                                                  padding:
-                                                      const EdgeInsets.all(0),
-                                                  margin: EdgeInsets.symmetric(
-                                                    horizontal:
-                                                        widthScreen * 0.008,
-                                                    //vertical: heightScreen * 0.01
+                                              child: Row(
+                                                children: [
+                                                  Consumer(builder:
+                                                      (context, ref, _) {
+                                                    return Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              0),
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal:
+                                                            widthScreen * 0.008,
+                                                        //vertical: heightScreen * 0.01
+                                                      ),
+                                                      height:
+                                                          heightScreen * 0.06,
+                                                      width: widthScreen * 0.04,
+                                                      decoration: BoxDecoration(
+                                                          image: DecorationImage(
+                                                              invertColors:
+                                                                  false,
+                                                              fit: BoxFit.fill,
+                                                              image: AssetImage(ref
+                                                                  .watch(
+                                                                      bleProvider)
+                                                                  .getBatteryLevelAzul(
+                                                                      data.mac)))),
+                                                    );
+                                                  }),
+                                                  Expanded(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          data.nombre,
+                                                          style: const TextStyle(
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      50,
+                                                                      102,
+                                                                      175),
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                            'Equipo: ${data.tipo}',
+                                                            style: const TextStyle(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        50,
+                                                                        102,
+                                                                        175),
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold))
+                                                      ],
+                                                    ),
                                                   ),
-                                                  height: heightScreen * 0.06,
-                                                  width: widthScreen * 0.04,
-                                                  decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                          invertColors: false,
-                                                          fit: BoxFit.fill,
-                                                          image: AssetImage(ref
-                                                              .watch(
-                                                                  bleProvider)
-                                                              .getBatteryLevelForBlescreen(
-                                                                  data.mac)))),
-                                                );
-                                              }),
-                                              title: Text(data.nombre),
-                                              subtitle:
-                                                  Text('Equipo: ${data.tipo}'),
-                                              trailing: TextButton(
-                                                  onPressed: () async {
-                                                    if (data.relojAsignado >
-                                                        0) {
-                                                      ref
+                                                  TextButton(
+                                                      style: ButtonStyle(
+                                                          minimumSize:
+                                                              MaterialStatePropertyAll(Size(
+                                                                  widthScreen *
+                                                                      0.15,
+                                                                  heightScreen *
+                                                                      0.034)),
+                                                          maximumSize:
+                                                              MaterialStatePropertyAll(Size(
+                                                                  widthScreen *
+                                                                      0.15,
+                                                                  heightScreen *
+                                                                      0.034)),
+                                                          /* alignment: Alignment
+                                                              .centerRight, */
+                                                          padding:
+                                                              const MaterialStatePropertyAll(
+                                                                  EdgeInsets
+                                                                      .zero),
+                                                          backgroundColor:
+                                                              const MaterialStatePropertyAll(
+                                                                  Color.fromARGB(
+                                                                      255,
+                                                                      50,
+                                                                      102,
+                                                                      175))),
+                                                      onPressed: () async {
+                                                        if (data.relojAsignado >
+                                                            0) {
+                                                          ref
                                                                   .read(relojProvider
                                                                       .notifier)
-                                                                  .state[
-                                                              data.relojAsignado] =
-                                                          'disponible';
-                                                      data.relojAsignado = 0;
-                                                    }
-                                                    data.conectado = false;
-                                                    await ref
-                                                        .read(servicesProvider)
-                                                        .editDevice(data);
-                                                    ref
-                                                        .read(reConectarProvider
-                                                            .notifier)
-                                                        .update(
-                                                            (state) => false);
-                                                    await ref
-                                                        .read(bleProvider)
-                                                        .desconectar2(data.mac);
-                                                  },
-                                                  child: const Text(
-                                                      'Desconectar')),
+                                                                  .state[data.relojAsignado] =
+                                                              'disponible';
+                                                          data.relojAsignado =
+                                                              0;
+                                                        }
+                                                        data.conectado = false;
+                                                        await ref
+                                                            .read(
+                                                                servicesProvider)
+                                                            .editDevice(data);
+                                                        ref
+                                                            .read(
+                                                                reConectarProvider
+                                                                    .notifier)
+                                                            .update((state) =>
+                                                                false);
+                                                        await ref
+                                                            .read(bleProvider)
+                                                            .desconectar2(
+                                                                data.mac);
+                                                      },
+                                                      child: const Text(
+                                                        'Apagar',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 12),
+                                                      )),
+                                                  /* Column(
+                                                    children: [
+                                                      IconButton(
+                                                          alignment: Alignment
+                                                              .centerRight,
+                                                          padding:
+                                                              EdgeInsets.all(0),
+                                                          onPressed: () {},
+                                                          icon: Icon(Icons
+                                                              .power_settings_new)),
+                                                      Text('Apagar')
+                                                    ],
+                                                  ) */
+                                                ],
+                                              ),
                                             ),
                                           );
                                         });
@@ -558,16 +714,4 @@ class BleScreen extends ConsumerWidget {
       ),
     );
   }
-
-  /* ImageProvider<Object> userImage(User? user) {
-    ImageProvider<Object> imagen = const AssetImage('assets/logo-google-G.png');
-    if (user != null) {
-      if (user.photoURL == null || user.photoURL!.isEmpty) {
-        imagen = const AssetImage('assets/icons/iconoCircular.png');
-      } else {
-        imagen = NetworkImage(user.photoURL!);
-      }
-    }
-    return imagen;
-  } */
 }
