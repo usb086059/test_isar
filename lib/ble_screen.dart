@@ -32,7 +32,6 @@ class BleScreen extends ConsumerWidget {
         subscriptionStateConection;
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
-    User? user = FirebaseAuth.instance.currentUser;
 
     List<BluetoothDevice> listaDC = [];
     final formKey = GlobalKey<FormState>();
@@ -100,16 +99,38 @@ class BleScreen extends ConsumerWidget {
                   backgroundColor: Colors.transparent,
                   centerTitle: true,
                   actions: [
-                    Container(
-                      padding: const EdgeInsets.all(0),
-                      margin: const EdgeInsets.all(0),
-                      height: heightScreen * 0.1,
-                      width: widthScreen * 0.15,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.fill, image: userImage(user))),
-                    ),
+                    Stack(children: [
+                      Container(
+                        padding: const EdgeInsets.all(0),
+                        margin: const EdgeInsets.all(0),
+                        height: heightScreen * 0.1,
+                        width: widthScreen * 0.15,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image:
+                                  AssetImage('assets/icons/icon_circulo.png'),
+                            )),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(0),
+                        margin: const EdgeInsets.all(0),
+                        height: heightScreen * 0.1,
+                        width: widthScreen * 0.15,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: userImage(),
+                              onError: (exception, stackTrace) {
+                                /* =>
+                                  const AssetImage(
+                                      'assets/icons/icon_circulo.png') */
+                              },
+                            )),
+                      ),
+                    ]),
                     /* SizedBox(
                     height: heightScreen * 0.06,
                     width: widthScreen * 0.056,

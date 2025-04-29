@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/auth_google_services.dart';
 import 'package:flutter_application_1/curve_services.dart';
@@ -18,6 +21,7 @@ class LoginScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
+    UserCredential? user;
 /*     double anchoMin = MediaQuery.of(context).size.width * 0.35;
     double anchoMax = MediaQuery.of(context).size.width * 0.95;
     double altoMin = MediaQuery.of(context).size.height * 0.35;
@@ -107,6 +111,10 @@ class LoginScreen extends ConsumerWidget {
                                     backgroundColor: MaterialStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () async {
+                                  print(
+                                      '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Usuario es: ${FirebaseAuth.instance.currentUser}');
+                                  print(
+                                      '+++++++++++++++++++++++++++++++++++++++ Usuario es: ${user}');
                                   showDialog(
                                       barrierDismissible: false,
                                       context: context,
@@ -118,14 +126,163 @@ class LoginScreen extends ConsumerWidget {
                                           backgroundColor: Colors.purple[300],
                                         ));
                                       });
-                                  final user = await signInWithGoogle();
-                                  if (user.user != null) {
-                                    final List googleID = await getGoogleID();
-                                    final String estaRegistrado =
-                                        await googleID.firstWhere(
-                                            (element) =>
-                                                element == user.user!.uid,
-                                            orElse: () => 'no existe');
+                                  if (FirebaseAuth.instance.currentUser ==
+                                      null) {
+                                    user = await signInWithGoogle();
+
+                                    print(
+                                        '************************************** Usuario es: $user');
+                                    if (user?.user != null) {
+                                      final List googleID = await getGoogleID();
+                                      final String estaRegistrado =
+                                          await googleID.firstWhere(
+                                              (element) =>
+                                                  element == user?.user!.uid,
+                                              orElse: () => 'no existe');
+                                      if (context.mounted) {
+                                        context.pop();
+                                        if (ref.read(primerArranqueProvider) ==
+                                            false) {
+                                          listDeviceConected = await ref
+                                              .read(servicesProvider)
+                                              .getAllDeviceConected();
+                                          if (listDeviceConected.isNotEmpty) {
+                                            for (var element
+                                                in listDeviceConected) {
+                                              element.conectado = false;
+                                              element.relojAsignado = 0;
+                                              await ref
+                                                  .read(servicesProvider)
+                                                  .editDevice(element);
+                                            }
+                                          }
+                                        }
+                                        if (estaRegistrado == user?.user!.uid) {
+                                          ref
+                                              .read(primerArranqueProvider
+                                                  .notifier)
+                                              .update((state) => true);
+                                          if (ref.read(cerroSesion)) {
+                                            context.pop();
+                                          } else {
+                                            context.push('/bluetooth');
+                                          }
+                                        } else {
+                                          ref
+                                              .read(primerArranqueProvider
+                                                  .notifier)
+                                              .update((state) => true);
+                                          context.push('/register');
+                                        }
+                                      }
+                                    } else {
+                                      if (context.mounted) {
+                                        showDialog(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            builder: (context) {
+                                              return BackdropFilter(
+                                                filter: ImageFilter.blur(
+                                                    sigmaX: 5, sigmaY: 5),
+                                                child: Stack(children: [
+                                                  Center(
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30),
+                                                      child: Container(
+                                                        constraints:
+                                                            BoxConstraints(
+                                                                maxHeight:
+                                                                    heightScreen *
+                                                                        0.214,
+                                                                maxWidth:
+                                                                    widthScreen *
+                                                                        0.783),
+                                                        child: BackdropFilter(
+                                                          filter:
+                                                              ImageFilter.blur(
+                                                                  sigmaX: 5,
+                                                                  sigmaY: 5),
+                                                          child: Container(),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Center(
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30),
+                                                      child: Container(
+                                                        constraints:
+                                                            BoxConstraints(
+                                                                maxHeight:
+                                                                    heightScreen *
+                                                                        0.214,
+                                                                maxWidth:
+                                                                    widthScreen *
+                                                                        0.783),
+                                                        decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .white
+                                                                    .withOpacity(
+                                                                        0.2)),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        30),
+                                                            gradient:
+                                                                gradientAlertDialog()),
+                                                        child: Container(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const AlertDialog(
+                                                    elevation: 0,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    actionsAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    title: Text(
+                                                      'Error de conexión',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          //fontSize: 18,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    content: Text(
+                                                      'Revise su conexión a internet',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ]),
+                                              );
+                                            });
+                                        print(
+                                            '*********************************** Detecto nulo');
+                                        await Future.delayed(
+                                            const Duration(seconds: 3));
+                                        if (context.mounted) {
+                                          context.pop();
+                                        }
+                                      }
+                                      if (context.mounted) {
+                                        context.pop();
+                                      }
+                                    }
+                                  } else {
                                     if (context.mounted) {
                                       context.pop();
                                       if (ref.read(primerArranqueProvider) ==
@@ -144,22 +301,13 @@ class LoginScreen extends ConsumerWidget {
                                           }
                                         }
                                       }
-                                      if (estaRegistrado == user.user!.uid) {
-                                        ref
-                                            .read(
-                                                primerArranqueProvider.notifier)
-                                            .update((state) => true);
-                                        if (ref.read(cerroSesion)) {
-                                          context.pop();
-                                        } else {
-                                          context.push('/bluetooth');
-                                        }
+                                      ref
+                                          .read(primerArranqueProvider.notifier)
+                                          .update((state) => true);
+                                      if (ref.read(cerroSesion)) {
+                                        context.pop();
                                       } else {
-                                        ref
-                                            .read(
-                                                primerArranqueProvider.notifier)
-                                            .update((state) => true);
-                                        context.push('/register');
+                                        context.push('/bluetooth');
                                       }
                                     }
                                   }

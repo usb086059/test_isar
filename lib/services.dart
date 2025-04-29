@@ -7,6 +7,7 @@
 import 'package:flutter_application_1/dato.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/firebase_services.dart';
+import 'package:flutter_application_1/localuseremail.dart';
 import 'package:flutter_application_1/terapia.dart';
 import 'package:flutter_application_1/terapia_personal.dart';
 import 'package:flutter_application_1/terapia_total.dart';
@@ -32,7 +33,8 @@ class Services {
         TerapiaSchema,
         TerapiaPersonalSchema,
         TerapiaTotalSchema,
-        DeviceSchema
+        DeviceSchema,
+        LocalUserEmailSchema
       ], directory: dir.path, inspector: true);
     }
     return Future.value(Isar.getInstance());

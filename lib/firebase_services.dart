@@ -71,13 +71,14 @@ Future<void> addUser(
   });
 }
 
-ImageProvider<Object> userImage(User? user) {
+ImageProvider<Object> userImage(/* User? user, bool localUserImagen */) {
+  User? currentUser = FirebaseAuth.instance.currentUser;
   ImageProvider<Object> imagen = const AssetImage('assets/logo-google-G.png');
-  if (user != null) {
-    if (user.photoURL == null || user.photoURL!.isEmpty) {
+  if (currentUser != null) {
+    if (currentUser.photoURL == null || currentUser.photoURL!.isEmpty) {
       imagen = const AssetImage('assets/icons/iconoCircular.png');
     } else {
-      imagen = NetworkImage(user.photoURL!);
+      imagen = NetworkImage(currentUser.photoURL!);
     }
   }
   return imagen;

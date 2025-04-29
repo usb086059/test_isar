@@ -39,7 +39,6 @@ class HomeZapperScreen extends ConsumerWidget {
     //final int terapiaSeleccionada = ref.watch(indexTerapiaProvider);
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
-    var user = FirebaseAuth.instance.currentUser;
     final bluetoothProvider = ref.watch(bleProvider);
     ScrollController scroll = ScrollController();
     final int puntero = ref.watch(indexTerapiaProvider);
@@ -110,16 +109,37 @@ class HomeZapperScreen extends ConsumerWidget {
               backgroundColor: Colors.transparent,
               centerTitle: true,
               actions: [
-                Container(
-                  padding: const EdgeInsets.all(0),
-                  margin: const EdgeInsets.all(0),
-                  height: heightScreen * 0.1,
-                  width: widthScreen * 0.15,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          fit: BoxFit.fill, image: userImage(user))),
-                ),
+                Stack(children: [
+                  Container(
+                    padding: const EdgeInsets.all(0),
+                    margin: const EdgeInsets.all(0),
+                    height: heightScreen * 0.1,
+                    width: widthScreen * 0.15,
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image:
+                                AssetImage('assets/icons/icon_circulo.png'))),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(0),
+                    margin: const EdgeInsets.all(0),
+                    height: heightScreen * 0.1,
+                    width: widthScreen * 0.15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: userImage(),
+                          onError: (exception, stackTrace) {
+                            /* =>
+                                  const AssetImage(
+                                      'assets/icons/icon_circulo.png') */
+                          },
+                        )),
+                  ),
+                ]),
                 Container(
                   padding: const EdgeInsets.all(0),
                   margin: EdgeInsets.symmetric(

@@ -25,7 +25,6 @@ class TimerZapperScreen3 extends ConsumerWidget {
     final timer = ref.watch(countdownProvider3);
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
-    var user = FirebaseAuth.instance.currentUser;
     final bluetoothProvider = ref.watch(bleProvider);
     const int tiempoClark = 10;
     const int tiempoRift = 6;
@@ -99,15 +98,38 @@ class TimerZapperScreen3 extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 centerTitle: true,
                 actions: [
-                  Container(
-                    padding: const EdgeInsets.all(0),
-                    margin: const EdgeInsets.all(0),
-                    height: heightScreen * 0.1,
-                    width: widthScreen * 0.15,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.fill, image: userImage(user))),
+                  Stack(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(0),
+                        margin: const EdgeInsets.all(0),
+                        height: heightScreen * 0.1,
+                        width: widthScreen * 0.15,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                fit: BoxFit.fill,
+                                image: AssetImage(
+                                    'assets/icons/icon_circulo.png'))),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(0),
+                        margin: const EdgeInsets.all(0),
+                        height: heightScreen * 0.1,
+                        width: widthScreen * 0.15,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: userImage(),
+                              onError: (exception, stackTrace) {
+                                /* =>
+                                  const AssetImage(
+                                      'assets/icons/icon_circulo.png') */
+                              },
+                            )),
+                      ),
+                    ],
                   ),
                   Container(
                     padding: const EdgeInsets.all(0),
