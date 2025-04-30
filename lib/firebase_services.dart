@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
@@ -41,13 +43,24 @@ Future<String> getContacto(String contacto) async {
   List listContactos = [];
   String url;
   CollectionReference collectionReferenceContactos = db.collection('contacto');
-  QuerySnapshot queryListContactos = await collectionReferenceContactos
-      .where('nombre', isEqualTo: contacto)
-      .get();
-  for (var element in queryListContactos.docs) {
-    listContactos.add(element.data());
+  try {
+    QuerySnapshot queryListContactos = await collectionReferenceContactos
+        .where('nombre', isEqualTo: contacto)
+        .get(const GetOptions(source: Source.server))
+        .timeout(const Duration(seconds: 3));
+    for (var element in queryListContactos.docs) {
+      listContactos.add(element.data());
+    }
+    url = listContactos[0]['url'];
+  } on TimeoutException catch (_) {
+    url = 'error';
+    print('************************************* error Timeout');
+  } catch (e) {
+    url = 'error';
+    print(
+        '************************ Error al obtener la lista de contactos (sin internet?: $e)');
   }
-  url = listContactos[0]['url'];
+
   return url;
 }
 

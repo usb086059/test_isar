@@ -177,99 +177,8 @@ class LoginScreen extends ConsumerWidget {
                                       }
                                     } else {
                                       if (context.mounted) {
-                                        showDialog(
-                                            barrierDismissible: false,
-                                            context: context,
-                                            builder: (context) {
-                                              return BackdropFilter(
-                                                filter: ImageFilter.blur(
-                                                    sigmaX: 5, sigmaY: 5),
-                                                child: Stack(children: [
-                                                  Center(
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              30),
-                                                      child: Container(
-                                                        constraints:
-                                                            BoxConstraints(
-                                                                maxHeight:
-                                                                    heightScreen *
-                                                                        0.214,
-                                                                maxWidth:
-                                                                    widthScreen *
-                                                                        0.783),
-                                                        child: BackdropFilter(
-                                                          filter:
-                                                              ImageFilter.blur(
-                                                                  sigmaX: 5,
-                                                                  sigmaY: 5),
-                                                          child: Container(),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Center(
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              30),
-                                                      child: Container(
-                                                        constraints:
-                                                            BoxConstraints(
-                                                                maxHeight:
-                                                                    heightScreen *
-                                                                        0.214,
-                                                                maxWidth:
-                                                                    widthScreen *
-                                                                        0.783),
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .white
-                                                                    .withOpacity(
-                                                                        0.2)),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        30),
-                                                            gradient:
-                                                                gradientAlertDialog()),
-                                                        child: Container(),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const AlertDialog(
-                                                    elevation: 0,
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                    actionsAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    title: Text(
-                                                      'Error de conexión',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          //fontSize: 18,
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    content: Text(
-                                                      'Revise su conexión a internet',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                ]),
-                                              );
-                                            });
+                                        showDialogAviso(
+                                            context, heightScreen, widthScreen);
                                         print(
                                             '*********************************** Detecto nulo');
                                         await Future.delayed(
@@ -305,9 +214,13 @@ class LoginScreen extends ConsumerWidget {
                                           .read(primerArranqueProvider.notifier)
                                           .update((state) => true);
                                       if (ref.read(cerroSesion)) {
-                                        context.pop();
+                                        if (context.mounted) {
+                                          context.pop();
+                                        }
                                       } else {
-                                        context.push('/bluetooth');
+                                        if (context.mounted) {
+                                          context.push('/bluetooth');
+                                        }
                                       }
                                     }
                                   }
@@ -331,5 +244,70 @@ class LoginScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<dynamic> showDialogAviso(
+      BuildContext context, double heightScreen, double widthScreen) {
+    return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Stack(children: [
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: Container(
+                    constraints: BoxConstraints(
+                        maxHeight: heightScreen * 0.214,
+                        maxWidth: widthScreen * 0.783),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child: Container(),
+                    ),
+                  ),
+                ),
+              ),
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: Container(
+                    constraints: BoxConstraints(
+                        maxHeight: heightScreen * 0.214,
+                        maxWidth: widthScreen * 0.783),
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: Colors.white.withOpacity(0.2)),
+                        borderRadius: BorderRadius.circular(30),
+                        gradient: gradientAlertDialog()),
+                    child: Container(),
+                  ),
+                ),
+              ),
+              const AlertDialog(
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                actionsAlignment: MainAxisAlignment.spaceEvenly,
+                title: Text(
+                  'Error de conexión',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      //fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
+                content: Text(
+                  'Revise su conexión a internet',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ]),
+          );
+        });
   }
 }
