@@ -1,24 +1,87 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/auth_google_services.dart';
+import 'package:flutter_application_1/ble_services.dart';
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
+import 'package:flutter_application_1/my_task_handler.dart';
 import 'package:flutter_application_1/navigation_bar_redes.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/state_provider.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 //import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-class LoginScreen extends ConsumerWidget {
-  const LoginScreen({super.key});
+class LoginScreen extends ConsumerStatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  LoginScreenState createState() => LoginScreenState();
+}
+
+class LoginScreenState extends ConsumerState<LoginScreen> {
+  StreamSubscription<BluetoothAdapterState>? _adapterStateSubscription;
+  @override
+  void initState() {
+    super.initState();
+    _adapterStateSubscription = FlutterBluePlus.adapterState.listen((state) {
+      print(
+          '************************************* Adapter State Changed (UI): $state');
+      if (state == BluetoothAdapterState.on) {
+        print('************************************* Bluetooth is ON (UI)!');
+        // Realiza acciones aquí si necesitas saber cuándo se activa desde la UI
+      }
+    });
+
+    // Add a callback to receive data sent from the TaskHandler.
+    FlutterForegroundTask.addTaskDataCallback(_onReceiveTaskData);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Request permissions and initialize the service.
+      await _requestPermissions();
+      _initService();
+      await _startService();
+      await ref.read(bleProvider).bleTurnOn();
+    });
+  }
+
+  // Se llama después de initState y cuando cambian las dependencias del widget.
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print(
+        '********************************* MyHomePageState: didChangeDependencies');
+    // Realizar acciones que dependen de InheritedWidgets o Providers.
+    // Por ejemplo, leer un Provider por primera vez aquí si es necesario para la inicialización.
+  }
+
+  // Se llama cuando el widget se retira del árbol, pero podría volver a insertarse.
+  @override
+  void deactivate() {
+    print(
+        'MyHomePageState: deactivate - La aplicación va a segundo plano (posiblemente)');
+    super.deactivate();
+    // Realizar limpieza temporal o guardar el estado transitorio si es necesario.
+  }
+
+  @override
+  void dispose() {
+    _adapterStateSubscription?.cancel();
+    // Remove a callback to receive data sent from the TaskHandler.
+    FlutterForegroundTask.removeTaskDataCallback(_onReceiveTaskData);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
     UserCredential? user;
@@ -57,6 +120,11 @@ class LoginScreen extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
                   backgroundColor: Colors.transparent,
+                  leading: IconButton(
+                      onPressed: () async {
+                        await _startService();
+                      },
+                      icon: const Icon(Icons.ac_unit)),
                 ),
                 body: Container(
                   height: heightScreen,
@@ -309,5 +377,91 @@ class LoginScreen extends ConsumerWidget {
             ]),
           );
         });
+  }
+
+  void _onReceiveTaskData(Object data) {
+    if (data is Map<String, dynamic>) {
+      final dynamic timestampMillis = data["timestampMillis"];
+      if (timestampMillis != null) {
+        final DateTime timestamp =
+            DateTime.fromMillisecondsSinceEpoch(timestampMillis, isUtc: true);
+        print('timestamp: ${timestamp.toString()}');
+      }
+    }
+  }
+
+  Future<void> _requestPermissions() async {
+    // Android 13+, you need to allow notification permission to display foreground service notification.
+    //
+    // iOS: If you need notification, ask for permission.
+    final NotificationPermission notificationPermission =
+        await FlutterForegroundTask.checkNotificationPermission();
+    if (notificationPermission != NotificationPermission.granted) {
+      await FlutterForegroundTask.requestNotificationPermission();
+    }
+
+    if (Platform.isAndroid) {
+      // Android 12+, there are restrictions on starting a foreground service.
+      //
+      // To restart the service on device reboot or unexpected problem, you need to allow below permission.
+      if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
+        // This function requires `android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` permission.
+        await FlutterForegroundTask.requestIgnoreBatteryOptimization();
+      }
+
+      // Use this utility only if you provide services that require long-term survival,
+      // such as exact alarm service, healthcare service, or Bluetooth communication.
+      //
+      // This utility requires the "android.permission.SCHEDULE_EXACT_ALARM" permission.
+      // Using this permission may make app distribution difficult due to Google policy.
+      /* if (!await FlutterForegroundTask.canScheduleExactAlarms) {
+        // When you call this function, will be gone to the settings page.
+        // So you need to explain to the user why set it.
+        await FlutterForegroundTask.openAlarmsAndRemindersSettings();
+      } */
+    }
+  }
+
+  void _initService() {
+    FlutterForegroundTask.init(
+      androidNotificationOptions: AndroidNotificationOptions(
+        channelId: 'foreground_service',
+        channelName: 'Foreground Service Notification',
+        channelDescription:
+            'This notification appears when the foreground service is running.',
+        onlyAlertOnce: true,
+      ),
+      iosNotificationOptions: const IOSNotificationOptions(
+        showNotification: false,
+        playSound: false,
+      ),
+      foregroundTaskOptions: ForegroundTaskOptions(
+        eventAction: ForegroundTaskEventAction.repeat(5000),
+        autoRunOnBoot: true,
+        autoRunOnMyPackageReplaced: true,
+        allowWakeLock: true,
+        allowWifiLock: true,
+      ),
+    );
+  }
+
+  Future<ServiceRequestResult> _startService() async {
+    if (await FlutterForegroundTask.isRunningService) {
+      return FlutterForegroundTask.restartService();
+    } else {
+      print(
+          '************************************************************ StartServcie');
+      return FlutterForegroundTask.startService(
+        serviceId: 256,
+        notificationTitle: 'Foreground Service is running',
+        notificationText: 'Tap to return to the app',
+        notificationIcon: null,
+        notificationButtons: [
+          const NotificationButton(id: 'btn_hello', text: 'hello'),
+        ],
+        notificationInitialRoute: '/',
+        callback: startCallback,
+      );
+    }
   }
 }

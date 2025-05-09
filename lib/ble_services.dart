@@ -16,7 +16,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
 import 'package:flutter_application_1/pack_comando.dart';
 
-final bleProvider = ChangeNotifierProvider((ref) => BleServices());
+final bleProvider = ChangeNotifierProvider((ref) {
+  print(
+      '************************************************************ bleProvider is being initialized');
+  return BleServices();
+});
 
 /* BluetoothCharacteristic caracteristica = BluetoothCharacteristic(
     remoteId: const DeviceIdentifier('disponible'),

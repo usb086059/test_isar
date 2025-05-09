@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 //importaciones de Firebase
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 //final ProviderContainer container = ProviderContainer();
 
@@ -22,6 +23,7 @@ void main() async {
   await Services().cargarTerapiaTotal();
 
   await initNotification();
+  FlutterForegroundTask.initCommunicationPort();
   runApp(const ProviderScope(child: MyApp()));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 }
