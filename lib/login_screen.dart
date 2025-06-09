@@ -28,18 +28,18 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class LoginScreenState extends ConsumerState<LoginScreen> {
-  StreamSubscription<BluetoothAdapterState>? _adapterStateSubscription;
+  //StreamSubscription<BluetoothAdapterState>? _adapterStateSubscription;
   @override
   void initState() {
     super.initState();
-    _adapterStateSubscription = FlutterBluePlus.adapterState.listen((state) {
+    /* _adapterStateSubscription = FlutterBluePlus.adapterState.listen((state) {
       print(
           '************************************* Adapter State Changed (UI): $state');
       if (state == BluetoothAdapterState.on) {
         print('************************************* Bluetooth is ON (UI)!');
         // Realiza acciones aquí si necesitas saber cuándo se activa desde la UI
       }
-    });
+    }); */
 
     // Add a callback to receive data sent from the TaskHandler.
     FlutterForegroundTask.addTaskDataCallback(_onReceiveTaskData);
@@ -49,7 +49,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
       await _requestPermissions();
       _initService();
       await _startService();
-      await ref.read(bleProvider).bleTurnOn();
+      //await ref.read(bleProvider).bleTurnOn();
     });
   }
 
@@ -74,7 +74,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   void dispose() {
-    _adapterStateSubscription?.cancel();
+    //_adapterStateSubscription?.cancel();
     // Remove a callback to receive data sent from the TaskHandler.
     FlutterForegroundTask.removeTaskDataCallback(_onReceiveTaskData);
     super.dispose();

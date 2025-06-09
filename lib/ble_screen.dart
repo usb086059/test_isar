@@ -15,6 +15,7 @@ import 'package:flutter_application_1/navigation_bar_redes.dart';
 //import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_application_1/state_provider.dart';
@@ -39,6 +40,11 @@ class BleScreen extends ConsumerWidget {
 
     final String location = '/bluetooth';
     ScrollController scroll = ScrollController();
+
+    Map<String, dynamic> orden = {
+      'command': 'conectar',
+      'deviceId': '94:A9:A8:39:16:59'
+    };
 
     return PopScope(
       canPop: false,
@@ -78,6 +84,13 @@ class BleScreen extends ConsumerWidget {
                 ),
                 endDrawerEnableOpenDragGesture: false,
                 appBar: AppBar(
+                  leading: IconButton(
+                      onPressed: () async {
+                        FlutterForegroundTask.sendDataToTask(orden);
+                        print(
+                            '*************** UI: Enviando comando de conexión a TaskHandler');
+                      },
+                      icon: const Icon(Icons.ac_unit)),
                   flexibleSpace: const Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: Stack(
@@ -439,7 +452,7 @@ class BleScreen extends ConsumerWidget {
                                       ConnectionState.done) {
                                     print(
                                         '******************* FUERA DEL LISTEN ********');
-                                    subscriptionStateConection?.cancel();
+                                    /* subscriptionStateConection?.cancel();
                                     subscriptionStateConection = ref
                                         .read(bleProvider)
                                         .conectionState
@@ -514,7 +527,7 @@ class BleScreen extends ConsumerWidget {
                                         //ref.invalidate(servicesProvider);
                                       }
                                       ref.invalidate(servicesProvider);
-                                    });
+                                    }); */
 
                                     return ListView.builder(
                                         shrinkWrap: true,
