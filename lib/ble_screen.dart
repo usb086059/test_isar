@@ -325,7 +325,7 @@ class BleScreen extends ConsumerWidget {
                                                                   if (formKey
                                                                       .currentState!
                                                                       .validate()) {
-                                                                    await ref.watch(servicesProvider).addDevice(Device(
+                                                                    await ref.read(servicesProvider).addDevice(Device(
                                                                         tipo: data
                                                                             .device
                                                                             .advName,

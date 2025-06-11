@@ -87,3 +87,9 @@ final primerArranqueProvider = StateProvider<bool>((ref) => false);
 final batteryLevelProvider = StateProvider<String>((ref) => batteryLevels[0]);
 
 final cerroSesion = StateProvider<bool>((ref) => false);
+
+final batteryProvider =
+    StateProvider<String>((ref) => 'assets/icons/bateriaAzulMarco.png');
+
+final batteryAzulProvider =
+    StateProvider<String>((ref) => 'assets/icons/bateriaAzulMarco.png');

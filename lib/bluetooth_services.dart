@@ -1,32 +1,13 @@
-//import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_application_1/battery_levels.dart';
-//import 'package:flutter_application_1/caracteristicas.dart';
 import 'package:flutter_application_1/comandos.dart';
-//import 'package:flutter_application_1/countdown_provider.dart';
-//import 'package:flutter_application_1/device.dart';
-//import 'package:flutter_application_1/state_provider.dart';
+import 'package:flutter_application_1/local_notification_services.dart';
+import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-//import 'package:isar/isar.dart';
-import 'package:flutter_application_1/local_notification_services.dart';
-import 'package:flutter_application_1/pack_comando.dart';
-
-final bleProvider = ChangeNotifierProvider((ref) {
-  print(
-      '************************************************************ bleProvider is being initialized');
-  return BleServices();
-});
-
-/* BluetoothCharacteristic caracteristica = BluetoothCharacteristic(
-    remoteId: const DeviceIdentifier('disponible'),
-    serviceUuid: Guid('FFE0'),
-    characteristicUuid: Guid('FFE1')); */
 
 bool bussy = false;
 
@@ -35,7 +16,7 @@ List<PackComando> listBackupCommand = [];
 bool isSending = false;
 
 /* ************************************** */
-/* List<BluetoothCharacteristic> listCaracteristicas = [
+List<BluetoothCharacteristic> listCaracteristicas = [
   BluetoothCharacteristic(
       remoteId: const DeviceIdentifier('disponible'),
       serviceUuid: Guid('FFE0'),
@@ -56,13 +37,13 @@ bool isSending = false;
       remoteId: const DeviceIdentifier('disponible'),
       serviceUuid: Guid('FFE0'),
       characteristicUuid: Guid('FFE1')),
-]; */
+];
 List<String> listCaracteristicasRemoteId = [
   'disponible',
   'disponible',
   'disponible',
   'disponible',
-  'disponible',
+  'disponible'
 ];
 List<List<int>> respuestas = [
   [],
@@ -71,22 +52,21 @@ List<List<int>> respuestas = [
   [],
   [],
 ];
-/* int caseNumber = 0;
+int caseNumber = 0;
 bool deviceDisconnected = false;
 StreamSubscription<List<int>>? subscriptionCaracteristica0;
 StreamSubscription<List<int>>? subscriptionCaracteristica1;
 StreamSubscription<List<int>>? subscriptionCaracteristica2;
 StreamSubscription<List<int>>? subscriptionCaracteristica3;
-StreamSubscription<List<int>>? subscriptionCaracteristica4; */
+StreamSubscription<List<int>>? subscriptionCaracteristica4;
 //String bateriaxxx = batteryLevels[1];
 
 /* ***************************************** */
 
-class BleServices extends ChangeNotifier {
-  BleServices() {
-    print('****************** Constructor de BleServices llamado');
+class BluetoothServices {
+  BluetoothServices() {
+    print('**************** Constructor de BluetoothServices llamado');
   }
-  //StreamSubscription<List<int>>? subscriptionCaracteristica;
   List<String> bleServicesBatery = [
     batteryLevels[0],
     batteryLevels[0],
@@ -107,45 +87,27 @@ class BleServices extends ChangeNotifier {
     return bussy;
   }
 
-  /* List<BluetoothCharacteristic> get getListCaracteristicas {
+  List<BluetoothCharacteristic> get getListCaracteristicas {
     return listCaracteristicas;
-  } */
-
-  void setCaractericticasRemoteId(List<String> lista) {
-    listCaracteristicasRemoteId = lista;
-    notifyListeners();
-  }
-
-  void setBleServicesBatery(List<String> lista) {
-    bleServicesBatery = lista;
-    notifyListeners();
   }
 
   String getBatteryLevel(String remoteId) {
     for (int i = 0; i < 5; i++) {
-      if (listCaracteristicasRemoteId[i] == remoteId) {
+      if (listCaracteristicas[i].remoteId.toString() == remoteId) {
         return bleServicesBatery[i];
       }
     }
     return bleServicesBatery[5];
   }
 
-  void setBleServicesBatteryAzul(List<String> lista) {
-    bleServicesBateryAzul = lista;
-    notifyListeners();
-  }
-
   String getBatteryLevelAzul(String remoteId) {
     for (int i = 0; i < 5; i++) {
-      if (listCaracteristicasRemoteId[i] == remoteId) {
+      if (listCaracteristicas[i].remoteId.toString() == remoteId) {
         return bleServicesBateryAzul[i];
       }
     }
     return bleServicesBatery[5];
   }
-  /*  String get getBleservicesBatery {
-    return bleServicesBatery;
-  } */
 
   List<PackComando> get getListBackupComando {
     return listBackupCommand;
@@ -187,12 +149,6 @@ class BleServices extends ChangeNotifier {
     }
   }
 
-  Future<List<BluetoothDevice>> scanDevicesConected() async {
-    final List<BluetoothDevice> listDevicesConected =
-        FlutterBluePlus.connectedDevices;
-    return FlutterBluePlus.connectedDevices;
-  }
-
   Future<void> scanDevices(int segundos) async {
 // Wait for Bluetooth enabled & permission granted
 // In your real app you should use `FlutterBluePlus.adapterState.listen` to handle all states
@@ -211,39 +167,12 @@ class BleServices extends ChangeNotifier {
     //FlutterBluePlus.stopScan();
   }
 
+  Stream<List<ScanResult>> get scanResults => FlutterBluePlus.scanResults;
+
   Stream<OnConnectionStateChangedEvent> get conectionState =>
       FlutterBluePlus.events.onConnectionStateChanged;
 
-  /* void startss(){
-      conectionState.listen((event) { 
-        if(event.connectionState == BluetoothConnectionState.connected){
-          print('>>>>>>>>>>>Device conected: ${event.device}');
-        }
-      });
-    } */
-
-  Stream<List<ScanResult>> get scanResults => FlutterBluePlus.scanResults;
-  /* @override
-  notifyListeners(); */
-
-  /* Future<void> conectar(BluetoothDevice device) async {
-    var subscription = device.connectionState.listen((BluetoothConnectionState state) async {
-      if(state == BluetoothConnectionState.disconnected){
-        await device.connect();
-      } else {
-        await device.cancelWhenDisconnected(subscription, delayed: true, next: true);
-      }
-     });
-  } */
-
-  Stream<List<BluetoothDevice>> get devicesConected {
-    StreamController<List<BluetoothDevice>> controller =
-        StreamController<List<BluetoothDevice>>();
-    controller.add(FlutterBluePlus.connectedDevices);
-    return controller.stream;
-  }
-
-  /*  Future<bool> reConectar(BluetoothDevice device) async {
+  Future<bool> reConectar(BluetoothDevice device) async {
     if (await bleState()) {
       //int count = 0;
       try {
@@ -263,34 +192,29 @@ class BleServices extends ChangeNotifier {
           'El Bluetooth de su telefono esta apagado. Enciendalo y reconecte el ${device.advName} manualmente');
       return false;
     }
-  } */
+  }
 
   Future<void> conectar(BluetoothDevice device) async {
     if (await bleState()) {
-      FlutterBluePlus.stopScan();
-      final Map<String, dynamic> data = {
-        'command': 'conectar',
-        'device': device
-      };
-      FlutterForegroundTask.sendDataToTask(data);
-      /* await device.connect();
+      //FlutterBluePlus.stopScan();
+      FlutterForegroundTask.sendDataToTask(
+          {'command': 'conectar', 'deviceId': device.remoteId});
+      await device.connect();
+      /* await device.connectionState
+          .where((event) => event == BluetoothConnectionState.connected)
+          .first; */
       if (device.isConnected) {
-        await scanDevices(0);
+        //await scanDevices(0);
         await descubrirServicios(device);
-      } */
+      }
     } else {
       await bleTurnOn();
-      final Map<String, dynamic> data = {
-        'command': 'conectar',
-        'device': device
-      };
-      FlutterForegroundTask.sendDataToTask(data);
-      /* await device.connect();
+      await device.connect();
       if (device.isConnected) {
-        await scanDevices(0);
+        //await scanDevices(0);
         await descubrirServicios(device);
         //await Future.delayed(const Duration(seconds: 3));
-      } */
+      }
     }
     //await Future.delayed(const Duration(seconds: 3));
     /* _pulso?.cancel();
@@ -303,14 +227,98 @@ class BleServices extends ChangeNotifier {
     /* int elMTU = await device.requestMtu(512);
     await Future.delayed(const Duration(seconds: 16));
     print('>>>>>>>>>> El MTU negociaodo es: $elMTU'); */
-    //notifyListeners();
   }
 
-  /*  set setCaracteristica(BluetoothCharacteristic _caracteristica) {
-    caracteristica = _caracteristica;
-  } */
+  Future<void> desconectar2(String reomteId) async {
+    if (await bleState()) {
+      //FlutterBluePlus.stopScan();
+      final BluetoothDevice device = FlutterBluePlus.connectedDevices
+          .firstWhere((element) => element.remoteId.toString() == reomteId);
+      print('************** Device **** $device');
+      await device.disconnect();
+      //await scanDevices(0);
+    } else {
+      await bleTurnOn();
+      final BluetoothDevice device = FlutterBluePlus.connectedDevices
+          .firstWhere((element) => element.remoteId.toString() == reomteId);
+      await device.disconnect();
+      //await scanDevices(0);
+    }
+  }
 
-  /* void escuchas() {
+  Future<void> descubrirServicios(BluetoothDevice device) async {
+    List<BluetoothService> listServicios = await device.discoverServices();
+    print('******** Servicios: ${listServicios.length}');
+    /* caracteristica = BluetoothCharacteristic(
+        remoteId: device.remoteId,
+        serviceUuid: Guid('FFE0'),
+        characteristicUuid: Guid('FFE1'));
+    await caracteristica.setNotifyValue(true); */
+    await caracteristicas(device, false);
+
+    print('**************** BleServicesBattery: $bleServicesBatery');
+    await Future.delayed(const Duration(seconds: 1));
+    await sendCommand(PackComando(
+        deviceMac: device.remoteId.toString(),
+        comando: '*', //solo para activar el envio de nivel de bateria
+        terapia: TerapiaTotal(
+            nombre: '',
+            frecMin: 1,
+            frecMax: 1,
+            info: 'Agregue una breve descripción de la terapia',
+            editable: false,
+            idTerapiaPersonal: 0)));
+  }
+
+  Future<void> caracteristicas(
+      BluetoothDevice device, bool disconnected) async {
+    deviceDisconnected = disconnected;
+    if (disconnected) {
+      for (int i = 0; i < 5; i++) {
+        if (listCaracteristicas[i].remoteId == device.remoteId) {
+          listCaracteristicas[i] = BluetoothCharacteristic(
+              remoteId: const DeviceIdentifier('disponible'),
+              serviceUuid: Guid('FFE0'),
+              characteristicUuid: Guid('FFE1'));
+          listCaracteristicasRemoteId[i] = 'disponible';
+          caseNumber = i;
+          escuchas();
+          i = 5;
+        }
+      }
+      //return;
+    } else {
+      bool characteristicExist = false;
+      for (int i = 0; i < 5; i++) {
+        if (listCaracteristicas[i].remoteId == device.remoteId) {
+          characteristicExist = true;
+          i = 5;
+        }
+      }
+      if (!characteristicExist) {
+        BluetoothCharacteristic caracteristicaBase = BluetoothCharacteristic(
+            remoteId: device.remoteId,
+            serviceUuid: Guid('FFE0'),
+            characteristicUuid: Guid('FFE1'));
+        await caracteristicaBase.setNotifyValue(true);
+        for (int i = 0; i < 5; i++) {
+          if (listCaracteristicas[i].remoteId.toString() == 'disponible') {
+            listCaracteristicas[i] = caracteristicaBase;
+            listCaracteristicasRemoteId[i] =
+                caracteristicaBase.remoteId.toString();
+            caseNumber = i;
+            print('*********************** caseNumber: $caseNumber');
+            escuchas();
+            i = 5;
+          }
+        }
+        //return;
+      }
+    }
+    return;
+  }
+
+  void escuchas() {
     switch (caseNumber) {
       case 0:
         subscriptionCaracteristica0?.cancel();
@@ -332,6 +340,13 @@ class BleServices extends ChangeNotifier {
                 bleServicesBatery[0] = selectBatteryLevelImage(batteryLevel);
                 bleServicesBateryAzul[0] =
                     bleServicesBatery[0].replaceRange(20, 20, 'Azul');
+                final Map<String, dynamic> data = {
+                  'command': 'batteryLevel',
+                  'battery': bleServicesBatery,
+                  'batteryAzul': bleServicesBateryAzul,
+                  'caracteristicasRemoteId': listCaracteristicasRemoteId
+                };
+                FlutterForegroundTask.sendDataToMain(data);
                 print(
                     '**************** batteryLevelAddress: $bleServicesBatery');
               } else {
@@ -341,7 +356,6 @@ class BleServices extends ChangeNotifier {
             print(
                 '************* respuesta BOTON: ${String.fromCharCodes(respuestas[0])}');
             print('************* respuesta BOTON: ${listString}');
-            notifyListeners();
           });
         }
         break;
@@ -365,6 +379,13 @@ class BleServices extends ChangeNotifier {
                 bleServicesBatery[1] = selectBatteryLevelImage(batteryLevel1);
                 bleServicesBateryAzul[1] =
                     bleServicesBatery[1].replaceRange(20, 20, 'Azul');
+                final Map<String, dynamic> data = {
+                  'command': 'batteryLevel',
+                  'battery': bleServicesBatery,
+                  'batteryAzul': bleServicesBateryAzul,
+                  'caracteristicasRemoteId': listCaracteristicasRemoteId
+                };
+                FlutterForegroundTask.sendDataToMain(data);
                 print(
                     '**************** batteryLevelAddress: $bleServicesBatery');
               } else {
@@ -374,7 +395,6 @@ class BleServices extends ChangeNotifier {
             print(
                 '************* respuesta BOTON: ${String.fromCharCodes(respuestas[1])}');
             print('************* respuesta BOTON: ${listString1}');
-            notifyListeners();
           });
         }
       case 2:
@@ -405,118 +425,9 @@ class BleServices extends ChangeNotifier {
           });
         }
     }
-  } */
-
-  /* Future<void> caracteristicas(
-      BluetoothDevice device, bool disconnected) async {
-    deviceDisconnected = disconnected;
-    if (disconnected) {
-      for (int i = 0; i < 5; i++) {
-        if (listCaracteristicas[i].remoteId == device.remoteId) {
-          listCaracteristicas[i] = BluetoothCharacteristic(
-              remoteId: const DeviceIdentifier('disponible'),
-              serviceUuid: Guid('FFE0'),
-              characteristicUuid: Guid('FFE1'));
-          caseNumber = i;
-          escuchas();
-          i = 5;
-        }
-      }
-      //return;
-    } else {
-      bool characteristicExist = false;
-      for (int i = 0; i < 5; i++) {
-        if (listCaracteristicas[i].remoteId == device.remoteId) {
-          characteristicExist = true;
-          i = 5;
-        }
-      }
-      if (!characteristicExist) {
-        BluetoothCharacteristic caracteristicaBase = BluetoothCharacteristic(
-            remoteId: device.remoteId,
-            serviceUuid: Guid('FFE0'),
-            characteristicUuid: Guid('FFE1'));
-        await caracteristicaBase.setNotifyValue(true);
-        for (int i = 0; i < 5; i++) {
-          if (listCaracteristicas[i].remoteId.toString() == 'disponible') {
-            listCaracteristicas[i] = caracteristicaBase;
-            caseNumber = i;
-            print('*********************** caseNumber: $caseNumber');
-            escuchas();
-            i = 5;
-          }
-        }
-        //return;
-      }
-    }
-    return;
-  } */
-
-  /* Future<void> descubrirServicios(BluetoothDevice device) async {
-    List<BluetoothService> listServicios = await device.discoverServices();
-    print('******** Servicios: ${listServicios.length}');
-    /* caracteristica = BluetoothCharacteristic(
-        remoteId: device.remoteId,
-        serviceUuid: Guid('FFE0'),
-        characteristicUuid: Guid('FFE1'));
-    await caracteristica.setNotifyValue(true); */
-    await caracteristicas(device, false);
-
-    print('**************** BleServicesBattery: $bleServicesBatery');
-    await Future.delayed(const Duration(seconds: 1));
-    await sendCommand(PackComando(
-        deviceMac: device.remoteId.toString(),
-        comando: '*', //solo para activar el envio de nivel de bateria
-        terapia: TerapiaTotal(
-            nombre: '',
-            frecMin: 1,
-            frecMax: 1,
-            info: 'Agregue una breve descripción de la terapia',
-            editable: false,
-            idTerapiaPersonal: 0)));
-    notifyListeners();
-  } */
-
-  /* BluetoothCharacteristic get gCaracteristica {
-    return caracteristica;
-  } */
-
-  /* Future<void> desconectar(BluetoothDevice device) async {
-    FlutterBluePlus.stopScan();
-    await device.disconnect();
-    await scanDevices(0);
-    notifyListeners();
-  } */
-
-  Future<void> desconectar2(String reomteId) async {
-    if (await bleState()) {
-      FlutterBluePlus.stopScan();
-      /* final BluetoothDevice device = FlutterBluePlus.connectedDevices
-          .firstWhere((element) => element.remoteId.toString() == reomteId);
-      print('************** Device **** $device'); */
-      final Map<String, dynamic> data = {
-        'command': 'desconectar',
-        'deviceId': reomteId
-      };
-      FlutterForegroundTask.sendDataToTask(data);
-      //await device.disconnect();
-      await scanDevices(0);
-    } else {
-      await bleTurnOn();
-      /* final BluetoothDevice device = FlutterBluePlus.connectedDevices
-          .firstWhere((element) => element.remoteId.toString() == reomteId); */
-      final Map<String, dynamic> data = {
-        'command': 'desconectar',
-        'deviceId': reomteId
-      };
-      FlutterForegroundTask.sendDataToTask(data);
-      //await device.disconnect();
-      await scanDevices(0);
-    }
-    //notifyListeners();
   }
 
-  /* Future<void> processShipmentCommand() async {
+  Future<void> processShipmentCommand() async {
     isSending = true;
     while (commandQueue.isNotEmpty) {
       PackComando packCommandFirst = commandQueue.first;
@@ -539,21 +450,16 @@ class BleServices extends ChangeNotifier {
     }
     isSending = false;
     print('**************** termino el bucle While');
-  } */
-
-  Future<void> sendCommand(PackComando packComando) async {
-    final Map<String, dynamic> data = {
-      'command': 'sendCommand',
-      'packCommand': packComando
-    };
-    FlutterForegroundTask.sendDataToTask(data);
-    /* commandQueue.add(packComando);
-    if (!isSending) {
-      processShipmentCommand();
-    } */
   }
 
-  /* Future<bool> enviarDataBLE(
+  Future<void> sendCommand(PackComando packComando) async {
+    commandQueue.add(packComando);
+    if (!isSending) {
+      processShipmentCommand();
+    }
+  }
+
+  Future<bool> enviarDataBLE(
       String remoteId, String comando, TerapiaTotal terapia) async {
     BluetoothDevice device = BluetoothDevice.fromId(remoteId);
     int indiceRespuesta = listCaracteristicas
@@ -664,5 +570,5 @@ class BleServices extends ChangeNotifier {
     /* print(
         'lenght: ${respuesta.length} -- Valores: ${String.fromCharCodes(respuesta)}');
     subscriptionCaracteristica.cancel(); */
-  } */
+  }
 }

@@ -379,9 +379,30 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
         });
   }
 
-  void _onReceiveTaskData(Object data) {
+  void _onReceiveTaskData(Object data) async {
     if (data is Map<String, dynamic>) {
-      final dynamic timestampMillis = data["timestampMillis"];
+      final String command = data['command'];
+      switch (command) {
+        case 'getDevice':
+          final Device dev =
+              await ref.read(servicesProvider).getDevice(data['deviceId']);
+          Map<String, dynamic> dataToSend = {
+            'command': 'deviceFoundInDatabase',
+            'device': dev
+          };
+          FlutterForegroundTask.sendDataToTask(dataToSend);
+        case 'editDevice':
+          await ref.read(servicesProvider).editDevice(data['device']);
+        case 'batteryLevel':
+          ref.read(bleProvider).setBleServicesBatery(data['battery']);
+          ref.read(bleProvider).setBleServicesBatteryAzul(data['batteryAzul']);
+          ref
+              .read(bleProvider)
+              .setCaractericticasRemoteId(data['caracteristicasRemoteId']);
+        default:
+          break;
+      }
+      final dynamic timestampMillis = data['timestampMillis'];
       if (timestampMillis != null) {
         final DateTime timestamp =
             DateTime.fromMillisecondsSinceEpoch(timestampMillis, isUtc: true);
