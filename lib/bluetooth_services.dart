@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_application_1/battery_levels.dart';
 import 'package:flutter_application_1/comandos.dart';
+import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
 import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/terapia_total.dart';
@@ -91,6 +92,17 @@ class BluetoothServices {
     return listCaracteristicas;
   }
 
+  Device devForScannedDevices = Device(
+      tipo: 'tipo',
+      mac: 'mac',
+      nombre: 'nombre',
+      conectado: false,
+      relojAsignado: 0);
+
+  void setDevForScannedDevices(Device dev) {
+    devForScannedDevices = dev;
+  }
+
   String getBatteryLevel(String remoteId) {
     for (int i = 0; i < 5; i++) {
       if (listCaracteristicas[i].remoteId.toString() == remoteId) {
@@ -114,27 +126,6 @@ class BluetoothServices {
   }
 
   Future<bool> bleState() async {
-    //bool bluetoothState = false;
-    // handle bluetooth on & off
-// note: for iOS the initial state is typically BluetoothAdapterState.unknown
-// note: if you have permissions issues you will get stuck at BluetoothAdapterState.unauthorized
-    /* StreamSubscription<BluetoothAdapterState> subscription = FlutterBluePlus
-        .adapterState
-        .listen((BluetoothAdapterState state) async {
-      print('>>>>>>>>>>>>>>>>$state');
-
-      if (state == BluetoothAdapterState.on) {
-        // usually start scanning, connecting, etc
-        //await scanDevices();
-        bluetoothState = true;
-      } else {
-        // show an error to the user, etc
-        //await bleTurnOn();
-        //await scanDevices();
-        bluetoothState = false;
-      }
-    });
-    subscription.cancel(); */
     if (FlutterBluePlus.adapterStateNow == BluetoothAdapterState.on) {
       return true;
     } else {
@@ -169,6 +160,32 @@ class BluetoothServices {
 
   Stream<List<ScanResult>> get scanResults => FlutterBluePlus.scanResults;
 
+  Future<List<Device>> getLastScannedDevices() async {
+    List<Device> lastScannedDevices = [];
+    final List<ScanResult> lastScanResults = FlutterBluePlus.lastScanResults;
+    if (lastScanResults.isNotEmpty) {
+      for (ScanResult element in lastScanResults) {
+        final Map<String, dynamic> data = {
+          'command': 'getDeviceForScanResult',
+          'deviceId': element.device.remoteId.toString()
+        };
+        FlutterForegroundTask.sendDataToMain(data);
+        await Future.delayed(const Duration(seconds: 2));
+        if (devForScannedDevices.nombre == 'nombre') {
+          lastScannedDevices.add(Device(
+              tipo: element.device.advName,
+              mac: element.device.remoteId.toString(),
+              nombre: 'Sin nombre',
+              conectado: false,
+              relojAsignado: 0));
+        } else {
+          lastScannedDevices.add(devForScannedDevices);
+        }
+      }
+    }
+    return lastScannedDevices;
+  }
+
   Stream<OnConnectionStateChangedEvent> get conectionState =>
       FlutterBluePlus.events.onConnectionStateChanged;
 
@@ -195,38 +212,31 @@ class BluetoothServices {
   }
 
   Future<void> conectar(BluetoothDevice device) async {
-    if (await bleState()) {
-      //FlutterBluePlus.stopScan();
-      FlutterForegroundTask.sendDataToTask(
-          {'command': 'conectar', 'deviceId': device.remoteId});
-      await device.connect();
-      /* await device.connectionState
-          .where((event) => event == BluetoothConnectionState.connected)
-          .first; */
-      if (device.isConnected) {
-        //await scanDevices(0);
-        await descubrirServicios(device);
+    try {
+      print('*********** Iniciando conexión al equipo...');
+      if (await bleState()) {
+        //FlutterBluePlus.stopScan();
+        await device.connect();
+        if (device.isConnected) {
+          //await scanDevices(0);
+          await descubrirServicios(device);
+        }
+      } else {
+        await bleTurnOn();
+        await device.connect();
+        if (device.isConnected) {
+          //await scanDevices(0);
+          await descubrirServicios(device);
+          //await Future.delayed(const Duration(seconds: 3));
+        }
       }
-    } else {
-      await bleTurnOn();
-      await device.connect();
-      if (device.isConnected) {
-        //await scanDevices(0);
-        await descubrirServicios(device);
-        //await Future.delayed(const Duration(seconds: 3));
-      }
+      // No esperes eventos aquí; el listener global debería capturarlos
+      // sendPort?.send({'connectionStatus': {'id': device.remoteId.str, 'status': 'connecting'}});
+    } catch (e) {
+      print(
+          '*********** TaskHandler: FALLÓ la llamada a connect() para ${device.remoteId}: $e');
+      //sendPort?.send({'deviceConnectionState': {'id': device.remoteId.str, 'state': BluetoothConnectionState.disconnected.toString(), 'error': e.toString()}});
     }
-    //await Future.delayed(const Duration(seconds: 3));
-    /* _pulso?.cancel();
-    _pulso = Stream<int>.periodic(const Duration(seconds: 3), (sec) => sec)
-        .listen((event) async {
-      notifyListeners();
-      print('******** PeriodicBleServices: ${event}');
-    }); */
-
-    /* int elMTU = await device.requestMtu(512);
-    await Future.delayed(const Duration(seconds: 16));
-    print('>>>>>>>>>> El MTU negociaodo es: $elMTU'); */
   }
 
   Future<void> desconectar2(String reomteId) async {

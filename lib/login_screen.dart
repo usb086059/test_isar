@@ -391,6 +391,28 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
             'device': dev
           };
           FlutterForegroundTask.sendDataToTask(dataToSend);
+        case 'getDeviceForScanResult':
+          Device dev = Device(
+              tipo: 'tipo',
+              mac: 'mac',
+              nombre: 'nombre',
+              conectado: false,
+              relojAsignado: 0);
+          final List<Device> devicesInDatabase =
+              await ref.read(servicesProvider).getAllDevice();
+          if (devicesInDatabase.isNotEmpty) {
+            dev = devicesInDatabase.firstWhere(
+              (element) => element.mac == data['deviceId'],
+              orElse: () => dev,
+            );
+          }
+          Map<String, dynamic> dataToSend = {
+            'command': 'deviceForScannedDevices',
+            'device': dev
+          };
+          FlutterForegroundTask.sendDataToTask(dataToSend);
+        case 'updateScannedDevices':
+          ref.read(bleProvider).setScannedDevices(data['scannedDevices']);
         case 'editDevice':
           await ref.read(servicesProvider).editDevice(data['device']);
         case 'batteryLevel':
@@ -399,6 +421,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
           ref
               .read(bleProvider)
               .setCaractericticasRemoteId(data['caracteristicasRemoteId']);
+        case 'blutoothState':
+          ref.read(bleProvider).setBluetoothState(data['state']);
         default:
           break;
       }

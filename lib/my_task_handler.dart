@@ -22,6 +22,7 @@ class MyTaskHandler extends TaskHandler {
       nombre: 'nombre',
       conectado: false,
       relojAsignado: 0);
+
   bool reconnectEnabled = false;
   BluetoothServices bluetoothServices = BluetoothServices();
   StreamSubscription<OnConnectionStateChangedEvent>?
@@ -119,44 +120,34 @@ class MyTaskHandler extends TaskHandler {
       final String command = data['command'];
       switch (command) {
         case 'conectar':
-          print(
-              '**************** TaskHandler: Recibido comando para CONECTAR a dispositivo');
-          final BluetoothDevice device = data['device'];
-
-          // ¡Aquí es donde el TaskHandler inicia la conexión!
-          try {
-            print(
-                '*********** TaskHandler: Iniciando conexión a ${device.remoteId}...');
-            await device.connect();
-            print(
-                '*********** TaskHandler: device.connect() llamado para ${device.remoteId}');
-            if (device.isConnected) {
-              await bluetoothServices.descubrirServicios(device);
-            }
-            // No esperes eventos aquí; el listener global debería capturarlos
-            // sendPort?.send({'connectionStatus': {'id': device.remoteId.str, 'status': 'connecting'}});
-          } catch (e) {
-            print(
-                '*********** TaskHandler: FALLÓ la llamada a connect() para ${device.remoteId}: $e');
-            //sendPort?.send({'deviceConnectionState': {'id': device.remoteId.str, 'state': BluetoothConnectionState.disconnected.toString(), 'error': e.toString()}});
-          }
+          await bluetoothServices.conectar(data['device']);
         case 'desconectar':
-          final BluetoothDevice device = FlutterBluePlus.connectedDevices
-              .firstWhere(
-                  (element) => element.remoteId.toString() == data['deviceId']);
-          await device.disconnect();
-        /* case 'getBatteryAzul':
-          final String bateryAzul =
-              bluetoothServices.getBatteryLevelAzul(data['deviceId']);
-          final Map<String, dynamic> datax = {
-            'command': 'batteryLevelAzul',
-            'batteryAzul': bateryAzul
-          };
-          FlutterForegroundTask.sendDataToMain(datax); */
+          await bluetoothServices.desconectar2(data['deviceId']);
         case 'deviceFoundInDatabase':
           dev = data['device'];
+        case 'deviceForScannedDevices':
+          bluetoothServices.setDevForScannedDevices(data['device']);
         case 'sendCommand':
           await bluetoothServices.sendCommand(data['packCommand']);
+        case 'blutoothState':
+          final bool isBluetoothOn = await bluetoothServices.bleState();
+          final Map<String, dynamic> data = {
+            'command': 'blutoothState',
+            'state': isBluetoothOn
+          };
+          FlutterForegroundTask.sendDataToMain(data);
+        case 'blutoothTurnOn':
+          await bluetoothServices.bleTurnOn();
+        case 'scanDevices':
+          await bluetoothServices.scanDevices(5);
+          await Future.delayed(const Duration(seconds: 1));
+          final List<Device> lastScannedDevices =
+              await bluetoothServices.getLastScannedDevices();
+          final Map<String, dynamic> data = {
+            'command': 'updateScannedDevices',
+            'scannedDevices': lastScannedDevices
+          };
+          FlutterForegroundTask.sendDataToMain(data);
       }
 
       //if (command == 'conectar' && deviceId != null) {}

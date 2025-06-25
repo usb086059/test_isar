@@ -228,8 +228,9 @@ class BleScreen extends ConsumerWidget {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(30)),
                             ),
-                            child: StreamBuilder<List<ScanResult>>(
-                                stream: ref.read(bleProvider).scanResults,
+                            child: StreamBuilder<List<Device>>(
+                                stream:
+                                    ref.read(bleProvider).streamScannedDevices,
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
                                     return ListView.builder(
@@ -255,11 +256,14 @@ class BleScreen extends ConsumerWidget {
                                                       MaterialStatePropertyAll(
                                                           Colors.transparent)),
                                               onPressed: () async {
+                                                BluetoothDevice
+                                                    bluetoothDevice =
+                                                    BluetoothDevice.fromId(
+                                                        data.mac);
                                                 if (!await ref
                                                     .read(servicesProvider)
-                                                    .getDeviceExists(data
-                                                        .device.remoteId
-                                                        .toString())) {
+                                                    .getDeviceExists(
+                                                        data.mac)) {
                                                   if (!context.mounted) return;
                                                   showDialog(
                                                       context: context,
@@ -327,12 +331,9 @@ class BleScreen extends ConsumerWidget {
                                                                       .validate()) {
                                                                     await ref.read(servicesProvider).addDevice(Device(
                                                                         tipo: data
-                                                                            .device
-                                                                            .advName,
+                                                                            .tipo,
                                                                         mac: data
-                                                                            .device
-                                                                            .remoteId
-                                                                            .toString(),
+                                                                            .mac,
                                                                         nombre: nombreDeviceController
                                                                             .text
                                                                             .toUpperCase(),
@@ -342,12 +343,9 @@ class BleScreen extends ConsumerWidget {
                                                                             0));
                                                                     ref.read(deviceProvider.notifier).update((state) => Device(
                                                                         tipo: data
-                                                                            .device
-                                                                            .advName,
+                                                                            .tipo,
                                                                         mac: data
-                                                                            .device
-                                                                            .remoteId
-                                                                            .toString(),
+                                                                            .mac,
                                                                         nombre: nombreDeviceController
                                                                             .text
                                                                             .toUpperCase(),
@@ -359,7 +357,7 @@ class BleScreen extends ConsumerWidget {
                                                                         .read(
                                                                             bleProvider)
                                                                         .conectar(
-                                                                            data.device);
+                                                                            bluetoothDevice);
                                                                     context
                                                                         .pop();
                                                                   }
@@ -372,9 +370,7 @@ class BleScreen extends ConsumerWidget {
                                                 } else {
                                                   final Device dev = await ref
                                                       .read(servicesProvider)
-                                                      .getDevice(data
-                                                          .device.remoteId
-                                                          .toString());
+                                                      .getDevice(data.mac);
                                                   dev.conectado = true;
                                                   await ref
                                                       .read(servicesProvider)
@@ -385,14 +381,15 @@ class BleScreen extends ConsumerWidget {
                                                       .update((state) => dev);
                                                   await ref
                                                       .read(bleProvider)
-                                                      .conectar(data.device);
+                                                      .conectar(
+                                                          bluetoothDevice);
                                                 }
                                               },
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
-                                                  Text(data.device.advName,
+                                                  Text(data.tipo,
                                                       style: const TextStyle(
                                                           color: Color.fromARGB(
                                                               255,
@@ -402,9 +399,7 @@ class BleScreen extends ConsumerWidget {
                                                           fontSize: 16,
                                                           fontWeight:
                                                               FontWeight.bold)),
-                                                  Text(
-                                                      data.device.remoteId
-                                                          .toString(),
+                                                  Text(data.nombre,
                                                       style: const TextStyle(
                                                           color: Color.fromARGB(
                                                               255,

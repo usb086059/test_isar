@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/battery_levels.dart';
 //import 'package:flutter_application_1/caracteristicas.dart';
 import 'package:flutter_application_1/comandos.dart';
+import 'package:flutter_application_1/device.dart';
 //import 'package:flutter_application_1/countdown_provider.dart';
 //import 'package:flutter_application_1/device.dart';
 //import 'package:flutter_application_1/state_provider.dart';
@@ -30,9 +31,9 @@ final bleProvider = ChangeNotifierProvider((ref) {
 
 bool bussy = false;
 
-List<PackComando> commandQueue = [];
+/* List<PackComando> commandQueue = [];
 List<PackComando> listBackupCommand = [];
-bool isSending = false;
+bool isSending = false; */
 
 /* ************************************** */
 /* List<BluetoothCharacteristic> listCaracteristicas = [
@@ -103,6 +104,11 @@ class BleServices extends ChangeNotifier {
     batteryLevels[0],
     batteryLevels[0],
   ];
+
+  bool bluetoothState = false;
+
+  List<Device> scannedDevices = [];
+
   bool get isBussy {
     return bussy;
   }
@@ -110,6 +116,16 @@ class BleServices extends ChangeNotifier {
   /* List<BluetoothCharacteristic> get getListCaracteristicas {
     return listCaracteristicas;
   } */
+
+  void setScannedDevices(List<Device> lista) {
+    scannedDevices = lista;
+    notifyListeners();
+  }
+
+  void setBluetoothState(bool state) {
+    bluetoothState = state;
+    notifyListeners();
+  }
 
   void setCaractericticasRemoteId(List<String> lista) {
     listCaracteristicasRemoteId = lista;
@@ -147,68 +163,42 @@ class BleServices extends ChangeNotifier {
     return bleServicesBatery;
   } */
 
-  List<PackComando> get getListBackupComando {
+  /* List<PackComando> get getListBackupComando {
     return listBackupCommand;
-  }
+  } */
 
   Future<bool> bleState() async {
-    //bool bluetoothState = false;
-    // handle bluetooth on & off
-// note: for iOS the initial state is typically BluetoothAdapterState.unknown
-// note: if you have permissions issues you will get stuck at BluetoothAdapterState.unauthorized
-    /* StreamSubscription<BluetoothAdapterState> subscription = FlutterBluePlus
-        .adapterState
-        .listen((BluetoothAdapterState state) async {
-      print('>>>>>>>>>>>>>>>>$state');
-
-      if (state == BluetoothAdapterState.on) {
-        // usually start scanning, connecting, etc
-        //await scanDevices();
-        bluetoothState = true;
-      } else {
-        // show an error to the user, etc
-        //await bleTurnOn();
-        //await scanDevices();
-        bluetoothState = false;
-      }
-    });
-    subscription.cancel(); */
-    if (FlutterBluePlus.adapterStateNow == BluetoothAdapterState.on) {
-      return true;
-    } else {
-      return false;
-    }
-    //return bluetoothState;
+    final Map<String, dynamic> data = {'command': 'blutoothState'};
+    FlutterForegroundTask.sendDataToTask(data);
+    await Future.delayed(const Duration(seconds: 2));
+    return bluetoothState;
   }
 
   Future<void> bleTurnOn() async {
     if (Platform.isAndroid) {
-      await FlutterBluePlus.turnOn();
+      final Map<String, dynamic> data = {'command': 'blutoothTurnOn'};
+      FlutterForegroundTask.sendDataToTask(data);
+      await Future.delayed(const Duration(seconds: 2));
+      //await FlutterBluePlus.turnOn();
     }
   }
 
-  Future<List<BluetoothDevice>> scanDevicesConected() async {
+  /* Future<List<BluetoothDevice>> scanDevicesConected() async {
     final List<BluetoothDevice> listDevicesConected =
         FlutterBluePlus.connectedDevices;
     return FlutterBluePlus.connectedDevices;
-  }
+  } */
 
   Future<void> scanDevices(int segundos) async {
-// Wait for Bluetooth enabled & permission granted
-// In your real app you should use `FlutterBluePlus.adapterState.listen` to handle all states
-    await FlutterBluePlus.adapterState
-        .where((val) => val == BluetoothAdapterState.on)
-        .first;
+    final Map<String, dynamic> data = {'command': 'scanDevices'};
+    FlutterForegroundTask.sendDataToTask(data);
+  }
 
-    FlutterBluePlus.stopScan();
-
-    await FlutterBluePlus.startScan(timeout: Duration(seconds: segundos));
-    //withKeywords: ['SH'], timeout: const Duration(seconds: 15));
-
-// wait for scanning to stop
-    await FlutterBluePlus.isScanning.where((val) => val == false).first;
-
-    //FlutterBluePlus.stopScan();
+  Stream<List<Device>> get streamScannedDevices {
+    StreamController<List<Device>> controller =
+        StreamController<List<Device>>();
+    controller.add(scannedDevices);
+    return controller.stream;
   }
 
   Stream<OnConnectionStateChangedEvent> get conectionState =>
@@ -236,12 +226,12 @@ class BleServices extends ChangeNotifier {
      });
   } */
 
-  Stream<List<BluetoothDevice>> get devicesConected {
+  /* Stream<List<BluetoothDevice>> get devicesConected {
     StreamController<List<BluetoothDevice>> controller =
         StreamController<List<BluetoothDevice>>();
     controller.add(FlutterBluePlus.connectedDevices);
     return controller.stream;
-  }
+  } */
 
   /*  Future<bool> reConectar(BluetoothDevice device) async {
     if (await bleState()) {
@@ -273,37 +263,15 @@ class BleServices extends ChangeNotifier {
         'device': device
       };
       FlutterForegroundTask.sendDataToTask(data);
-      /* await device.connect();
-      if (device.isConnected) {
-        await scanDevices(0);
-        await descubrirServicios(device);
-      } */
     } else {
       await bleTurnOn();
+      //ToDo: deberia esperar que el usuario encienda el bluetooth ya eque no es automatico
       final Map<String, dynamic> data = {
         'command': 'conectar',
         'device': device
       };
       FlutterForegroundTask.sendDataToTask(data);
-      /* await device.connect();
-      if (device.isConnected) {
-        await scanDevices(0);
-        await descubrirServicios(device);
-        //await Future.delayed(const Duration(seconds: 3));
-      } */
     }
-    //await Future.delayed(const Duration(seconds: 3));
-    /* _pulso?.cancel();
-    _pulso = Stream<int>.periodic(const Duration(seconds: 3), (sec) => sec)
-        .listen((event) async {
-      notifyListeners();
-      print('******** PeriodicBleServices: ${event}');
-    }); */
-
-    /* int elMTU = await device.requestMtu(512);
-    await Future.delayed(const Duration(seconds: 16));
-    print('>>>>>>>>>> El MTU negociaodo es: $elMTU'); */
-    //notifyListeners();
   }
 
   /*  set setCaracteristica(BluetoothCharacteristic _caracteristica) {
@@ -503,8 +471,7 @@ class BleServices extends ChangeNotifier {
       await scanDevices(0);
     } else {
       await bleTurnOn();
-      /* final BluetoothDevice device = FlutterBluePlus.connectedDevices
-          .firstWhere((element) => element.remoteId.toString() == reomteId); */
+      //ToDo: deberia esperar que el usuario encienda el bluetooth ya eque no es automatico
       final Map<String, dynamic> data = {
         'command': 'desconectar',
         'deviceId': reomteId
