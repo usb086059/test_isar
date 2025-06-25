@@ -6,7 +6,7 @@ import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
 import 'package:flutter_application_1/terapia_total.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+//import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/ble_services.dart';
 
@@ -16,9 +16,7 @@ final countdownProvider =
 class CountdownProvider extends ChangeNotifier {
   final Ref ref;
   CountdownProvider(this.ref) {
-    print('''wwwwwwwwwwwwwwwwwwwwwwwwwww
-    wwwwwwwwwwwwwwwwwwwwwwwww
-    wwwwwwwwwwwwwwwwwwwww''');
+    print('**************** Llamado constructor de CountdownProvider 1');
   }
 
   Duration duration = const Duration(seconds: 0);
@@ -40,11 +38,11 @@ class CountdownProvider extends ChangeNotifier {
       info: 'Agregue una breve descripción de la terapia',
       editable: false,
       idTerapiaPersonal: 0);
-  StreamSubscription<OnConnectionStateChangedEvent>? subscriptionStateConection;
+  //StreamSubscription<OnConnectionStateChangedEvent>? subscriptionStateConection;
   String estadoRespaldo = '';
   bool isRunningRespaldo = false;
-  BluetoothDevice myBlue =
-      BluetoothDevice(remoteId: const DeviceIdentifier("str"));
+  /* BluetoothDevice myBlue =
+      BluetoothDevice(remoteId: const DeviceIdentifier("str")); */
   //String batLevel = 'assets/icons/bateriaMarco.png';
 
   /* set setTimerBat(String value) {
@@ -66,70 +64,51 @@ class CountdownProvider extends ChangeNotifier {
     volvioDeTimerZapperScreen = volvio;
   }
 
-  void avisoDesconexion() {
-    print('****************************** AvisoDesconexion');
-    _tickSubscription?.cancel();
-    device.conectado = false;
-    //Services().editDevice(device);
-    if (isRunning) {
-      isRunningRespaldo = isRunning;
-      isRunning = false;
+  void avisoDesconexion(Device _dev) async {
+    if (device.mac == _dev.mac) {
+      print('****************************** AvisoDesconexion');
+      _tickSubscription?.cancel();
+      device.conectado = false;
+      //Services().editDevice(device);
+      if (isRunning) {
+        isRunningRespaldo = isRunning;
+        isRunning = false;
+      }
+      if (estado != 'Desconectado') {
+        estadoRespaldo = estado;
+        estado = 'Desconectado';
+      }
+      await showNotification(device.nombre,
+          'El dispositivo ${device.nombre} perdió la conexón Bluetooth.');
     }
-    if (estado != 'Desconectado') {
-      estadoRespaldo = estado;
-      estado = 'Desconectado';
-    }
-    showNotification(device.nombre,
-        'El dispositivo ${device.nombre} perdió la conexón Bluetooth.');
   }
 
-  void avisoReconexion() {
-    device.conectado = true;
-    //Services().editDevice(device);
-    if (isRunningRespaldo) {
-      _startTimer(duration.inSeconds);
-      isRunning = true;
-      isRunningRespaldo = false;
+  void avisoReconexion(Device _dev) async {
+    if (device.mac == _dev.mac) {
+      device.conectado = true;
+      //Services().editDevice(device);
+      if (isRunningRespaldo) {
+        _startTimer(duration.inSeconds);
+        isRunning = true;
+        isRunningRespaldo = false;
+      }
+      estado = estadoRespaldo;
+      await showNotification(device.nombre,
+          'El dispositivo ${device.nombre} fue reconectado al Bluetooth.');
+
+      String _command = '';
+      if (estado.contains('Ciclo')) {
+        isRunning ? enviarComando('play') : enviarComando('pause');
+      }
+      if (estado.contains('Reposo')) _command = 'pause';
+      if (estado.contains('FIN')) _command = 'fin';
+      if (_command.isNotEmpty) enviarComando(_command);
     }
-    estado = estadoRespaldo;
-    showNotification(device.nombre,
-        'El dispositivo ${device.nombre} fue reconectado al Bluetooth.');
   }
 
   void startStopTimer(String modoTiempo, Device _device, TerapiaTotal _terapia,
       bool playInicial) async {
     device = _device;
-    subscriptionStateConection?.cancel();
-    subscriptionStateConection =
-        ref.read(bleProvider).conectionState.listen((event) async {
-      if (event.connectionState == BluetoothConnectionState.disconnected &&
-          event.device.remoteId.toString() == device.mac) {
-        //await ref.read(bleProvider).caracteristicas(event.device, true);
-        avisoDesconexion();
-        /* if (!event.device.isAutoConnectEnabled &&
-            ref.read(reConectadoProvider)) {
-          await ref.read(bleProvider).reConectar(event.device);
-        } */
-        //notifyListeners();
-      }
-      if (event.connectionState == BluetoothConnectionState.connected &&
-          event.device.remoteId.toString() == device.mac) {
-        if (!ref.read(bleProvider).isBussy) {
-          print('*************************** AVISO DE RECONEXION **');
-          await ref.read(bleProvider).descubrirServicios(event.device);
-          avisoReconexion();
-          String _command = '';
-          if (estado.contains('Ciclo')) {
-            isRunning ? enviarComando('play') : enviarComando('pause');
-          }
-          if (estado.contains('Reposo')) _command = 'pause';
-          if (estado.contains('FIN')) _command = 'fin';
-          if (_command.isNotEmpty) enviarComando(_command);
-          //notifyListeners();
-        }
-      }
-      notifyListeners();
-    });
 
     if (device.conectado) {
       if (playInicial) {
@@ -241,8 +220,8 @@ class CountdownProvider extends ChangeNotifier {
 
   void terminarTimer() async {
     _tickSubscription?.cancel();
-    subscriptionStateConection?.cancel();
-    showNotification(device.nombre, 'La terapia ha terminado con éxito');
+    //subscriptionStateConection?.cancel();
+    await showNotification(device.nombre, 'La terapia ha terminado con éxito');
     isRunning = false;
     estado = 'FIN';
     ciclos = 1;
@@ -256,8 +235,9 @@ class CountdownProvider extends ChangeNotifier {
 
   void cancelarTimer() async {
     _tickSubscription?.cancel();
-    subscriptionStateConection?.cancel();
-    showNotification(device.nombre, 'La terapia se ha cancelado con éxito');
+    //subscriptionStateConection?.cancel();
+    await showNotification(
+        device.nombre, 'La terapia se ha cancelado con éxito');
     isRunning = false;
     estado = 'FIN';
     ciclos = 1;

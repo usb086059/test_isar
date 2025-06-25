@@ -20,7 +20,7 @@ import 'package:flutter_application_1/countdown_provider_3.dart';
 import 'package:flutter_application_1/countdown_provider_4.dart';
 import 'package:flutter_application_1/countdown_provider_5.dart';
 import 'package:flutter_application_1/state_provider.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+//import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_application_1/comandos.dart';

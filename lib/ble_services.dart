@@ -11,7 +11,7 @@ import 'package:flutter_application_1/device.dart';
 //import 'package:flutter_application_1/device.dart';
 //import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_application_1/terapia_total.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+//import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 //import 'package:isar/isar.dart';
@@ -201,8 +201,8 @@ class BleServices extends ChangeNotifier {
     return controller.stream;
   }
 
-  Stream<OnConnectionStateChangedEvent> get conectionState =>
-      FlutterBluePlus.events.onConnectionStateChanged;
+  /* Stream<OnConnectionStateChangedEvent> get conectionState =>
+      FlutterBluePlus.events.onConnectionStateChanged; */
 
   /* void startss(){
       conectionState.listen((event) { 
@@ -212,7 +212,7 @@ class BleServices extends ChangeNotifier {
       });
     } */
 
-  Stream<List<ScanResult>> get scanResults => FlutterBluePlus.scanResults;
+  //Stream<List<ScanResult>> get scanResults => FlutterBluePlus.scanResults;
   /* @override
   notifyListeners(); */
 
@@ -255,12 +255,12 @@ class BleServices extends ChangeNotifier {
     }
   } */
 
-  Future<void> conectar(BluetoothDevice device) async {
+  Future<void> conectar(String remoteId) async {
     if (await bleState()) {
-      FlutterBluePlus.stopScan();
+      //FlutterBluePlus.stopScan();
       final Map<String, dynamic> data = {
         'command': 'conectar',
-        'device': device
+        'deviceId': remoteId
       };
       FlutterForegroundTask.sendDataToTask(data);
     } else {
@@ -268,7 +268,7 @@ class BleServices extends ChangeNotifier {
       //ToDo: deberia esperar que el usuario encienda el bluetooth ya eque no es automatico
       final Map<String, dynamic> data = {
         'command': 'conectar',
-        'device': device
+        'deviceId': remoteId
       };
       FlutterForegroundTask.sendDataToTask(data);
     }
@@ -458,7 +458,7 @@ class BleServices extends ChangeNotifier {
 
   Future<void> desconectar2(String reomteId) async {
     if (await bleState()) {
-      FlutterBluePlus.stopScan();
+      //FlutterBluePlus.stopScan();
       /* final BluetoothDevice device = FlutterBluePlus.connectedDevices
           .firstWhere((element) => element.remoteId.toString() == reomteId);
       print('************** Device **** $device'); */
@@ -468,7 +468,7 @@ class BleServices extends ChangeNotifier {
       };
       FlutterForegroundTask.sendDataToTask(data);
       //await device.disconnect();
-      await scanDevices(0);
+      //await scanDevices(0);
     } else {
       await bleTurnOn();
       //ToDo: deberia esperar que el usuario encienda el bluetooth ya eque no es automatico
@@ -478,7 +478,7 @@ class BleServices extends ChangeNotifier {
       };
       FlutterForegroundTask.sendDataToTask(data);
       //await device.disconnect();
-      await scanDevices(0);
+      //await scanDevices(0);
     }
     //notifyListeners();
   }

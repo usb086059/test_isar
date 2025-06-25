@@ -45,7 +45,7 @@ class TimerZapperScreen3 extends ConsumerWidget {
       onPopInvoked: (didPop) async {
         if (didPop) {
           return;
-        } else if (ref.watch(countdownProvider3).estado == 'FIN') {
+        } else if (timer.estado == 'FIN') {
           await cerrarTimerScreen(ref);
           if (context.mounted) {
             context.pop();
@@ -65,10 +65,9 @@ class TimerZapperScreen3 extends ConsumerWidget {
               clipper: TimerScreenCurve(),
               child: Container(
                 decoration: BoxDecoration(
-                    gradient:
-                        ref.watch(countdownProvider3).estado.contains('Ciclo')
-                            ? azulGradientCurvas()
-                            : purpleGradientCurvas()),
+                    gradient: timer.estado.contains('Ciclo')
+                        ? azulGradientCurvas()
+                        : purpleGradientCurvas()),
                 //height: 100,
                 height: MediaQuery.sizeOf(context).height,
                 width: MediaQuery.sizeOf(context).width,
@@ -169,9 +168,7 @@ class TimerZapperScreen3 extends ConsumerWidget {
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                      color: ref
-                                          .watch(countdownProvider3)
-                                          .ciclosLeftColor,
+                                      color: timer.ciclosLeftColor,
                                       offset: const Offset(4, 4),
                                       blurRadius: 15,
                                       spreadRadius: 1),
@@ -191,15 +188,13 @@ class TimerZapperScreen3 extends ConsumerWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       const SizedBox(height: 20),
-                                      Text(ref.watch(countdownProvider3).estado,
+                                      Text(timer.estado,
                                           style: const TextStyle(
                                               fontSize: 25,
                                               fontWeight: FontWeight.bold),
                                           textAlign: TextAlign.center),
                                       Text(
-                                        ref
-                                            .watch(countdownProvider3)
-                                            .timeLeftString,
+                                        timer.timeLeftString,
                                         style: const TextStyle(fontSize: 50),
                                         textAlign: TextAlign.center,
                                       ),
@@ -207,11 +202,7 @@ class TimerZapperScreen3 extends ConsumerWidget {
                                           disabledColor: Colors.transparent,
                                           padding: const EdgeInsets.all(0.0),
                                           iconSize: 50,
-                                          onPressed: ref
-                                                          .watch(
-                                                              countdownProvider3)
-                                                          .estado !=
-                                                      'FIN' &&
+                                          onPressed: timer.estado != 'FIN' &&
                                                   timer.device.conectado
                                               ? () async {
                                                   modoSeleccionado
@@ -266,11 +257,7 @@ class TimerZapperScreen3 extends ConsumerWidget {
                                   ),
                                 ),
                                 Visibility(
-                                  visible:
-                                      ref.watch(countdownProvider3).estado ==
-                                              'FIN'
-                                          ? true
-                                          : false,
+                                  visible: timer.estado == 'FIN' ? true : false,
                                   child: Center(
                                     child: Column(
                                       mainAxisAlignment:
@@ -288,11 +275,7 @@ class TimerZapperScreen3 extends ConsumerWidget {
                                                 backgroundColor:
                                                     MaterialStatePropertyAll(
                                                         Colors.transparent)),
-                                            onPressed: ref
-                                                        .watch(
-                                                            countdownProvider3)
-                                                        .estado ==
-                                                    'FIN'
+                                            onPressed: timer.estado == 'FIN'
                                                 ? () async {
                                                     await cerrarTimerScreen(
                                                         ref);
@@ -321,13 +304,8 @@ class TimerZapperScreen3 extends ConsumerWidget {
                                     value: timer.estado.contains('Reposo')
                                         ? porcentajeTimerReposo
                                         : porcentajeTimer,
-                                    backgroundColor: ref
-                                        .watch(countdownProvider3)
-                                        .ciclosLeftColor,
-                                    color: ref
-                                            .watch(countdownProvider3)
-                                            .estado
-                                            .contains('Ciclo')
+                                    backgroundColor: timer.ciclosLeftColor,
+                                    color: timer.estado.contains('Ciclo')
                                         ? Colors.blue[50]
                                         : Colors.purple[50],
                                   ),

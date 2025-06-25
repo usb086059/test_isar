@@ -6,6 +6,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/auth_google_services.dart';
 import 'package:flutter_application_1/ble_services.dart';
+import 'package:flutter_application_1/countdown_provider.dart';
+import 'package:flutter_application_1/countdown_provider_2.dart';
+import 'package:flutter_application_1/countdown_provider_3.dart';
+import 'package:flutter_application_1/countdown_provider_4.dart';
+import 'package:flutter_application_1/countdown_provider_5.dart';
 import 'package:flutter_application_1/curve_services.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/firebase_services.dart';
@@ -18,7 +23,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 //import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+//import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -423,6 +428,36 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
               .setCaractericticasRemoteId(data['caracteristicasRemoteId']);
         case 'blutoothState':
           ref.read(bleProvider).setBluetoothState(data['state']);
+        case 'avisoReconexion':
+          final Device dev =
+              await ref.read(servicesProvider).getDevice(data['deviceId']);
+          switch (dev.relojAsignado) {
+            case 1:
+              ref.read(countdownProvider).avisoReconexion(dev);
+            case 2:
+              ref.read(countdownProvider2).avisoReconexion(dev);
+            case 3:
+              ref.read(countdownProvider3).avisoReconexion(dev);
+            case 4:
+              ref.read(countdownProvider4).avisoReconexion(dev);
+            case 5:
+              ref.read(countdownProvider5).avisoReconexion(dev);
+          }
+        case 'avisoDesconexion':
+          final Device dev =
+              await ref.read(servicesProvider).getDevice(data['deviceId']);
+          switch (dev.relojAsignado) {
+            case 1:
+              ref.read(countdownProvider).avisoDesconexion(dev);
+            case 2:
+              ref.read(countdownProvider2).avisoDesconexion(dev);
+            case 3:
+              ref.read(countdownProvider3).avisoDesconexion(dev);
+            case 4:
+              ref.read(countdownProvider4).avisoDesconexion(dev);
+            case 5:
+              ref.read(countdownProvider5).avisoDesconexion(dev);
+          }
         default:
           break;
       }

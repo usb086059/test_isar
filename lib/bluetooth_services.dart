@@ -200,12 +200,12 @@ class BluetoothServices {
         .where((event) => event == BluetoothConnectionState.connected)
         .first; */
       } catch (e) {
-        showNotification(device.advName, 'se acabo el timeout');
+        await showNotification(device.advName, 'se acabo el timeout');
         return false;
       }
     } else {
       await device.disconnect();
-      showNotification(device.advName,
+      await showNotification(device.advName,
           'El Bluetooth de su telefono esta apagado. Enciendalo y reconecte el ${device.advName} manualmente');
       return false;
     }
@@ -215,7 +215,7 @@ class BluetoothServices {
     try {
       print('*********** Iniciando conexión al equipo...');
       if (await bleState()) {
-        //FlutterBluePlus.stopScan();
+        await FlutterBluePlus.stopScan();
         await device.connect();
         if (device.isConnected) {
           //await scanDevices(0);
@@ -241,7 +241,7 @@ class BluetoothServices {
 
   Future<void> desconectar2(String reomteId) async {
     if (await bleState()) {
-      //FlutterBluePlus.stopScan();
+      await FlutterBluePlus.stopScan();
       final BluetoothDevice device = FlutterBluePlus.connectedDevices
           .firstWhere((element) => element.remoteId.toString() == reomteId);
       print('************** Device **** $device');

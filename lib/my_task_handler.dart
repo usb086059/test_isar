@@ -37,7 +37,8 @@ class MyTaskHandler extends TaskHandler {
       (event) async {
         print(
             '****************** Un dispositivo cambio su StateConnection: ${event.connectionState}');
-        subscriptionStateConectionTask?.cancel();
+        subscriptionStateConectionTask
+            ?.cancel(); //Todo: no se debe cancelar porque onStart no es llamado nunca mas
         Map<String, dynamic> data = {
           'command': 'getDevice',
           'deviceId': event.device.remoteId.toString()
@@ -52,6 +53,8 @@ class MyTaskHandler extends TaskHandler {
           if (!event.device.isAutoConnectEnabled && reconnectEnabled) {
             await bluetoothServices.reConectar(event.device);
           }
+          FlutterForegroundTask.sendDataToMain(
+              {'command': 'avisoDesconexion', 'deviceId': dev.mac});
           print('****************** Listen Disconnnected Realizado');
         }
         if (event.connectionState == BluetoothConnectionState.connected) {
@@ -69,9 +72,11 @@ class MyTaskHandler extends TaskHandler {
                 i = 5;
               }
             }
-            if (!characteristicExist && dev.relojAsignado == 0) {
+            if (!characteristicExist) {
               await bluetoothServices.descubrirServicios(event.device);
             }
+            FlutterForegroundTask.sendDataToMain(
+                {'command': 'avisoReconexion', 'deviceId': dev.mac});
           }
         }
       },
@@ -120,8 +125,11 @@ class MyTaskHandler extends TaskHandler {
       final String command = data['command'];
       switch (command) {
         case 'conectar':
-          await bluetoothServices.conectar(data['device']);
+          final BluetoothDevice device =
+              BluetoothDevice.fromId(data['deviceId']);
+          await bluetoothServices.conectar(device);
         case 'desconectar':
+          reconnectEnabled = false;
           await bluetoothServices.desconectar2(data['deviceId']);
         case 'deviceFoundInDatabase':
           dev = data['device'];

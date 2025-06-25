@@ -14,7 +14,7 @@ import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/navigation_bar_redes.dart';
 //import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/services.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+//import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -29,12 +29,12 @@ class BleScreen extends ConsumerWidget {
     print(
         '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< **** Construyendo bleScreen **** >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     //final bluetoothProvider = ref.watch(bleProvider);
-    StreamSubscription<OnConnectionStateChangedEvent>?
-        subscriptionStateConection;
+    /* StreamSubscription<OnConnectionStateChangedEvent>?
+        subscriptionStateConection; */
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
 
-    List<BluetoothDevice> listaDC = [];
+    //List<BluetoothDevice> listaDC = [];
     final formKey = GlobalKey<FormState>();
     TextEditingController nombreDeviceController = TextEditingController();
 
@@ -256,10 +256,10 @@ class BleScreen extends ConsumerWidget {
                                                       MaterialStatePropertyAll(
                                                           Colors.transparent)),
                                               onPressed: () async {
-                                                BluetoothDevice
+                                                /* BluetoothDevice
                                                     bluetoothDevice =
                                                     BluetoothDevice.fromId(
-                                                        data.mac);
+                                                        data.mac); */
                                                 if (!await ref
                                                     .read(servicesProvider)
                                                     .getDeviceExists(
@@ -357,7 +357,7 @@ class BleScreen extends ConsumerWidget {
                                                                         .read(
                                                                             bleProvider)
                                                                         .conectar(
-                                                                            bluetoothDevice);
+                                                                            data.mac);
                                                                     context
                                                                         .pop();
                                                                   }
@@ -381,8 +381,7 @@ class BleScreen extends ConsumerWidget {
                                                       .update((state) => dev);
                                                   await ref
                                                       .read(bleProvider)
-                                                      .conectar(
-                                                          bluetoothDevice);
+                                                      .conectar(data.mac);
                                                 }
                                               },
                                               child: Column(
