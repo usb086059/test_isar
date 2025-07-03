@@ -7,6 +7,7 @@ import 'package:flutter_application_1/battery_levels.dart';
 //import 'package:flutter_application_1/caracteristicas.dart';
 import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/device.dart';
+import 'package:flutter_application_1/serialize.dart';
 //import 'package:flutter_application_1/countdown_provider.dart';
 //import 'package:flutter_application_1/device.dart';
 //import 'package:flutter_application_1/state_provider.dart';
@@ -84,8 +85,11 @@ StreamSubscription<List<int>>? subscriptionCaracteristica4; */
 /* ***************************************** */
 
 class BleServices extends ChangeNotifier {
+  List<Device> scannedDevices = [];
+
   BleServices() {
     print('****************** Constructor de BleServices llamado');
+    scannedDevicesController.add(scannedDevices);
   }
   //StreamSubscription<List<int>>? subscriptionCaracteristica;
   List<String> bleServicesBatery = [
@@ -107,8 +111,6 @@ class BleServices extends ChangeNotifier {
 
   bool bluetoothState = false;
 
-  List<Device> scannedDevices = [];
-
   bool get isBussy {
     return bussy;
   }
@@ -119,6 +121,7 @@ class BleServices extends ChangeNotifier {
 
   void setScannedDevices(List<Device> lista) {
     scannedDevices = lista;
+    scannedDevicesController.add(scannedDevices);
     notifyListeners();
   }
 
@@ -194,12 +197,17 @@ class BleServices extends ChangeNotifier {
     FlutterForegroundTask.sendDataToTask(data);
   }
 
-  Stream<List<Device>> get streamScannedDevices {
+  final scannedDevicesController = StreamController<List<Device>>();
+
+  Stream<List<Device>> get streamScannedDevices =>
+      scannedDevicesController.stream;
+
+  /* Stream<List<Device>> get streamScannedDevices {
     StreamController<List<Device>> controller =
         StreamController<List<Device>>();
     controller.add(scannedDevices);
     return controller.stream;
-  }
+  } */
 
   /* Stream<OnConnectionStateChangedEvent> get conectionState =>
       FlutterBluePlus.events.onConnectionStateChanged; */
@@ -511,7 +519,7 @@ class BleServices extends ChangeNotifier {
   Future<void> sendCommand(PackComando packComando) async {
     final Map<String, dynamic> data = {
       'command': 'sendCommand',
-      'packCommand': packComando
+      'packCommand': serializePackComando(packComando)
     };
     FlutterForegroundTask.sendDataToTask(data);
     /* commandQueue.add(packComando);

@@ -17,13 +17,14 @@ import 'package:flutter_application_1/firebase_services.dart';
 import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/my_task_handler.dart';
 import 'package:flutter_application_1/navigation_bar_redes.dart';
+import 'package:flutter_application_1/serialize.dart';
 import 'package:flutter_application_1/services.dart';
 import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 //import 'package:url_launcher/url_launcher.dart';
-//import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -37,6 +38,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    FlutterBluePlus.turnOn();
     /* _adapterStateSubscription = FlutterBluePlus.adapterState.listen((state) {
       print(
           '************************************* Adapter State Changed (UI): $state');
@@ -393,7 +395,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
               await ref.read(servicesProvider).getDevice(data['deviceId']);
           Map<String, dynamic> dataToSend = {
             'command': 'deviceFoundInDatabase',
-            'device': dev
+            'device': serializeDevice(dev)
           };
           FlutterForegroundTask.sendDataToTask(dataToSend);
         case 'getDeviceForScanResult':
@@ -413,13 +415,18 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
           }
           Map<String, dynamic> dataToSend = {
             'command': 'deviceForScannedDevices',
-            'device': dev
+            'device': serializeDevice(dev)
           };
+          print('********* dataToSend: ${dataToSend['device']}');
           FlutterForegroundTask.sendDataToTask(dataToSend);
         case 'updateScannedDevices':
-          ref.read(bleProvider).setScannedDevices(data['scannedDevices']);
+          ref
+              .read(bleProvider)
+              .setScannedDevices(deSerializeListDevice(data['scannedDevices']));
         case 'editDevice':
-          await ref.read(servicesProvider).editDevice(data['device']);
+          await ref
+              .read(servicesProvider)
+              .editDevice(deSerializeDevice(data['device']));
         case 'batteryLevel':
           ref.read(bleProvider).setBleServicesBatery(data['battery']);
           ref.read(bleProvider).setBleServicesBatteryAzul(data['batteryAzul']);
@@ -458,6 +465,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
             case 5:
               ref.read(countdownProvider5).avisoDesconexion(dev);
           }
+        case 'updateUIDeviceConnected':
+          ref.invalidate(servicesProvider);
         default:
           break;
       }

@@ -6,6 +6,7 @@ import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
 import 'package:flutter_application_1/pack_comando.dart';
+import 'package:flutter_application_1/serialize.dart';
 import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -99,8 +100,8 @@ class BluetoothServices {
       conectado: false,
       relojAsignado: 0);
 
-  void setDevForScannedDevices(Device dev) {
-    devForScannedDevices = dev;
+  void setDevForScannedDevices(Map<String, dynamic> dev) {
+    devForScannedDevices = deSerializeDevice(dev);
   }
 
   String getBatteryLevel(String remoteId) {
@@ -135,9 +136,7 @@ class BluetoothServices {
   }
 
   Future<void> bleTurnOn() async {
-    if (Platform.isAndroid) {
-      await FlutterBluePlus.turnOn();
-    }
+    //await FlutterBluePlus.turnOn();
   }
 
   Future<void> scanDevices(int segundos) async {
@@ -156,6 +155,13 @@ class BluetoothServices {
     await FlutterBluePlus.isScanning.where((val) => val == false).first;
 
     //FlutterBluePlus.stopScan();
+
+    final List<Device> lastScannedDevices = await getLastScannedDevices();
+    final Map<String, dynamic> data = {
+      'command': 'updateScannedDevices',
+      'scannedDevices': serializeListDevice(lastScannedDevices)
+    };
+    FlutterForegroundTask.sendDataToMain(data);
   }
 
   Stream<List<ScanResult>> get scanResults => FlutterBluePlus.scanResults;
@@ -170,7 +176,7 @@ class BluetoothServices {
           'deviceId': element.device.remoteId.toString()
         };
         FlutterForegroundTask.sendDataToMain(data);
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(milliseconds: 100));
         if (devForScannedDevices.nombre == 'nombre') {
           lastScannedDevices.add(Device(
               tipo: element.device.advName,
@@ -218,14 +224,14 @@ class BluetoothServices {
         await FlutterBluePlus.stopScan();
         await device.connect();
         if (device.isConnected) {
-          //await scanDevices(0);
+          await scanDevices(0);
           await descubrirServicios(device);
         }
       } else {
         await bleTurnOn();
         await device.connect();
         if (device.isConnected) {
-          //await scanDevices(0);
+          await scanDevices(0);
           await descubrirServicios(device);
           //await Future.delayed(const Duration(seconds: 3));
         }
@@ -246,13 +252,13 @@ class BluetoothServices {
           .firstWhere((element) => element.remoteId.toString() == reomteId);
       print('************** Device **** $device');
       await device.disconnect();
-      //await scanDevices(0);
+      await scanDevices(0);
     } else {
       await bleTurnOn();
       final BluetoothDevice device = FlutterBluePlus.connectedDevices
           .firstWhere((element) => element.remoteId.toString() == reomteId);
       await device.disconnect();
-      //await scanDevices(0);
+      await scanDevices(0);
     }
   }
 

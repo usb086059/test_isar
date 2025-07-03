@@ -81,6 +81,7 @@ class CountdownProvider extends ChangeNotifier {
       await showNotification(device.nombre,
           'El dispositivo ${device.nombre} perdió la conexón Bluetooth.');
     }
+    notifyListeners();
   }
 
   void avisoReconexion(Device _dev) async {
@@ -104,6 +105,7 @@ class CountdownProvider extends ChangeNotifier {
       if (estado.contains('FIN')) _command = 'fin';
       if (_command.isNotEmpty) enviarComando(_command);
     }
+    notifyListeners();
   }
 
   void startStopTimer(String modoTiempo, Device _device, TerapiaTotal _terapia,

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_application_1/device.dart';
+import 'package:flutter_application_1/serialize.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_application_1/bluetooth_services.dart';
@@ -37,8 +38,8 @@ class MyTaskHandler extends TaskHandler {
       (event) async {
         print(
             '****************** Un dispositivo cambio su StateConnection: ${event.connectionState}');
-        subscriptionStateConectionTask
-            ?.cancel(); //Todo: no se debe cancelar porque onStart no es llamado nunca mas
+        /* subscriptionStateConectionTask
+            ?.cancel(); //Todo: no se debe cancelar porque onStart no es llamado nunca mas */
         Map<String, dynamic> data = {
           'command': 'getDevice',
           'deviceId': event.device.remoteId.toString()
@@ -48,7 +49,7 @@ class MyTaskHandler extends TaskHandler {
         if (event.connectionState == BluetoothConnectionState.disconnected) {
           await bluetoothServices.caracteristicas(event.device, true);
           dev.conectado = false;
-          data = {'command': 'editDevice', 'device': dev};
+          data = {'command': 'editDevice', 'device': serializeDevice(dev)};
           FlutterForegroundTask.sendDataToMain(data);
           if (!event.device.isAutoConnectEnabled && reconnectEnabled) {
             await bluetoothServices.reConectar(event.device);
@@ -61,7 +62,7 @@ class MyTaskHandler extends TaskHandler {
           print('***********>>>>> Estoy en event.connected del taskHandler');
           reconnectEnabled = true;
           dev.conectado = true;
-          data = {'command': 'editDevice', 'device': dev};
+          data = {'command': 'editDevice', 'device': serializeDevice(dev)};
           FlutterForegroundTask.sendDataToMain(data);
           if (event.device.isAutoConnectEnabled) {
             bool characteristicExist = false;
@@ -79,6 +80,8 @@ class MyTaskHandler extends TaskHandler {
                 {'command': 'avisoReconexion', 'deviceId': dev.mac});
           }
         }
+        FlutterForegroundTask.sendDataToMain(
+            {'command': 'updateUIDeviceConnected'});
       },
       onError: (error, stackTrace) {
         print('!!!! MinimalTaskHandler ERROR: $error\n$stackTrace');
@@ -132,11 +135,12 @@ class MyTaskHandler extends TaskHandler {
           reconnectEnabled = false;
           await bluetoothServices.desconectar2(data['deviceId']);
         case 'deviceFoundInDatabase':
-          dev = data['device'];
+          dev = deSerializeDevice(data['device']);
         case 'deviceForScannedDevices':
           bluetoothServices.setDevForScannedDevices(data['device']);
         case 'sendCommand':
-          await bluetoothServices.sendCommand(data['packCommand']);
+          await bluetoothServices
+              .sendCommand(deSerializePackComando(data['packCommand']));
         case 'blutoothState':
           final bool isBluetoothOn = await bluetoothServices.bleState();
           final Map<String, dynamic> data = {
@@ -148,14 +152,7 @@ class MyTaskHandler extends TaskHandler {
           await bluetoothServices.bleTurnOn();
         case 'scanDevices':
           await bluetoothServices.scanDevices(5);
-          await Future.delayed(const Duration(seconds: 1));
-          final List<Device> lastScannedDevices =
-              await bluetoothServices.getLastScannedDevices();
-          final Map<String, dynamic> data = {
-            'command': 'updateScannedDevices',
-            'scannedDevices': lastScannedDevices
-          };
-          FlutterForegroundTask.sendDataToMain(data);
+        //await Future.delayed(const Duration(seconds: 1));
       }
 
       //if (command == 'conectar' && deviceId != null) {}
