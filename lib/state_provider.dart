@@ -93,3 +93,7 @@ final batteryProvider =
 
 final batteryAzulProvider =
     StateProvider<String>((ref) => 'assets/icons/bateriaAzulMarco.png');
+
+final isScanEnabledProvider = StateProvider<bool>((ref) => true);
+
+final isApagarEnabledProvider = StateProvider<bool>((ref) => true);

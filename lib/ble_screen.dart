@@ -202,21 +202,35 @@ class BleScreen extends ConsumerWidget {
                                       color: Color.fromARGB(255, 50, 102, 175),
                                       fontWeight: FontWeight.bold)),
                               IconButton.filled(
-                                  onPressed: () async {
-                                    //await bluetoothProvider.bleState();
-                                    if (await ref
-                                        .read(bleProvider)
-                                        .bleState()) {
-                                      await ref
-                                          .read(bleProvider)
-                                          .scanDevices(5);
-                                    } else {
-                                      await ref.read(bleProvider).bleTurnOn();
-                                      await ref
-                                          .read(bleProvider)
-                                          .scanDevices(5);
-                                    }
-                                  },
+                                  onPressed: ref.watch(isScanEnabledProvider)
+                                      ? () async {
+                                          final List<Device> listDeviceEmpty =
+                                              [];
+                                          ref
+                                              .read(bleProvider)
+                                              .setScannedDevices(
+                                                  listDeviceEmpty);
+                                          ref
+                                              .read(isScanEnabledProvider
+                                                  .notifier)
+                                              .update((state) => false);
+                                          //await bluetoothProvider.bleState();
+                                          if (await ref
+                                              .read(bleProvider)
+                                              .bleState()) {
+                                            await ref
+                                                .read(bleProvider)
+                                                .scanDevices(5);
+                                          } else {
+                                            await ref
+                                                .read(bleProvider)
+                                                .bleTurnOn();
+                                            await ref
+                                                .read(bleProvider)
+                                                .scanDevices(5);
+                                          }
+                                        }
+                                      : null,
                                   icon: const Icon(Icons.search))
                             ],
                           ),
@@ -233,6 +247,11 @@ class BleScreen extends ConsumerWidget {
                                     ref.read(bleProvider).streamScannedDevices,
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
+                                    if (snapshot.data!.isEmpty &&
+                                        !ref.read(isScanEnabledProvider)) {
+                                      return const Center(
+                                          child: CircularProgressIndicator());
+                                    }
                                     return ListView.builder(
                                         shrinkWrap: true,
                                         itemCount: snapshot.data!.length,
@@ -256,6 +275,16 @@ class BleScreen extends ConsumerWidget {
                                                       MaterialStatePropertyAll(
                                                           Colors.transparent)),
                                               onPressed: () async {
+                                                final List<Device>
+                                                    listDeviceEmpty = [];
+                                                ref
+                                                    .read(bleProvider)
+                                                    .setScannedDevices(
+                                                        listDeviceEmpty);
+                                                ref
+                                                    .read(isScanEnabledProvider
+                                                        .notifier)
+                                                    .update((state) => false);
                                                 /* BluetoothDevice
                                                     bluetoothDevice =
                                                     BluetoothDevice.fromId(
@@ -413,10 +442,9 @@ class BleScreen extends ConsumerWidget {
                                             ),
                                           );
                                         });
-                                  } else {
-                                    return const Center(
-                                        child: Text('No devices found'));
                                   }
+                                  return const Center(
+                                      child: CircularProgressIndicator());
                                 }),
                           ),
                           Divider(height: 10, color: Colors.blue[50]),
@@ -649,8 +677,8 @@ class BleScreen extends ConsumerWidget {
                                                   ),
                                                   TextButton(
                                                       style: ButtonStyle(
-                                                          minimumSize:
-                                                              MaterialStatePropertyAll(Size(
+                                                          minimumSize: MaterialStatePropertyAll(
+                                                              Size(
                                                                   widthScreen *
                                                                       0.15,
                                                                   heightScreen *
@@ -674,33 +702,49 @@ class BleScreen extends ConsumerWidget {
                                                                       50,
                                                                       102,
                                                                       175))),
-                                                      onPressed: () async {
-                                                        if (data.relojAsignado >
-                                                            0) {
-                                                          ref
-                                                                  .read(relojProvider
+                                                      onPressed: ref.watch(
+                                                              isApagarEnabledProvider)
+                                                          ? () async {
+                                                              ref
+                                                                  .read(isApagarEnabledProvider
                                                                       .notifier)
-                                                                  .state[data.relojAsignado] =
-                                                              'disponible';
-                                                          data.relojAsignado =
-                                                              0;
-                                                        }
-                                                        data.conectado = false;
-                                                        await ref
-                                                            .read(
-                                                                servicesProvider)
-                                                            .editDevice(data);
-                                                        ref
-                                                            .read(
-                                                                reConectarProvider
-                                                                    .notifier)
-                                                            .update((state) =>
-                                                                false);
-                                                        await ref
-                                                            .read(bleProvider)
-                                                            .desconectar2(
-                                                                data.mac);
-                                                      },
+                                                                  .update(
+                                                                      (state) =>
+                                                                          false);
+                                                              if (data.relojAsignado >
+                                                                  0) {
+                                                                ref.read(relojProvider.notifier).state[
+                                                                        data.relojAsignado] =
+                                                                    'disponible';
+                                                                data.relojAsignado =
+                                                                    0;
+                                                              }
+                                                              data.conectado =
+                                                                  false;
+                                                              await ref
+                                                                  .read(
+                                                                      servicesProvider)
+                                                                  .editDevice(
+                                                                      data);
+                                                              ref
+                                                                  .read(reConectarProvider
+                                                                      .notifier)
+                                                                  .update(
+                                                                      (state) =>
+                                                                          false);
+                                                              await ref
+                                                                  .read(
+                                                                      bleProvider)
+                                                                  .desconectar2(
+                                                                      data.mac);
+                                                              ref
+                                                                  .read(isApagarEnabledProvider
+                                                                      .notifier)
+                                                                  .update(
+                                                                      (state) =>
+                                                                          true);
+                                                            }
+                                                          : null,
                                                       child: const Text(
                                                         'Apagar',
                                                         style: TextStyle(

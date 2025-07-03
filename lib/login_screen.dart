@@ -423,6 +423,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
           ref
               .read(bleProvider)
               .setScannedDevices(deSerializeListDevice(data['scannedDevices']));
+          ref.read(isScanEnabledProvider.notifier).update((state) => true);
         case 'editDevice':
           await ref
               .read(servicesProvider)
