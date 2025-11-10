@@ -107,10 +107,9 @@ class TimerZapperScreen5 extends ConsumerWidget {
                         decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image:
-                                  AssetImage('assets/icons/icon_circulo.png'),
-                            )),
+                                fit: BoxFit.fill,
+                                image: AssetImage(
+                                    'assets/icons/icon_circulo.png'))),
                       ),
                       Container(
                         padding: const EdgeInsets.all(0),

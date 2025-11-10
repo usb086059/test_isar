@@ -127,15 +127,15 @@ class CountdownProvider5 extends ChangeNotifier {
       comando: listComandos[comando]!,
       terapia: terapia,
     );
-    ref.read(bleProvider).sendCommand(packCommand);
+    await ref.read(bleProvider).sendCommand(packCommand);
   }
 
-  void _startTimer(int seconds) {
+  void _startTimer(int seconds) async {
     _tickSubscription?.cancel();
     _tickSubscription = Stream<int>.periodic(
             const Duration(seconds: 1), (sec) => seconds - sec - 1)
         .take(seconds)
-        .listen((timeLeftInSeconds) {
+        .listen((timeLeftInSeconds) async {
       duration = Duration(seconds: timeLeftInSeconds);
       if (modo == 'Modo A' && duration.inSeconds == 0) {
         ciclos++;
