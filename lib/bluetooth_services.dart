@@ -413,33 +413,124 @@ class BluetoothServices {
             print('************* respuesta BOTON: ${listString1}');
           });
         }
+        break;
       case 2:
         subscriptionCaracteristica2?.cancel();
         if (!deviceDisconnected) {
           subscriptionCaracteristica2 =
-              listCaracteristicas[caseNumber].onValueReceived.listen((event) {
-            respuestas[caseNumber].clear();
-            respuestas[caseNumber].addAll(event);
+              listCaracteristicas[2].onValueReceived.listen((event) {
+            if (!String.fromCharCodes(event).contains('*')) {
+              respuestas[2].clear();
+            }
+            respuestas[2].clear();
+            respuestas[2].addAll(event);
+            List<String> listString2 =
+                String.fromCharCodes(respuestas[2]).split('*');
+            listString2.removeLast();
+            for (String element in listString2) {
+              final int? batteryLevel2 = int.tryParse(element);
+              if (batteryLevel2 != null) {
+                print('**************** batteryLevel 2: $batteryLevel2');
+                bleServicesBatery[2] = selectBatteryLevelImage(batteryLevel2);
+                bleServicesBateryAzul[2] =
+                    bleServicesBatery[2].replaceRange(20, 20, 'Azul');
+                final Map<String, dynamic> data = {
+                  'command': 'batteryLevel',
+                  'battery': bleServicesBatery,
+                  'batteryAzul': bleServicesBateryAzul,
+                  'caracteristicasRemoteId': listCaracteristicasRemoteId
+                };
+                FlutterForegroundTask.sendDataToMain(data);
+                print(
+                    '**************** batteryLevelAddress: $bleServicesBatery');
+              } else {
+                print('***************** batterLevel ES NULO');
+              }
+            }
+            print(
+                '************* respuesta BOTON: ${String.fromCharCodes(respuestas[2])}');
+            print('************* respuesta BOTON: ${listString2}');
           });
         }
+        break;
       case 3:
         subscriptionCaracteristica3?.cancel();
         if (!deviceDisconnected) {
           subscriptionCaracteristica3 =
-              listCaracteristicas[caseNumber].onValueReceived.listen((event) {
-            respuestas[caseNumber].clear();
-            respuestas[caseNumber].addAll(event);
+              listCaracteristicas[3].onValueReceived.listen((event) {
+            if (!String.fromCharCodes(event).contains('*')) {
+              respuestas[3].clear();
+            }
+            respuestas[3].clear();
+            respuestas[3].addAll(event);
+            List<String> listString3 =
+                String.fromCharCodes(respuestas[3]).split('*');
+            listString3.removeLast();
+            for (String element in listString3) {
+              final int? batteryLevel3 = int.tryParse(element);
+              if (batteryLevel3 != null) {
+                print('**************** batteryLevel 3: $batteryLevel3');
+                bleServicesBatery[3] = selectBatteryLevelImage(batteryLevel3);
+                bleServicesBateryAzul[3] =
+                    bleServicesBatery[3].replaceRange(20, 20, 'Azul');
+                final Map<String, dynamic> data = {
+                  'command': 'batteryLevel',
+                  'battery': bleServicesBatery,
+                  'batteryAzul': bleServicesBateryAzul,
+                  'caracteristicasRemoteId': listCaracteristicasRemoteId
+                };
+                FlutterForegroundTask.sendDataToMain(data);
+                print(
+                    '**************** batteryLevelAddress: $bleServicesBatery');
+              } else {
+                print('***************** batterLevel ES NULO');
+              }
+            }
+            print(
+                '************* respuesta BOTON: ${String.fromCharCodes(respuestas[3])}');
+            print('************* respuesta BOTON: ${listString3}');
           });
         }
+        break;
       case 4:
         subscriptionCaracteristica4?.cancel();
         if (!deviceDisconnected) {
           subscriptionCaracteristica4 =
-              listCaracteristicas[caseNumber].onValueReceived.listen((event) {
-            respuestas[caseNumber].clear();
-            respuestas[caseNumber].addAll(event);
+              listCaracteristicas[4].onValueReceived.listen((event) {
+            if (!String.fromCharCodes(event).contains('*')) {
+              respuestas[4].clear();
+            }
+            respuestas[4].clear();
+            respuestas[4].addAll(event);
+            List<String> listString4 =
+                String.fromCharCodes(respuestas[4]).split('*');
+            listString4.removeLast();
+            for (String element in listString4) {
+              final int? batteryLevel4 = int.tryParse(element);
+              if (batteryLevel4 != null) {
+                print('**************** batteryLevel 4: $batteryLevel4');
+                bleServicesBatery[4] = selectBatteryLevelImage(batteryLevel4);
+                bleServicesBateryAzul[4] =
+                    bleServicesBatery[4].replaceRange(20, 20, 'Azul');
+                final Map<String, dynamic> data = {
+                  'command': 'batteryLevel',
+                  'battery': bleServicesBatery,
+                  'batteryAzul': bleServicesBateryAzul,
+                  'caracteristicasRemoteId': listCaracteristicasRemoteId
+                };
+                FlutterForegroundTask.sendDataToMain(data);
+                print(
+                    '**************** batteryLevelAddress: $bleServicesBatery');
+              } else {
+                print('***************** batterLevel ES NULO');
+              }
+            }
+            print(
+                '************* respuesta BOTON: ${String.fromCharCodes(respuestas[4])}');
+            print('************* respuesta BOTON: ${listString4}');
           });
         }
+        break;
     }
   }
 
