@@ -1,4 +1,4 @@
-package com.example.flutter_application_1
+package com.grupoavt.avtechnology
 
 import io.flutter.embedding.android.FlutterActivity
 import android.util.Log // Importa la clase Log
