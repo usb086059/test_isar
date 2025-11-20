@@ -2,22 +2,22 @@
   "project_info": {
     "project_number": "658374066982",
     "project_id": "flutter-application-1-80ebb",
-    "storage_bucket": "flutter-application-1-80ebb.appspot.com"
+    "storage_bucket": "flutter-application-1-80ebb.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:658374066982:android:81b14776ba52e2a17677e7",
+        "mobilesdk_app_id": "1:658374066982:android:4963d4ccf98358cc7677e7",
         "android_client_info": {
-          "package_name": "com.example.flutter_application_1"
+          "package_name": "com.grupoavt.avtechnology"
         }
       },
       "oauth_client": [
         {
-          "client_id": "658374066982-iq30jicm9usg3ahl1gsrlj4ojb3lojnb.apps.googleusercontent.com",
+          "client_id": "658374066982-evvsp6i0f44eoumtpl6fjft6mb78imuh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.flutter_application_1",
+            "package_name": "com.grupoavt.avtechnology",
             "certificate_hash": "f6d657aeaa6b42ec85aaeb042e3bbb6dee58c014"
           }
         },

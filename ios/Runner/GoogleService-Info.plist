@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>658374066982-8t2o5r8277sdep9eivtduo3q2e9491cq.apps.googleusercontent.com</string>
+	<string>658374066982-njaep7u9e2mk94o7qqgec96s32uv1f14.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.658374066982-8t2o5r8277sdep9eivtduo3q2e9491cq</string>
+	<string>com.googleusercontent.apps.658374066982-njaep7u9e2mk94o7qqgec96s32uv1f14</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>658374066982-iq30jicm9usg3ahl1gsrlj4ojb3lojnb.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,11 +15,11 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.flutterApplication1</string>
+	<string>com.grupoavt.avtechnology</string>
 	<key>PROJECT_ID</key>
 	<string>flutter-application-1-80ebb</string>
 	<key>STORAGE_BUCKET</key>
-	<string>flutter-application-1-80ebb.appspot.com</string>
+	<string>flutter-application-1-80ebb.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:658374066982:ios:0d98cf6df3fc7d597677e7</string>
+	<string>1:658374066982:ios:26402b9e8f4088b37677e7</string>
 </dict>
 </plist>
