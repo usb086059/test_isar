@@ -127,11 +127,11 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
                   backgroundColor: Colors.transparent,
-                  leading: IconButton(
+                  /* leading: IconButton(
                       onPressed: () async {
                         await _startService();
                       },
-                      icon: const Icon(Icons.ac_unit)),
+                      icon: const Icon(Icons.ac_unit)), */
                 ),
                 body: Container(
                   height: heightScreen,

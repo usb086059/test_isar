@@ -84,13 +84,13 @@ class BleScreen extends ConsumerWidget {
                 ),
                 endDrawerEnableOpenDragGesture: false,
                 appBar: AppBar(
-                  leading: IconButton(
+                  /* leading: IconButton(
                       onPressed: () async {
                         FlutterForegroundTask.sendDataToTask(orden);
                         print(
                             '*************** UI: Enviando comando de conexión a TaskHandler');
                       },
-                      icon: const Icon(Icons.ac_unit)),
+                      icon: const Icon(Icons.ac_unit)), */
                   flexibleSpace: const Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: Stack(
