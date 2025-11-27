@@ -26,9 +26,9 @@ class TimerZapperScreen5 extends ConsumerWidget {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
     final bluetoothProvider = ref.watch(bleProvider);
-    const int tiempoClark = 10;
-    const int tiempoRift = 6;
-    const int tiempoReposo = 12;
+    const int tiempoClark = 420;
+    const int tiempoRift = 3600;
+    const int tiempoReposo = 1200;
 
     double porcentajeTimer = ((timer.duration.inSeconds.toDouble() * 100) /
             (timer.estado.contains('Unico') ? tiempoRift : tiempoClark)) /

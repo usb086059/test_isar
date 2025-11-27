@@ -18,9 +18,9 @@ class CountdownProvider3 extends ChangeNotifier {
   CountdownProvider3(this.ref);
 
   Duration duration = const Duration(seconds: 0);
-  Duration tiempoModoA = const Duration(seconds: 10);
-  Duration tiempoModoB = const Duration(seconds: 6);
-  Duration tiempoReposo = const Duration(seconds: 12);
+  Duration tiempoModoA = const Duration(seconds: 420);
+  Duration tiempoModoB = const Duration(seconds: 3600);
+  Duration tiempoReposo = const Duration(seconds: 1200);
   int ciclos = 1;
   String estado = 'Ciclo Unico';
   bool isRunning = false;
