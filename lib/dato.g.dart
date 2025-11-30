@@ -39,7 +39,7 @@ const DatoSchema = CollectionSchema(
   getId: _datoGetId,
   getLinks: _datoGetLinks,
   attach: _datoAttach,
-  version: '3.1.0+1',
+  version: '3.3.0',
 );
 
 int _datoEstimateSize(

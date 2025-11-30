@@ -12,7 +12,7 @@ import 'package:flutter_application_1/terapia.dart';
 import 'package:flutter_application_1/terapia_personal.dart';
 import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
 final servicesProvider = Provider((ref) => Services());

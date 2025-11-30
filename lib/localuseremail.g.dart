@@ -34,7 +34,7 @@ const LocalUserEmailSchema = CollectionSchema(
   getId: _localUserEmailGetId,
   getLinks: _localUserEmailGetLinks,
   attach: _localUserEmailAttach,
-  version: '3.1.0+1',
+  version: '3.3.0',
 );
 
 int _localUserEmailEstimateSize(

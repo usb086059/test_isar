@@ -54,7 +54,7 @@ const DeviceSchema = CollectionSchema(
   getId: _deviceGetId,
   getLinks: _deviceGetLinks,
   attach: _deviceAttach,
-  version: '3.1.0+1',
+  version: '3.3.0',
 );
 
 int _deviceEstimateSize(

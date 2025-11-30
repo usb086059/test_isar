@@ -59,7 +59,7 @@ const TerapiaTotalSchema = CollectionSchema(
   getId: _terapiaTotalGetId,
   getLinks: _terapiaTotalGetLinks,
   attach: _terapiaTotalAttach,
-  version: '3.1.0+1',
+  version: '3.3.0',
 );
 
 int _terapiaTotalEstimateSize(
