@@ -73,7 +73,7 @@ Future<void> addUser(
   String pais,
   String provincia,
 ) async {
-  await db.collection('usuarios').add({
+  await db.collection('usuarios').doc(googleID).set({
     'googleID': googleID,
     'Nombre': nombre,
     'Apellido': apellido,
@@ -81,7 +81,16 @@ Future<void> addUser(
     'Teléfono': telefono,
     'País': pais,
     'Estado / Provincia': provincia,
-  });
+  }, SetOptions(merge: true));
+  /* await db.collection('usuarios').add({
+    'googleID': googleID,
+    'Nombre': nombre,
+    'Apellido': apellido,
+    'Edad': edad,
+    'Teléfono': telefono,
+    'País': pais,
+    'Estado / Provincia': provincia,
+  }); */
 }
 
 ImageProvider<Object> userImage(/* User? user, bool localUserImagen */) {
