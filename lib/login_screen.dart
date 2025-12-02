@@ -54,9 +54,10 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Request permissions and initialize the service.
+      await _requestPermissions();
       if (await androidPermissionsRequest()) {
         await FlutterBluePlus.turnOn();
-        await _requestPermissions();
+        //await _requestPermissions();
         _initService();
         await _startService();
         //await ref.read(bleProvider).bleTurnOn();
@@ -485,23 +486,53 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<bool> androidPermissionsRequest() async {
+    // 1. SOLICITUD PRINCIPAL: Ubicación en Uso y Bluetooth
     final Map<Permission, PermissionStatus> statusses = await [
-      Permission.location,
-      Permission.bluetoothConnect,
+      Permission.locationWhenInUse,
       Permission.bluetoothScan,
+      Permission.bluetoothConnect
     ].request();
 
-    final locationGranted = statusses[Permission.location]?.isGranted ?? false;
-    final bluetoothScanGranted =
-        statusses[Permission.bluetoothScan]?.isGranted ?? false;
-    final bluetoothConnectGranted =
-        statusses[Permission.bluetoothConnect]?.isGranted ?? false;
+    final locationWhenInUseGranted = statusses[Permission.locationWhenInUse];
+    final bluetoothScanGranted = statusses[Permission.bluetoothScan];
+    final bluetoothConnectGranted = statusses[Permission.bluetoothConnect];
 
-    if (!(locationGranted && bluetoothScanGranted && bluetoothConnectGranted)) {
+    // Verificamos si los permisos iniciales fueron concedidos
+    final bool initialGranted = locationWhenInUseGranted?.isGranted == true &&
+        bluetoothScanGranted?.isGranted == true &&
+        bluetoothConnectGranted?.isGranted == true;
+
+    if (!initialGranted) {
+      // Si hay una denegación inicial, revisamos si es permanente.
+      // Si no es permanente, simplemente devolvemos false (sin openAppSettings())
+      final bool isDeniedForever =
+          locationWhenInUseGranted?.isPermanentlyDenied == true ||
+              bluetoothScanGranted?.isPermanentlyDenied == true ||
+              bluetoothConnectGranted?.isPermanentlyDenied == true;
+
+      if (isDeniedForever) {
+        await openAppSettings();
+      }
+      return false;
+    }
+    // 2. SOLICITUD SECUNDARIA: Ubicación Siempre (locationAlways)
+    // Solo se llega aquí si la ubicación "en uso" fue concedida.
+    PermissionStatus locationAlwaysStatus =
+        await Permission.locationAlways.request();
+    if (locationAlwaysStatus.isGranted) {
+      // Éxito: Ubicación Siempre concedida
+      return true;
+    } else {
+      // Fracaso: Ubicación Siempre NO concedida.
+      // **ESTO ES LO QUE ESTÁ SUCEDIENDO:** Android solo permite conceder este
+      // permiso desde la configuración de la aplicación después de una primera denegación.
+
+      // Por lo tanto, abrir la configuración de la aplicación (openAppSettings)
+      // es el comportamiento CORREGTO Y ESPERADO en este punto,
+      // ya que es el único camino para que el usuario active "Permitir siempre".
       await openAppSettings();
       return false;
     }
-    return true;
   }
 
   Future<void> _requestPermissions() async {
