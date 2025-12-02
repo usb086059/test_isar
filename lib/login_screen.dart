@@ -25,6 +25,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 //import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -38,7 +39,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    FlutterBluePlus.turnOn();
+    //FlutterBluePlus.turnOn();
     /* _adapterStateSubscription = FlutterBluePlus.adapterState.listen((state) {
       print(
           '************************************* Adapter State Changed (UI): $state');
@@ -53,10 +54,13 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Request permissions and initialize the service.
-      await _requestPermissions();
-      _initService();
-      await _startService();
-      //await ref.read(bleProvider).bleTurnOn();
+      if (await androidPermissionsRequest()) {
+        await FlutterBluePlus.turnOn();
+        await _requestPermissions();
+        _initService();
+        await _startService();
+        //await ref.read(bleProvider).bleTurnOn();
+      }
     });
   }
 
@@ -478,6 +482,26 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
         print('timestamp: ${timestamp.toString()}');
       }
     }
+  }
+
+  Future<bool> androidPermissionsRequest() async {
+    final Map<Permission, PermissionStatus> statusses = await [
+      Permission.location,
+      Permission.bluetoothConnect,
+      Permission.bluetoothScan,
+    ].request();
+
+    final locationGranted = statusses[Permission.location]?.isGranted ?? false;
+    final bluetoothScanGranted =
+        statusses[Permission.bluetoothScan]?.isGranted ?? false;
+    final bluetoothConnectGranted =
+        statusses[Permission.bluetoothConnect]?.isGranted ?? false;
+
+    if (!(locationGranted && bluetoothScanGranted && bluetoothConnectGranted)) {
+      await openAppSettings();
+      return false;
+    }
+    return true;
   }
 
   Future<void> _requestPermissions() async {
