@@ -314,7 +314,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                 ),
-                bottomNavigationBar: const NavigationBarRedes()),
+                bottomNavigationBar:
+                    const SafeArea(child: NavigationBarRedes())),
           ],
         ),
       ),
