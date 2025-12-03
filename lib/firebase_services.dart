@@ -8,7 +8,7 @@ import "package:flutter/material.dart";
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
-Future<List> getGoogleID() async {
+/* Future<List> getGoogleID() async {
   List listGoogleID = [];
   CollectionReference collectionReferenceUsers = db.collection('usuarios');
   QuerySnapshot queryListGoogleID = await collectionReferenceUsers.get();
@@ -17,6 +17,11 @@ Future<List> getGoogleID() async {
   }
 
   return listGoogleID;
+} */
+
+Future<bool> userIsRegistered(String userId) async {
+  DocumentSnapshot document = await db.collection('usuarios').doc(userId).get();
+  return document.exists;
 }
 
 /* Future<List> getUsers() async {
@@ -74,23 +79,14 @@ Future<void> addUser(
   String provincia,
 ) async {
   await db.collection('usuarios').doc(googleID).set({
-    'googleID': googleID,
+    //'googleID': googleID,
     'Nombre': nombre,
     'Apellido': apellido,
     'Edad': edad,
     'Teléfono': telefono,
     'País': pais,
     'Estado / Provincia': provincia,
-  }, SetOptions(merge: true));
-  /* await db.collection('usuarios').add({
-    'googleID': googleID,
-    'Nombre': nombre,
-    'Apellido': apellido,
-    'Edad': edad,
-    'Teléfono': telefono,
-    'País': pais,
-    'Estado / Provincia': provincia,
-  }); */
+  });
 }
 
 ImageProvider<Object> userImage(/* User? user, bool localUserImagen */) {

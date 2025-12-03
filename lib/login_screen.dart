@@ -213,12 +213,6 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                     print(
                                         '************************************** Usuario es: $user');
                                     if (user?.user != null) {
-                                      final List googleID = await getGoogleID();
-                                      final String estaRegistrado =
-                                          await googleID.firstWhere(
-                                              (element) =>
-                                                  element == user?.user!.uid,
-                                              orElse: () => 'no existe');
                                       if (context.mounted) {
                                         context.pop();
                                         if (ref.read(primerArranqueProvider) ==
@@ -237,7 +231,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                             }
                                           }
                                         }
-                                        if (estaRegistrado == user?.user!.uid) {
+                                        if (await userIsRegistered(
+                                            user!.user!.uid)) {
                                           ref
                                               .read(primerArranqueProvider
                                                   .notifier)
