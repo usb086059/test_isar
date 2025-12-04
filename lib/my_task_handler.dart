@@ -151,6 +151,8 @@ class MyTaskHandler extends TaskHandler {
         case 'blutoothTurnOn':
           await bluetoothServices.bleTurnOn();
         case 'scanDevices':
+          print(
+              '>>>>>>>>>>>>>>>>>> antes de bluetoothServices.scanDevices(5) que esta el taskHandler. Es decir recibio bien el comando para escanear');
           await bluetoothServices.scanDevices(5);
         //await Future.delayed(const Duration(seconds: 1));
       }
@@ -158,6 +160,7 @@ class MyTaskHandler extends TaskHandler {
       //if (command == 'conectar' && deviceId != null) {}
     } else {
       //ToDo: Avisar a la UI que el bluetooth esta apagado
+      print('>>>>>>>>>>>>>>>>>>>>>>>>> el blutooth esta apagado');
     }
   }
 

@@ -10,6 +10,7 @@ import 'package:flutter_application_1/serialize.dart';
 import 'package:flutter_application_1/terapia_total.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 bool bussy = false;
 
@@ -140,19 +141,61 @@ class BluetoothServices {
   }
 
   Future<void> scanDevices(int segundos) async {
+    print('>>>>>>>>>>>>>>>>>> Entro en scanDevices');
+//  VERIFICAR PERMISOS DE TIEMPO DE EJECUCIÓN (Runtime)
+    // Aunque ya se pidieron, verificamos su estado final justo ahora.
+    final statusScan = await Permission.bluetoothScan.status;
+    final statusLocation = await Permission.locationWhenInUse.status;
+
+    if (statusScan.isGranted == false || statusLocation.isGranted == false) {
+      // Si la respuesta no es granted (puede ser denied o restricted), salimos.
+      print('Fallo de Escaneo: Permisos de Bluetooth/Ubicación NO concedidos.');
+      // Muestra un diálogo al usuario para pedir que active los permisos
+      return;
+    }
+
+// 1. Verificar si los Servicios de Ubicación (GPS) están encendidos
+    // ¡CRUCIAL para Android 12+!
+    final serviceStatus = await Permission.locationWhenInUse.serviceStatus;
+
+    if (serviceStatus.isEnabled == false) {
+      // Los permisos están OK, pero el GPS está apagado.
+      print('Error: Los Servicios de Ubicación (GPS) están desactivados.');
+      // Muestra un diálogo al usuario y le ofreces abrir la configuración del teléfono
+      // para que active el interruptor.
+
+      // Puedes usar openAppSettings(), pero es mejor usar:
+      // await Geolocator.openLocationSettings(); // (Si usas el plugin Geolocator)
+
+      // Alternativamente, puedes forzar el encendido del GPS (si el SO lo permite)
+      // o simplemente salir de la función.
+      return; // Salir, no se puede escanear.
+    } else {
+      print('>>>>>>>>>>>>>>>> service.Status es: ${serviceStatus.isEnabled}');
+    }
+
 // Wait for Bluetooth enabled & permission granted
 // In your real app you should use `FlutterBluePlus.adapterState.listen` to handle all states
     await FlutterBluePlus.adapterState
         .where((val) => val == BluetoothAdapterState.on)
         .first;
 
-    FlutterBluePlus.stopScan();
+    await Future.delayed(const Duration(milliseconds: 500));
 
+    FlutterBluePlus.stopScan();
+    print(
+        '>>>>>>>>>>>>>>>>>> Iniciando el FLutterBluePlus.starScan(timeout: Duration(seconds: segundos));');
     await FlutterBluePlus.startScan(timeout: Duration(seconds: segundos));
     //withKeywords: ['SH'], timeout: const Duration(seconds: 15));
+    print(
+        '>>>>>>>>>>>>>>>>>> veo esto despues del FLutterBluePlus.starScan(timeout: Duration(seconds: segundos));');
+    print(
+        '>>>>>>>>>>>>>>>>>> Iniciando await FlutterBluePlus.isScanning.where((val) => val == false).first;');
 
 // wait for scanning to stop
     await FlutterBluePlus.isScanning.where((val) => val == false).first;
+    print(
+        '>>>>>>>>>>>>>>>>>> Veo esto despues del await FlutterBluePlus.isScanning.where((val) => val == false).first;');
 
     //FlutterBluePlus.stopScan();
 

@@ -194,7 +194,10 @@ class BleServices extends ChangeNotifier {
 
   Future<void> scanDevices(int segundos) async {
     final Map<String, dynamic> data = {'command': 'scanDevices'};
+    print(
+        '>>>>>>>>>>>>>>>>>> antes de send.DatatoTask que quiere enviar el comando de scanDevices');
     FlutterForegroundTask.sendDataToTask(data);
+    print('>>>>>>>>>>>>>>>>>> despues de send.DatatoTask');
   }
 
   final scannedDevicesController = StreamController<List<Device>>();

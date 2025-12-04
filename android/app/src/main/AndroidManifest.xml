@@ -8,6 +8,7 @@
     <!-- para Android 14 (API 34) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_BLUETOOTH" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <!-- New Bluetooth permissions in Android 12
@@ -19,7 +20,8 @@
     <!-- legacy for Android 11 or lower -->
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30"/>
+    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30"/>-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <!-- legacy for Android 9 or lower -->
@@ -75,7 +77,7 @@
         </activity>
         <service 
             android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
-            android:foregroundServiceType="connectedDevice|location"
+            android:enabled="true" android:foregroundServiceType="connectedDevice|location"
             android:exported="false"
             android:stopWithTask="true" />
         <!-- Don't delete the meta-data below.

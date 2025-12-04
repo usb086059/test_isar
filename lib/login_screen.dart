@@ -56,12 +56,14 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
       // Request permissions and initialize the service.
       await _requestPermissions();
       if (await androidPermissionsRequest()) {
+        print('>>>>>>>>>>>>>>>>>>>>> androidPermissionRequest devolvio true');
         await FlutterBluePlus.turnOn();
         //await _requestPermissions();
         _initService();
         await _startService();
         //await ref.read(bleProvider).bleTurnOn();
       }
+      print('>>>>>>>>>>>>>>>>>> androidPermissionRequest devolvio false');
     });
   }
 
@@ -497,28 +499,40 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
     final bool initialGranted = locationWhenInUseGranted?.isGranted == true &&
         bluetoothScanGranted?.isGranted == true &&
         bluetoothConnectGranted?.isGranted == true;
+    print('>>>> locationWhenInUse es = $locationWhenInUseGranted');
+    print('>>>> bluetoothScanGranted es = $bluetoothScanGranted');
+    print('>>>> bluetoothConnectGranted es = $bluetoothConnectGranted');
+    print('>>>> initialGranted es = $initialGranted');
 
     if (!initialGranted) {
       // Si hay una denegación inicial, revisamos si es permanente.
       // Si no es permanente, simplemente devolvemos false (sin openAppSettings())
+      print('>>>> consulta si fueron denegados permanentemente');
       final bool isDeniedForever =
           locationWhenInUseGranted?.isPermanentlyDenied == true ||
               bluetoothScanGranted?.isPermanentlyDenied == true ||
               bluetoothConnectGranted?.isPermanentlyDenied == true;
 
+      print('>>>> isDeniedForever es = $isDeniedForever');
+
       if (isDeniedForever) {
+        print(
+            '>>>> ejecutar openSettings() por denegacion permanente de algun permiso');
         await openAppSettings();
       }
+      print('>>>> retornar false ya que falta algun permiso');
       return false;
     }
     // 2. SOLICITUD SECUNDARIA: Ubicación Siempre (locationAlways)
     // Solo se llega aquí si la ubicación "en uso" fue concedida.
     PermissionStatus locationAlwaysStatus =
         await Permission.locationAlways.request();
+    print('>>>> locationAlwaysStatus es = $locationAlwaysStatus');
     if (locationAlwaysStatus.isGranted) {
       // Éxito: Ubicación Siempre concedida
       return true;
     } else {
+      print('Fracaso: Ubicación Siempre NO concedida.');
       // Fracaso: Ubicación Siempre NO concedida.
       // **ESTO ES LO QUE ESTÁ SUCEDIENDO:** Android solo permite conceder este
       // permiso desde la configuración de la aplicación después de una primera denegación.

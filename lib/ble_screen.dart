@@ -218,6 +218,8 @@ class BleScreen extends ConsumerWidget {
                                           if (await ref
                                               .read(bleProvider)
                                               .bleState()) {
+                                            print(
+                                                '>>>>>>>>>>>>>>>>>> Llamando scanDevice(5) porque el bluetooth si esta encendido');
                                             await ref
                                                 .read(bleProvider)
                                                 .scanDevices(5);
@@ -225,6 +227,8 @@ class BleScreen extends ConsumerWidget {
                                             await ref
                                                 .read(bleProvider)
                                                 .bleTurnOn();
+                                            print(
+                                                '>>>>>>>>>>>>>>>>>> Llamando scanDevice(5) despues de enceder el bluetooth con bleTurnOn()porque estaba apagado');
                                             await ref
                                                 .read(bleProvider)
                                                 .scanDevices(5);
@@ -780,7 +784,8 @@ class BleScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-                bottomNavigationBar: const NavigationBarRedes()),
+                bottomNavigationBar:
+                    const SafeArea(child: NavigationBarRedes())),
           ],
         ),
       ),
