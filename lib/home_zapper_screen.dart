@@ -358,44 +358,55 @@ class HomeZapperScreen extends ConsumerWidget {
                                   .getAllTerapiaTotal(), //Carga las terapias de la base local
                               builder: ((context, snapshot) {
                                 if (snapshot.hasData) {
-                                  if (ref.watch(origenHomeZapperProvider)) {
-                                    //Pregunta si viene de devices_screen
-                                    Future(() async {
-                                      ref
-                                          .read(
-                                              origenHomeZapperProvider.notifier)
-                                          .state = false;
-                                    });
-                                  }
-                                  return GridView.builder(
-                                      controller: scroll,
-                                      itemCount: snapshot.data?.length,
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                              childAspectRatio:
-                                                  heightScreen * 0.005,
-                                              //crossAxisSpacing: 8,
-                                              //mainAxisSpacing: 12,
-                                              crossAxisCount: 1),
-                                      itemBuilder: (context, index) {
-                                        if (ref
-                                            .watch(countdownProvider)
-                                            .volvioDeTimerZapperScreen) {
-                                          ref
-                                              .watch(countdownProvider)
-                                              .volver(false);
-                                          scroll.jumpTo(
-                                              scroll.position.minScrollExtent);
-                                        }
-                                        return CustomTherapy(
-                                          name: snapshot.data![index].nombre,
-                                          frecMin:
-                                              snapshot.data![index].frecMin,
-                                          frecMax:
-                                              snapshot.data![index].frecMax,
-                                          terapiaSel: index,
-                                        );
+                                  if (snapshot.data!.length > 0) {
+                                    if (ref.watch(origenHomeZapperProvider)) {
+                                      //Pregunta si viene de devices_screen
+                                      Future(() async {
+                                        ref
+                                            .read(origenHomeZapperProvider
+                                                .notifier)
+                                            .state = false;
                                       });
+                                    }
+                                    return GridView.builder(
+                                        controller: scroll,
+                                        itemCount: snapshot.data?.length,
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                                childAspectRatio:
+                                                    heightScreen * 0.005,
+                                                //crossAxisSpacing: 8,
+                                                //mainAxisSpacing: 12,
+                                                crossAxisCount: 1),
+                                        itemBuilder: (context, index) {
+                                          if (ref
+                                              .watch(countdownProvider)
+                                              .volvioDeTimerZapperScreen) {
+                                            ref
+                                                .watch(countdownProvider)
+                                                .volver(false);
+                                            scroll.jumpTo(scroll
+                                                .position.minScrollExtent);
+                                          }
+                                          return CustomTherapy(
+                                            name: snapshot.data![index].nombre,
+                                            frecMin:
+                                                snapshot.data![index].frecMin,
+                                            frecMax:
+                                                snapshot.data![index].frecMax,
+                                            terapiaSel: index,
+                                          );
+                                        });
+                                  } else {
+                                    return Center(
+                                      child: IconButton(
+                                          onPressed: () async {
+                                            await Services()
+                                                .cargarTerapiaTotal();
+                                          },
+                                          icon: const Icon(Icons.download)),
+                                    );
+                                  }
                                 } else {
                                   return const Center(
                                     child: CircularProgressIndicator(),

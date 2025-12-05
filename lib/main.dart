@@ -19,7 +19,7 @@ void main() async {
   await Services().db;
 
   await Services().terapiasIniciales();
-  await Services().cargarTerapiaTotal();
+  //await Services().cargarTerapiaTotal();
 
   await initNotification();
   FlutterForegroundTask.initCommunicationPort();
