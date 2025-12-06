@@ -62,8 +62,9 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
         _initService();
         await _startService();
         //await ref.read(bleProvider).bleTurnOn();
+      } else {
+        print('>>>>>>>>>>>>>>>>>> androidPermissionRequest devolvio false');
       }
-      print('>>>>>>>>>>>>>>>>>> androidPermissionRequest devolvio false');
     });
   }
 

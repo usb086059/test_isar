@@ -62,6 +62,8 @@ class HomeZapperScreen extends ConsumerWidget {
 
     final String location = '/homeZapper';
 
+    final isLoadingTerapiaTotaleProvider = ref.watch(isLoadingTerapiaTotale);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Stack(
@@ -358,6 +360,9 @@ class HomeZapperScreen extends ConsumerWidget {
                                   .getAllTerapiaTotal(), //Carga las terapias de la base local
                               builder: ((context, snapshot) {
                                 if (snapshot.hasData) {
+                                  /*  ref
+                                      .read(isLoadingTerapiaTotale.notifier)
+                                      .state = false; */
                                   if (snapshot.data!.length > 0) {
                                     if (ref.watch(origenHomeZapperProvider)) {
                                       //Pregunta si viene de devices_screen
@@ -398,14 +403,54 @@ class HomeZapperScreen extends ConsumerWidget {
                                           );
                                         });
                                   } else {
-                                    return Center(
-                                      child: IconButton(
-                                          onPressed: () async {
-                                            await Services()
-                                                .cargarTerapiaTotal();
-                                          },
-                                          icon: const Icon(Icons.download)),
-                                    );
+                                    return Stack(children: [
+                                      Visibility(
+                                        visible:
+                                            !isLoadingTerapiaTotaleProvider,
+                                        child: Center(
+                                          child: TextButton.icon(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              50,
+                                                              102,
+                                                              175)),
+                                                  iconColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.white),
+                                                  side: MaterialStateProperty.all(
+                                                      const BorderSide(
+                                                          color:
+                                                              Colors.white))),
+                                              onPressed:
+                                                  isLoadingTerapiaTotaleProvider
+                                                      ? null
+                                                      : () async {
+                                                          ref
+                                                              .read(
+                                                                  isLoadingTerapiaTotale
+                                                                      .notifier)
+                                                              .state = true;
+                                                          await Services()
+                                                              .cargarTerapiaTotal();
+                                                        },
+                                              icon: const Icon(Icons.download),
+                                              label: const Text(
+                                                'Cargar lista de terapias',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16),
+                                              )),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: isLoadingTerapiaTotaleProvider,
+                                        child: const Center(
+                                            child: CircularProgressIndicator()),
+                                      )
+                                    ]);
                                   }
                                 } else {
                                   return const Center(

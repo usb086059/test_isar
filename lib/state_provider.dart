@@ -97,3 +97,5 @@ final batteryAzulProvider =
 final isScanEnabledProvider = StateProvider<bool>((ref) => true);
 
 final isApagarEnabledProvider = StateProvider<bool>((ref) => true);
+
+final isLoadingTerapiaTotale = StateProvider<bool>((ref) => false);

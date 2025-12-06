@@ -153,7 +153,7 @@ class MyTaskHandler extends TaskHandler {
         case 'scanDevices':
           print(
               '>>>>>>>>>>>>>>>>>> antes de bluetoothServices.scanDevices(5) que esta el taskHandler. Es decir recibio bien el comando para escanear');
-          await bluetoothServices.scanDevices(5);
+          await bluetoothServices.scanDevices(3);
         //await Future.delayed(const Duration(seconds: 1));
       }
 
