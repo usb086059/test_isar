@@ -152,8 +152,8 @@ class MyTaskHandler extends TaskHandler {
           await bluetoothServices.bleTurnOn();
         case 'scanDevices':
           print(
-              '>>>>>>>>>>>>>>>>>> antes de bluetoothServices.scanDevices(5) que esta el taskHandler. Es decir recibio bien el comando para escanear');
-          await bluetoothServices.scanDevices(3);
+              '>>>>>>>>>>>>>>>>>> antes de bluetoothServices.scanDevices(2) que esta el taskHandler. Es decir recibio bien el comando para escanear');
+          await bluetoothServices.scanDevices(2);
         //await Future.delayed(const Duration(seconds: 1));
       }
 
