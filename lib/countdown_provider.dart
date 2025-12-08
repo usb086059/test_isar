@@ -29,7 +29,7 @@ class CountdownProvider extends ChangeNotifier {
   bool isRunning = false;
   String modo = 'Modo B';
   StreamSubscription<int>? _tickSubscription;
-  bool volvioDeTimerZapperScreen = false;
+  //bool volvioDeTimerZapperScreen = false;
   Device device =
       Device(tipo: '', mac: '', nombre: '', conectado: false, relojAsignado: 0);
   TerapiaTotal terapia = TerapiaTotal(
@@ -61,9 +61,9 @@ class CountdownProvider extends ChangeNotifier {
     print('**************** updateBat: $batLevel');
   } */
 
-  void volver(bool volvio) {
+  /*  void volver(bool volvio) {
     volvioDeTimerZapperScreen = volvio;
-  }
+  } */
 
   void avisoDesconexion(Device _dev) async {
     if (device.mac == _dev.mac) {
