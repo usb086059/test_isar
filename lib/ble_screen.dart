@@ -433,8 +433,10 @@ class BleScreen extends ConsumerWidget {
                                                         '/timerZapper${data.relojAsignado}');
                                                   } else {
                                                     ref
-                                                        .read(countdownProvider)
-                                                        .volver(false);
+                                                        .read(
+                                                            isComingFromSomeTimerScreen
+                                                                .notifier)
+                                                        .state = false;
                                                     ref
                                                         .read(selectModoProvider
                                                             .notifier)

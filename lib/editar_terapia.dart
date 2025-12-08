@@ -231,8 +231,10 @@ Future<dynamic> editarTerapia(
                                                     .notifier)
                                                 .state = 0;
                                             ref
-                                                .watch(countdownProvider)
-                                                .volver(true);
+                                                .read(
+                                                    isComingFromSomeTimerScreen
+                                                        .notifier)
+                                                .state = true;
                                             context.pop();
                                           }
                                         },

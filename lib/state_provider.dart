@@ -102,3 +102,5 @@ final isLoadingTerapiaTotale = StateProvider<bool>((ref) => false);
 
 final isEnabledButtonConectar = StateProvider<bool>((ref) =>
     true); // Para habilitar/deshabilitar el boton concetar en el showDialog de la asignación de nombre del equipo conectado
+
+final isComingFromSomeTimerScreen = StateProvider<bool>((ref) => false);

@@ -384,12 +384,15 @@ class HomeZapperScreen extends ConsumerWidget {
                                                 //mainAxisSpacing: 12,
                                                 crossAxisCount: 1),
                                         itemBuilder: (context, index) {
-                                          if (ref
-                                              .watch(countdownProvider)
-                                              .volvioDeTimerZapperScreen) {
+                                          if (ref.watch(
+                                              isComingFromSomeTimerScreen)) {
+                                            print(
+                                                '------------- deviceProvider es = ${ref.read(deviceProvider).relojAsignado}');
                                             ref
-                                                .watch(countdownProvider)
-                                                .volver(false);
+                                                .read(
+                                                    isComingFromSomeTimerScreen
+                                                        .notifier)
+                                                .state = false;
                                             scroll.jumpTo(scroll
                                                 .position.minScrollExtent);
                                           }
@@ -492,40 +495,42 @@ class HomeZapperScreen extends ConsumerWidget {
                   // hoverColor: Colors.transparent,
                   onPressed: () async {
                     Device dev = await ref
-                        .watch(servicesProvider)
-                        .getDevice(ref.watch(deviceProvider).mac);
+                        .read(servicesProvider)
+                        .getDevice(ref.read(deviceProvider).mac);
                     if (dev.conectado) {
                       print('<<<<<<<<<<<<<<<object>>>>>>>>>>>>>>>');
                       int relojNumber = 0;
-                      relojNumber = ref.watch(relojProvider).indexOf(ref
-                          .watch(deviceProvider)
+                      relojNumber = ref.read(relojProvider).indexOf(ref
+                          .read(deviceProvider)
                           .mac); //indexOf devuelve -1 si no encuentra nada
                       print('<<<<<<<<<<<<RelojNumber: $relojNumber');
                       print(
                           '<<<<<<<<<<<<RelojNumber: ${ref.watch(relojProvider)[0]}');
                       if (relojNumber == -1) {
                         relojNumber =
-                            ref.watch(relojProvider).indexOf('disponible');
+                            ref.read(relojProvider).indexOf('disponible');
                         if (relojNumber == -1) {
                           //Avisar que No hay reloj disponible
                         } else {
                           ref.read(relojProvider.notifier).state[relojNumber] =
-                              ref.watch(deviceProvider).mac;
+                              ref.read(deviceProvider).mac;
                           ref
                               .read(deviceProvider.notifier)
                               .state
                               .relojAsignado = relojNumber;
                           await ref
-                              .watch(servicesProvider)
-                              .editDevice(ref.watch(deviceProvider));
+                              .read(servicesProvider)
+                              .editDevice(ref.read(deviceProvider));
+                          ref.invalidate(servicesProvider);
                           //context.push('/timerZapper$relojNumber');
                         }
                       } else {
                         ref.read(deviceProvider.notifier).state.relojAsignado =
                             relojNumber;
                         await ref
-                            .watch(servicesProvider)
-                            .editDevice(ref.watch(deviceProvider));
+                            .read(servicesProvider)
+                            .editDevice(ref.read(deviceProvider));
+                        ref.invalidate(servicesProvider);
                         //context.push('/timerZapper$relojNumber');
                       }
                       print('>>>>>>>>>>>>>RelojNumber: $relojNumber');

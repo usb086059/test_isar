@@ -5,6 +5,7 @@ import 'package:flutter_application_1/pack_comando.dart';
 import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/device.dart';
 import 'package:flutter_application_1/local_notification_services.dart';
+import 'package:flutter_application_1/state_provider.dart';
 import 'package:flutter_application_1/terapia_total.dart';
 //import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -227,7 +228,8 @@ class CountdownProvider extends ChangeNotifier {
     isRunning = false;
     estado = 'FIN';
     ciclos = 1;
-    volvioDeTimerZapperScreen = true;
+    ref.read(isComingFromSomeTimerScreen.notifier).state = true;
+    //volvioDeTimerZapperScreen = true;
     await ref.read(bleProvider).sendCommand(PackComando(
         deviceMac: device.mac,
         comando: listComandos['fin']!,
@@ -243,7 +245,8 @@ class CountdownProvider extends ChangeNotifier {
     isRunning = false;
     estado = 'FIN';
     ciclos = 1;
-    volvioDeTimerZapperScreen = true;
+    //volvioDeTimerZapperScreen = true;
+    ref.read(isComingFromSomeTimerScreen.notifier).state = true;
     if (device.conectado) {
       await ref.read(bleProvider).sendCommand(PackComando(
           deviceMac: device.mac,

@@ -94,7 +94,8 @@ Future<dynamic> eliminarTerapia(BuildContext context, double heightScreen,
                           ref.read(origenHomeZapperProvider.notifier).state =
                               true;
                           ref.read(indexTerapiaProvider.notifier).state = 0;
-                          ref.watch(countdownProvider).volver(true);
+                          ref.read(isComingFromSomeTimerScreen.notifier).state =
+                              true;
                           context.pop();
                         },
                         child: const Text('SI',

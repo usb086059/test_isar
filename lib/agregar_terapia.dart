@@ -213,18 +213,18 @@ Future<dynamic> agregarTerapia(
                                                               .text,
                                                       editable: true);
                                               await ref
-                                                  .watch(servicesProvider)
+                                                  .read(servicesProvider)
                                                   .addTerapiaPersonal(
                                                       newTerapiaPersonal);
                                               await ref
-                                                  .watch(servicesProvider)
+                                                  .read(servicesProvider)
                                                   .cargarTerapiaTotal();
                                               ref
                                                       .read(terapiaProvider0
                                                           .notifier)
                                                       .state =
                                                   await ref
-                                                      .watch(servicesProvider)
+                                                      .read(servicesProvider)
                                                       .getTerapiaSeleccionada(
                                                           0);
                                               ref
@@ -232,8 +232,10 @@ Future<dynamic> agregarTerapia(
                                                       .notifier)
                                                   .state = 0;
                                               ref
-                                                  .watch(countdownProvider)
-                                                  .volver(true);
+                                                  .read(
+                                                      isComingFromSomeTimerScreen
+                                                          .notifier)
+                                                  .state = true;
                                               context.pop();
                                             }
                                           },
