@@ -139,6 +139,17 @@ class SetNameMyDevice extends ConsumerWidget {
                         onPressed: isEnabledButtonConectarProvider
                             ? () async {
                                 if (formKey.currentState!.validate()) {
+                                  showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Center(
+                                            child: CircularProgressIndicator(
+                                          color: const Color.fromARGB(
+                                              255, 50, 102, 175),
+                                          backgroundColor: Colors.purple[300],
+                                        ));
+                                      });
                                   ref
                                       .read(isEnabledButtonConectar.notifier)
                                       .state = false;
@@ -161,6 +172,8 @@ class SetNameMyDevice extends ConsumerWidget {
                                   await ref
                                       .read(bleProvider)
                                       .conectar(data.mac);
+                                  if (!context.mounted) return;
+                                  context.pop();
                                   if (!context.mounted) return;
                                   context.pop();
                                 }
