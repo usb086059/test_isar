@@ -9,11 +9,13 @@ import 'package:google_sign_in/google_sign_in.dart';
     'profile', // ¡Verifica que esté aquí!
   ],
 ); */
+final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 Future<UserCredential?> signInWithGoogle() async {
   try {
     // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    //final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     //final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     print(
         '****************************** GoogleSignIn().signIn() returned: $googleUser');
@@ -67,7 +69,8 @@ Future<UserCredential?> signInWithGoogle() async {
 Future<void> signOutWithGoogle() async {
   try {
     await FirebaseAuth.instance.signOut();
-    await GoogleSignIn().signOut();
+    //await GoogleSignIn().signOut();
+    await _googleSignIn.signOut();
     print('Sesión cerrada exitosamente (Firebase y Google).');
     // Navegar a la pantalla de inicio de sesión
   } catch (e) {
