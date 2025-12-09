@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/auth_google_services.dart';
 //import 'package:flutter_application_1/auth_google_services.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -290,10 +291,25 @@ class RegisterScreen extends ConsumerWidget {
                                           backgroundColor:
                                               const MaterialStatePropertyAll(
                                                   Colors.transparent)),
-                                      onPressed: () {
-                                        if (context.mounted) {
-                                          context.pop();
-                                        }
+                                      onPressed: () async {
+                                        showDialog(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            builder: (context) {
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                color: const Color.fromARGB(
+                                                    255, 50, 102, 175),
+                                                backgroundColor:
+                                                    Colors.purple[300],
+                                              ));
+                                            });
+                                        await signOutWithGoogle();
+                                        if (!context.mounted) return;
+                                        context.pop();
+                                        if (!context.mounted) return;
+                                        context.pop();
                                       },
                                       child: const Text(
                                         'Volver',
