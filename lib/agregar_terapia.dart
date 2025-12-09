@@ -236,6 +236,7 @@ Future<dynamic> agregarTerapia(
                                                       isComingFromSomeTimerScreen
                                                           .notifier)
                                                   .state = true;
+                                              if (!context.mounted) return;
                                               context.pop();
                                             }
                                           },

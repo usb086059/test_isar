@@ -235,6 +235,7 @@ Future<dynamic> editarTerapia(
                                                     isComingFromSomeTimerScreen
                                                         .notifier)
                                                 .state = true;
+                                            if (!context.mounted) return;
                                             context.pop();
                                           }
                                         },

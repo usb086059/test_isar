@@ -443,7 +443,7 @@ class TimerZapperScreen5 extends ConsumerWidget {
   Future<void> cerrarTimerScreen(WidgetRef ref) async {
     ref.read(selectModoProvider.notifier).state = false;
     ref.read(indexTerapiaProvider.notifier).state = 0;
-    ref.read(terapiaProvider5.notifier).state =
+    ref.read(terapiaProvider0.notifier).state =
         await ref.read(servicesProvider).getTerapiaSeleccionada(0);
     ref
         .read(relojProvider.notifier)

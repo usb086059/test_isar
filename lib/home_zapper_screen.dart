@@ -64,6 +64,26 @@ class HomeZapperScreen extends ConsumerWidget {
 
     final isLoadingTerapiaTotaleProvider = ref.watch(isLoadingTerapiaTotale);
 
+    // 1. 💡 LÓGICA DE ESCUCHA Y EFECTO SECUNDARIO SEGURO
+    // Usamos watch para que el widget se reconstruya si el Provider cambia a true.
+    if (ref.watch(isComingFromSomeTimerScreen)) {
+      // Programamos la ejecución para la Microtask Queue.
+      // Esto se ejecuta inmediatamente después de que el build termine,
+      // fuera del ciclo de dibujo activo.
+      Future.microtask(() {
+        // Primero, aseguramos el estado del widget antes de cualquier acción (buena práctica)
+        if (!context.mounted) return;
+
+        // 1. Ejecutar la acción imperativa (Scroll)
+        // Esto solo se ejecuta una vez por ciclo cuando el Provider es true.
+        scroll.jumpTo(scroll.position.minScrollExtent);
+
+        // 2. Restablecer el Provider (Side Effect/Cambio de Estado)
+        // Esto disparará una nueva reconstrucción donde el IF ya será false.
+        ref.read(isComingFromSomeTimerScreen.notifier).state = false;
+      });
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Stack(
@@ -384,7 +404,7 @@ class HomeZapperScreen extends ConsumerWidget {
                                                 //mainAxisSpacing: 12,
                                                 crossAxisCount: 1),
                                         itemBuilder: (context, index) {
-                                          if (ref.watch(
+                                          /* if (ref.watch(
                                               isComingFromSomeTimerScreen)) {
                                             print(
                                                 '------------- deviceProvider es = ${ref.read(deviceProvider).relojAsignado}');
@@ -395,7 +415,7 @@ class HomeZapperScreen extends ConsumerWidget {
                                                 .state = false;
                                             scroll.jumpTo(scroll
                                                 .position.minScrollExtent);
-                                          }
+                                          } */
                                           return CustomTherapy(
                                             name: snapshot.data![index].nombre,
                                             frecMin:
