@@ -21,7 +21,7 @@ class SetNameMyDevice extends ConsumerWidget {
     double heightScreen = MediaQuery.of(context).size.height;
     //final formKey = GlobalKey<FormState>();
     TextEditingController nombreDeviceController = TextEditingController();
-    final isEnabledButtonConectarProvider = ref.watch(isEnabledButtonConectar);
+    final isEnabledButtonConectar = ref.watch(isEnabledButtonConectarProvider);
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
@@ -29,7 +29,7 @@ class SetNameMyDevice extends ConsumerWidget {
           return;
         } else {
           ref.read(isScanEnabledProvider.notifier).state = true;
-          ref.read(isEnabledButtonConectar.notifier).state = true;
+          ref.read(isEnabledButtonConectarProvider.notifier).state = true;
           context.pop();
         }
       },
@@ -118,8 +118,9 @@ class SetNameMyDevice extends ConsumerWidget {
                         ))),
                         onPressed: () {
                           ref.read(isScanEnabledProvider.notifier).state = true;
-                          ref.read(isEnabledButtonConectar.notifier).state =
-                              true;
+                          ref
+                              .read(isEnabledButtonConectarProvider.notifier)
+                              .state = true;
                           /* ref
                                                                                   .watch(
                                                                                       origenHomeZapperProvider
@@ -136,7 +137,7 @@ class SetNameMyDevice extends ConsumerWidget {
                             side: MaterialStatePropertyAll(BorderSide(
                           color: Colors.white,
                         ))),
-                        onPressed: isEnabledButtonConectarProvider
+                        onPressed: isEnabledButtonConectar
                             ? () async {
                                 if (formKey.currentState!.validate()) {
                                   showDialog(
@@ -151,7 +152,8 @@ class SetNameMyDevice extends ConsumerWidget {
                                         ));
                                       });
                                   ref
-                                      .read(isEnabledButtonConectar.notifier)
+                                      .read(isEnabledButtonConectarProvider
+                                          .notifier)
                                       .state = false;
                                   await ref.read(servicesProvider).addDevice(
                                       Device(

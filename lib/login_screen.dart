@@ -240,7 +240,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                               .read(primerArranqueProvider
                                                   .notifier)
                                               .update((state) => true);
-                                          if (ref.read(cerroSesion)) {
+                                          if (ref.read(cerroSesionProvider)) {
                                             context.pop();
                                           } else {
                                             context.push('/bluetooth');
@@ -291,7 +291,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                       ref
                                           .read(primerArranqueProvider.notifier)
                                           .update((state) => true);
-                                      if (ref.read(cerroSesion)) {
+                                      if (ref.read(cerroSesionProvider)) {
                                         if (context.mounted) {
                                           context.pop();
                                         }

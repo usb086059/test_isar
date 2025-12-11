@@ -86,7 +86,7 @@ final primerArranqueProvider = StateProvider<bool>((ref) => false);
 
 final batteryLevelProvider = StateProvider<String>((ref) => batteryLevels[0]);
 
-final cerroSesion = StateProvider<bool>((ref) => false);
+final cerroSesionProvider = StateProvider<bool>((ref) => false);
 
 final batteryProvider =
     StateProvider<String>((ref) => 'assets/icons/bateriaAzulMarco.png');
@@ -100,7 +100,10 @@ final isApagarEnabledProvider = StateProvider<bool>((ref) => true);
 
 final isLoadingTerapiaTotale = StateProvider<bool>((ref) => false);
 
-final isEnabledButtonConectar = StateProvider<bool>((ref) =>
+final isEnabledButtonConectarProvider = StateProvider<bool>((ref) =>
     true); // Para habilitar/deshabilitar el boton concetar en el showDialog de la asignación de nombre del equipo conectado
 
 final isComingFromSomeTimerScreen = StateProvider<bool>((ref) => false);
+
+final isEnableButtonSelectDeviceScannedProvider =
+    StateProvider<bool>((ref) => true);

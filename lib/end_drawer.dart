@@ -173,7 +173,7 @@ class EndDrawer extends ConsumerWidget {
                           await Future.delayed(const Duration(seconds: 1));
                           await signOutWithGoogle();
                           ref
-                              .read(cerroSesion.notifier)
+                              .read(cerroSesionProvider.notifier)
                               .update((state) => true);
                           if (context.mounted) {
                             Navigator.pop(context);

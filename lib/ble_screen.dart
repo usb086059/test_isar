@@ -46,6 +46,9 @@ class BleScreen extends ConsumerWidget {
       'deviceId': '94:A9:A8:39:16:59'
     };
 
+    final isEnableButtonSelectDeviceScanned =
+        ref.watch(isEnableButtonSelectDeviceScannedProvider);
+
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
@@ -278,56 +281,116 @@ class BleScreen extends ConsumerWidget {
                                                   backgroundColor:
                                                       MaterialStatePropertyAll(
                                                           Colors.transparent)),
-                                              onPressed: () async {
-                                                final List<Device>
-                                                    listDeviceEmpty = [];
-                                                ref
-                                                    .read(bleProvider)
-                                                    .setScannedDevices(
-                                                        listDeviceEmpty);
-                                                ref
+                                              onPressed:
+                                                  isEnableButtonSelectDeviceScanned
+                                                      ? () async {
+                                                          ref
+                                                              .read(
+                                                                  isEnableButtonSelectDeviceScannedProvider
+                                                                      .notifier)
+                                                              .state = false;
+                                                          final List<Device>
+                                                              listDeviceEmpty =
+                                                              [];
+                                                          ref
+                                                              .read(bleProvider)
+                                                              .setScannedDevices(
+                                                                  listDeviceEmpty);
+                                                          /* ref
                                                     .read(isScanEnabledProvider
                                                         .notifier)
-                                                    .update((state) => false);
-                                                /* BluetoothDevice
+                                                    .update((state) => false); */
+                                                          /* BluetoothDevice
                                                     bluetoothDevice =
                                                     BluetoothDevice.fromId(
                                                         data.mac); */
-                                                if (!await ref
-                                                    .read(servicesProvider)
-                                                    .getDeviceExists(
-                                                        data.mac)) {
-                                                  ref
-                                                      .read(
-                                                          isEnabledButtonConectar
-                                                              .notifier)
-                                                      .state = true;
-                                                  if (!context.mounted) return;
-                                                  showDialog(
-                                                      barrierDismissible: false,
-                                                      context: context,
-                                                      builder: (context) =>
-                                                          SetNameMyDevice(
-                                                              data: data,
-                                                              formKey:
-                                                                  formKey));
-                                                } else {
-                                                  final Device dev = await ref
-                                                      .read(servicesProvider)
-                                                      .getDevice(data.mac);
-                                                  dev.conectado = true;
-                                                  await ref
-                                                      .read(servicesProvider)
-                                                      .editDevice(dev);
-                                                  ref
-                                                      .read(deviceProvider
-                                                          .notifier)
-                                                      .update((state) => dev);
-                                                  await ref
-                                                      .read(bleProvider)
-                                                      .conectar(data.mac);
-                                                }
-                                              },
+                                                          if (!await ref
+                                                              .read(
+                                                                  servicesProvider)
+                                                              .getDeviceExists(
+                                                                  data.mac)) {
+                                                            ref
+                                                                .read(isEnabledButtonConectarProvider
+                                                                    .notifier)
+                                                                .state = true;
+                                                            if (!context
+                                                                .mounted) {
+                                                              return;
+                                                            }
+                                                            showDialog(
+                                                                barrierDismissible:
+                                                                    false,
+                                                                context:
+                                                                    context,
+                                                                builder: (context) =>
+                                                                    SetNameMyDevice(
+                                                                        data:
+                                                                            data,
+                                                                        formKey:
+                                                                            formKey));
+                                                          } else {
+                                                            if (!context
+                                                                .mounted) {
+                                                              return;
+                                                            }
+                                                            showDialog(
+                                                                barrierDismissible:
+                                                                    false,
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) {
+                                                                  return Center(
+                                                                      child:
+                                                                          CircularProgressIndicator(
+                                                                    color: const Color
+                                                                        .fromARGB(
+                                                                        255,
+                                                                        50,
+                                                                        102,
+                                                                        175),
+                                                                    backgroundColor:
+                                                                        Colors.purple[
+                                                                            300],
+                                                                  ));
+                                                                });
+                                                            final Device dev =
+                                                                await ref
+                                                                    .read(
+                                                                        servicesProvider)
+                                                                    .getDevice(
+                                                                        data.mac);
+                                                            dev.conectado =
+                                                                true;
+                                                            await ref
+                                                                .read(
+                                                                    servicesProvider)
+                                                                .editDevice(
+                                                                    dev);
+                                                            ref
+                                                                .read(deviceProvider
+                                                                    .notifier)
+                                                                .update(
+                                                                    (state) =>
+                                                                        dev);
+                                                            await ref
+                                                                .read(
+                                                                    bleProvider)
+                                                                .conectar(
+                                                                    data.mac);
+                                                            if (!context
+                                                                .mounted) {
+                                                              return;
+                                                            }
+                                                            context.pop();
+                                                          }
+                                                          ref
+                                                              .read(
+                                                                  isEnableButtonSelectDeviceScannedProvider
+                                                                      .notifier)
+                                                              .state = true;
+                                                        }
+                                                      : null,
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
