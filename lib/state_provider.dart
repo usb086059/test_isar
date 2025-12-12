@@ -107,3 +107,5 @@ final isComingFromSomeTimerScreen = StateProvider<bool>((ref) => false);
 
 final isEnableButtonSelectDeviceScannedProvider =
     StateProvider<bool>((ref) => true);
+
+final isEnabledButtonPlayProvider = StateProvider<bool>((ref) => true);

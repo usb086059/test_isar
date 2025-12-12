@@ -1,8 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/aviso_error_conexion.dart';
 import 'package:flutter_application_1/firebase_services.dart';
-import 'package:flutter_application_1/gradient_services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -156,62 +154,9 @@ class NavigationBarRedes extends StatelessWidget {
         barrierDismissible: false,
         context: context,
         builder: (context) {
-          return BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-            child: Stack(children: [
-              Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Container(
-                    constraints: BoxConstraints(
-                        maxHeight: heightScreen * 0.214,
-                        maxWidth: widthScreen * 0.783),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                      child: Container(),
-                    ),
-                  ),
-                ),
-              ),
-              Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Container(
-                    constraints: BoxConstraints(
-                        maxHeight: heightScreen * 0.214,
-                        maxWidth: widthScreen * 0.783),
-                    decoration: BoxDecoration(
-                        border:
-                            Border.all(color: Colors.white.withOpacity(0.2)),
-                        borderRadius: BorderRadius.circular(30),
-                        gradient: gradientAlertDialog()),
-                    child: Container(),
-                  ),
-                ),
-              ),
-              const AlertDialog(
-                elevation: 0,
-                backgroundColor: Colors.transparent,
-                actionsAlignment: MainAxisAlignment.spaceEvenly,
-                title: Text(
-                  'Error de conexión',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      //fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
-                ),
-                content: Text(
-                  'Revise su conexión a internet',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ]),
-          );
+          return const AvisoErrorConexion(
+              title: 'Error de conexión',
+              content: 'Revise su conexión a internet');
         });
   }
 }
