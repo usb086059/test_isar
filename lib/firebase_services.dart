@@ -89,16 +89,14 @@ Future<void> addUser(
   });
 }
 
-ImageProvider<Object> userImage(/* User? user, bool localUserImagen */) {
-  User? currentUser = FirebaseAuth.instance.currentUser;
-  ImageProvider<Object> imagen =
-      const AssetImage('assets/icons/iconUserNoImage.png');
-  if (currentUser != null) {
-    if (currentUser.photoURL == null || currentUser.photoURL!.isEmpty) {
-      imagen = const AssetImage('assets/icons/iconoCircular.png');
-    } else {
-      imagen = NetworkImage(currentUser.photoURL!);
-    }
+ImageProvider<Object> userImage(String imagePath) {
+  if (imagePath.startsWith('http')) {
+    return NetworkImage(imagePath);
   }
-  return imagen;
+
+  if (imagePath == 'assets/icons/iconUserNoImage.png') {
+    return const AssetImage('assets/icons/iconUserNoImage.png');
+  } else {
+    return const AssetImage('assets/icons/iconoCircular.png');
+  }
 }

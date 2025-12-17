@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/auth_provider.dart';
 import 'package:flutter_application_1/ble_services.dart';
 import 'package:flutter_application_1/comandos.dart';
 import 'package:flutter_application_1/countdown_provider_5.dart';
@@ -39,6 +40,8 @@ class TimerZapperScreen5 extends ConsumerWidget {
     final TerapiaTotal terapia = ref.watch(terapiaProvider5);
 
     const String location = '/timerZapper5';
+
+    final imagePath = ref.watch(userImageProvider);
 
     return PopScope(
       canPop: false,
@@ -120,7 +123,7 @@ class TimerZapperScreen5 extends ConsumerWidget {
                             shape: BoxShape.circle,
                             image: DecorationImage(
                               fit: BoxFit.fill,
-                              image: userImage(),
+                              image: userImage(imagePath),
                               onError: (exception, stackTrace) {
                                 /* =>
                                   const AssetImage(

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/agregar_terapia.dart';
+import 'package:flutter_application_1/auth_provider.dart';
 import 'package:flutter_application_1/aviso_error_conexion.dart';
 import 'package:flutter_application_1/ble_services.dart';
 import 'package:flutter_application_1/curve_services.dart';
@@ -87,6 +88,8 @@ class HomeZapperScreen extends ConsumerWidget {
       });
     }
 
+    final imagePath = ref.watch(userImageProvider);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Stack(
@@ -156,7 +159,7 @@ class HomeZapperScreen extends ConsumerWidget {
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           fit: BoxFit.fill,
-                          image: userImage(),
+                          image: userImage(imagePath),
                           onError: (exception, stackTrace) {
                             /* =>
                                   const AssetImage(

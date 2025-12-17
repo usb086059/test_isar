@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/auth_provider.dart';
 //import 'package:flutter_application_1/battery_levels.dart';
 import 'package:flutter_application_1/ble_services.dart';
 //import 'package:flutter_application_1/caracteristicas.dart';
@@ -48,6 +49,8 @@ class BleScreen extends ConsumerWidget {
 
     final isEnableButtonSelectDeviceScanned =
         ref.watch(isEnableButtonSelectDeviceScannedProvider);
+
+    final imagePath = ref.watch(userImageProvider);
 
     return PopScope(
       canPop: false,
@@ -138,7 +141,7 @@ class BleScreen extends ConsumerWidget {
                             shape: BoxShape.circle,
                             image: DecorationImage(
                               fit: BoxFit.fill,
-                              image: userImage(),
+                              image: userImage(imagePath),
                               onError: (exception, stackTrace) {
                                 /* =>
                                   const AssetImage(
