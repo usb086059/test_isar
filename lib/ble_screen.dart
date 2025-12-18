@@ -325,12 +325,16 @@ class BleScreen extends ConsumerWidget {
                                                                     false,
                                                                 context:
                                                                     context,
-                                                                builder: (context) =>
-                                                                    SetNameMyDevice(
-                                                                        data:
-                                                                            data,
-                                                                        formKey:
-                                                                            formKey));
+                                                                builder:
+                                                                    (context) =>
+                                                                        SetNameMyDevice(
+                                                                          data:
+                                                                              data,
+                                                                          formKey:
+                                                                              formKey,
+                                                                          editEnable:
+                                                                              false,
+                                                                        ));
                                                           } else {
                                                             if (!context
                                                                 .mounted) {
@@ -394,30 +398,105 @@ class BleScreen extends ConsumerWidget {
                                                               .state = true;
                                                         }
                                                       : null,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                              child: Row(
                                                 children: [
-                                                  Text(data.tipo,
-                                                      style: const TextStyle(
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              50,
-                                                              102,
-                                                              175),
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold)),
-                                                  Text(data.nombre,
-                                                      style: const TextStyle(
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              50,
-                                                              102,
-                                                              175),
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold)),
+                                                  Expanded(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(data.tipo,
+                                                            style: const TextStyle(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        50,
+                                                                        102,
+                                                                        175),
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                        Text(data.nombre,
+                                                            style: const TextStyle(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        50,
+                                                                        102,
+                                                                        175),
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Visibility(
+                                                    visible: data.nombre !=
+                                                        'Sin nombre',
+                                                    child: IconButton(
+                                                        style: ButtonStyle(
+                                                            minimumSize:
+                                                                MaterialStatePropertyAll(Size(
+                                                                    widthScreen *
+                                                                        0.15,
+                                                                    heightScreen *
+                                                                        0.034)),
+                                                            maximumSize:
+                                                                MaterialStatePropertyAll(Size(
+                                                                    widthScreen *
+                                                                        0.15,
+                                                                    heightScreen *
+                                                                        0.034)),
+                                                            /* alignment: Alignment
+                                                                .centerRight, */
+                                                            padding:
+                                                                const MaterialStatePropertyAll(
+                                                                    EdgeInsets
+                                                                        .zero),
+                                                            backgroundColor:
+                                                                const MaterialStatePropertyAll(
+                                                                    Color.fromARGB(
+                                                                        255,
+                                                                        50,
+                                                                        102,
+                                                                        175))),
+                                                        disabledColor:
+                                                            Colors.black12,
+                                                        onPressed:
+                                                            data.nombre ==
+                                                                    'Sin nombre'
+                                                                ? null
+                                                                : () {
+                                                                    ref
+                                                                        .read(isEnableButtonSelectDeviceScannedProvider
+                                                                            .notifier)
+                                                                        .state = false;
+                                                                    ref
+                                                                        .read(isEnabledButtonConectarProvider
+                                                                            .notifier)
+                                                                        .state = true;
+                                                                    showDialog(
+                                                                        barrierDismissible:
+                                                                            false,
+                                                                        context:
+                                                                            context,
+                                                                        builder: (context) =>
+                                                                            SetNameMyDevice(
+                                                                              data: data,
+                                                                              formKey: formKey,
+                                                                              editEnable: true,
+                                                                            ));
+                                                                    ref
+                                                                        .read(isEnableButtonSelectDeviceScannedProvider
+                                                                            .notifier)
+                                                                        .state = true;
+                                                                  },
+                                                        icon: const Icon(
+                                                            Icons.settings)),
+                                                  )
                                                 ],
                                               ),
                                             ),

@@ -13,14 +13,23 @@ import 'package:go_router/go_router.dart';
 class SetNameMyDevice extends ConsumerWidget {
   final Device data;
   final GlobalKey<FormState> formKey;
-  const SetNameMyDevice({super.key, required this.data, required this.formKey});
+  final bool editEnable;
+  const SetNameMyDevice(
+      {super.key,
+      required this.data,
+      required this.formKey,
+      required this.editEnable});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
     //final formKey = GlobalKey<FormState>();
-    TextEditingController nombreDeviceController = TextEditingController();
+    final TextEditingController nombreDeviceController =
+        TextEditingController.fromValue(TextEditingValue(
+            text: data.nombre == 'Sin nombre' ? '' : data.nombre,
+            selection: TextSelection.collapsed(
+                offset: data.nombre == 'Sin nombre' ? 0 : data.nombre.length)));
     final isEnabledButtonConectar = ref.watch(isEnabledButtonConectarProvider);
     return PopScope(
       canPop: false,
@@ -140,6 +149,10 @@ class SetNameMyDevice extends ConsumerWidget {
                         onPressed: isEnabledButtonConectar
                             ? () async {
                                 if (formKey.currentState!.validate()) {
+                                  ref
+                                      .read(isEnabledButtonConectarProvider
+                                          .notifier)
+                                      .state = false;
                                   showDialog(
                                       barrierDismissible: false,
                                       context: context,
@@ -151,26 +164,23 @@ class SetNameMyDevice extends ConsumerWidget {
                                           backgroundColor: Colors.purple[300],
                                         ));
                                       });
+                                  data.nombre =
+                                      nombreDeviceController.text.toUpperCase();
+                                  data.conectado = true;
+                                  data.relojAsignado = 0;
+                                  if (editEnable) {
+                                    await ref
+                                        .read(servicesProvider)
+                                        .editDevice(data);
+                                  } else {
+                                    await ref
+                                        .read(servicesProvider)
+                                        .addDevice(data);
+                                  }
+
                                   ref
-                                      .read(isEnabledButtonConectarProvider
-                                          .notifier)
-                                      .state = false;
-                                  await ref.read(servicesProvider).addDevice(
-                                      Device(
-                                          tipo: data.tipo,
-                                          mac: data.mac,
-                                          nombre: nombreDeviceController.text
-                                              .toUpperCase(),
-                                          conectado: true,
-                                          relojAsignado: 0));
-                                  ref.read(deviceProvider.notifier).update(
-                                      (state) => Device(
-                                          tipo: data.tipo,
-                                          mac: data.mac,
-                                          nombre: nombreDeviceController.text
-                                              .toUpperCase(),
-                                          conectado: true,
-                                          relojAsignado: 0));
+                                      .read(deviceProvider.notifier)
+                                      .update((state) => data);
                                   await ref
                                       .read(bleProvider)
                                       .conectar(data.mac);
