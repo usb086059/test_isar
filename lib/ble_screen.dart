@@ -436,16 +436,16 @@ class BleScreen extends ConsumerWidget {
                                                   Visibility(
                                                     visible: data.nombre !=
                                                         'Sin nombre',
-                                                    child: IconButton(
+                                                    child: TextButton(
                                                         style: ButtonStyle(
                                                             minimumSize:
-                                                                MaterialStatePropertyAll(Size(
+                                                                WidgetStatePropertyAll(Size(
                                                                     widthScreen *
                                                                         0.15,
                                                                     heightScreen *
                                                                         0.034)),
                                                             maximumSize:
-                                                                MaterialStatePropertyAll(Size(
+                                                                WidgetStatePropertyAll(Size(
                                                                     widthScreen *
                                                                         0.15,
                                                                     heightScreen *
@@ -453,18 +453,22 @@ class BleScreen extends ConsumerWidget {
                                                             /* alignment: Alignment
                                                                 .centerRight, */
                                                             padding:
-                                                                const MaterialStatePropertyAll(
+                                                                const WidgetStatePropertyAll(
                                                                     EdgeInsets
                                                                         .zero),
-                                                            backgroundColor:
-                                                                const MaterialStatePropertyAll(
-                                                                    Color.fromARGB(
-                                                                        255,
-                                                                        50,
-                                                                        102,
-                                                                        175))),
-                                                        disabledColor:
-                                                            Colors.black12,
+                                                            backgroundColor: data
+                                                                        .nombre ==
+                                                                    'Sin nombre'
+                                                                ? const WidgetStatePropertyAll(
+                                                                    Colors
+                                                                        .black12)
+                                                                : const WidgetStatePropertyAll(
+                                                                    Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            50,
+                                                                            102,
+                                                                            175))),
                                                         onPressed:
                                                             data.nombre ==
                                                                     'Sin nombre'
@@ -494,8 +498,13 @@ class BleScreen extends ConsumerWidget {
                                                                             .notifier)
                                                                         .state = true;
                                                                   },
-                                                        icon: const Icon(
-                                                            Icons.settings)),
+                                                        child: const Text(
+                                                          'Editar',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 12),
+                                                        )),
                                                   )
                                                 ],
                                               ),
