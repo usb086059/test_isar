@@ -211,9 +211,16 @@ class BluetoothServices {
 
   Future<List<Device>> getLastScannedDevices() async {
     List<Device> lastScannedDevices = [];
-    final List<ScanResult> lastScanResults = FlutterBluePlus.lastScanResults;
+    final List<ScanResult> lastScanResults =
+        FlutterBluePlus.lastScanResults.where((element) {
+      //Como el advName puede llegar con caracteres invisibles, uso .trim() para eliminarlos y poder comparar
+      return element.device.advName.trim() == 'AVT-ZAPPER';
+    }).toList();
+    print('>>>>>>>>>> Lenght LastScanRsults = ${lastScanResults.length}');
     if (lastScanResults.isNotEmpty) {
       for (ScanResult element in lastScanResults) {
+        print(
+            '>>>>>>>>>> AdvName = ${element.device.advName} y su length = ${element.device.advName.length}');
         final Map<String, dynamic> data = {
           'command': 'getDeviceForScanResult',
           'deviceId': element.device.remoteId.toString()
