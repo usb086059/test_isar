@@ -117,106 +117,166 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
           //context.go('/');
         }
       },
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(gradient: fondoLoginScreenGradient()),
-            ),
-            ClipPath(
-              clipper: LoginCurve(),
-              child: Container(
-                decoration: BoxDecoration(gradient: purpleGradientCurvas()),
-                height: MediaQuery.sizeOf(context).height,
-                width: MediaQuery.sizeOf(context).width,
+      child: SafeArea(
+        top: false,
+        bottom: true,
+        left: false,
+        right: false,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(gradient: fondoLoginScreenGradient()),
               ),
-            ),
-            Scaffold(
-                backgroundColor: Colors.transparent,
-                appBar: AppBar(
-                  backgroundColor: Colors.transparent,
-                  /* leading: IconButton(
-                      onPressed: () async {
-                        await _startService();
-                      },
-                      icon: const Icon(Icons.ac_unit)), */
+              ClipPath(
+                clipper: LoginCurve(),
+                child: Container(
+                  decoration: BoxDecoration(gradient: purpleGradientCurvas()),
+                  height: MediaQuery.sizeOf(context).height,
+                  width: MediaQuery.sizeOf(context).width,
                 ),
-                body: Container(
-                  height: heightScreen,
-                  width: widthScreen,
-                  color: Colors.transparent,
-                  child: SingleChildScrollView(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 50),
-                          Image.asset(
-                            'assets/logoEnNegro1080.png',
-                            scale: 3.5,
-                          ),
-                          const SizedBox(height: 100),
-                          Container(
-                            constraints: BoxConstraints(
-                                maxHeight: heightScreen * 0.1,
-                                minHeight: heightScreen * 0.1,
-                                minWidth: widthScreen * 0.95,
-                                maxWidth: widthScreen * 0.95),
-                            child: Image.asset(
-                              'assets/8.png',
-                              //color: Colors.white,
-                              scale: 20,
+              ),
+              Scaffold(
+                  backgroundColor: Colors.transparent,
+                  appBar: AppBar(
+                    backgroundColor: Colors.transparent,
+                    /* leading: IconButton(
+                        onPressed: () async {
+                          await _startService();
+                        },
+                        icon: const Icon(Icons.ac_unit)), */
+                  ),
+                  body: Container(
+                    height: heightScreen,
+                    width: widthScreen,
+                    color: Colors.transparent,
+                    child: SingleChildScrollView(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 50),
+                            Image.asset(
+                              'assets/logoEnNegro1080.png',
+                              scale: 3.5,
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            constraints: BoxConstraints(
-                                maxHeight: heightScreen * 0.14,
-                                minHeight: heightScreen * 0.14,
-                                minWidth: widthScreen * 0.95,
-                                maxWidth: widthScreen * 0.95),
-                            child: Image.asset(
-                              'assets/10.png',
-                              scale: 18,
+                            const SizedBox(height: 100),
+                            Container(
+                              constraints: BoxConstraints(
+                                  maxHeight: heightScreen * 0.1,
+                                  minHeight: heightScreen * 0.1,
+                                  minWidth: widthScreen * 0.95,
+                                  maxWidth: widthScreen * 0.95),
+                              child: Image.asset(
+                                'assets/8.png',
+                                //color: Colors.white,
+                                scale: 20,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 90),
-                          Container(
-                            padding: const EdgeInsets.only(
-                                left: 12, right: 12, top: 5, bottom: 18),
-                            decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image:
-                                        AssetImage('assets/icons/icono9.png'))),
-                            child: FilledButton.tonalIcon(
-                                style: const ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        Colors.transparent)),
-                                onPressed: () async {
-                                  print(
-                                      '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Usuario es: ${FirebaseAuth.instance.currentUser}');
-                                  print(
-                                      '+++++++++++++++++++++++++++++++++++++++ Usuario es: ${user}');
-                                  showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (context) {
-                                        return Center(
-                                            child: CircularProgressIndicator(
-                                          color: const Color.fromARGB(
-                                              255, 50, 102, 175),
-                                          backgroundColor: Colors.purple[300],
-                                        ));
-                                      });
-                                  if (FirebaseAuth.instance.currentUser ==
-                                      null) {
-                                    user = await signInWithGoogle();
-
+                            Container(
+                              alignment: Alignment.center,
+                              constraints: BoxConstraints(
+                                  maxHeight: heightScreen * 0.14,
+                                  minHeight: heightScreen * 0.14,
+                                  minWidth: widthScreen * 0.95,
+                                  maxWidth: widthScreen * 0.95),
+                              child: Image.asset(
+                                'assets/10.png',
+                                scale: 18,
+                              ),
+                            ),
+                            const SizedBox(height: 90),
+                            Container(
+                              padding: const EdgeInsets.only(
+                                  left: 12, right: 12, top: 5, bottom: 18),
+                              decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image: AssetImage(
+                                          'assets/icons/icono9.png'))),
+                              child: FilledButton.tonalIcon(
+                                  style: const ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(
+                                          Colors.transparent)),
+                                  onPressed: () async {
                                     print(
-                                        '************************************** Usuario es: $user');
-                                    if (user?.user != null) {
+                                        '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Usuario es: ${FirebaseAuth.instance.currentUser}');
+                                    print(
+                                        '+++++++++++++++++++++++++++++++++++++++ Usuario es: ${user}');
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) {
+                                          return Center(
+                                              child: CircularProgressIndicator(
+                                            color: const Color.fromARGB(
+                                                255, 50, 102, 175),
+                                            backgroundColor: Colors.purple[300],
+                                          ));
+                                        });
+                                    if (FirebaseAuth.instance.currentUser ==
+                                        null) {
+                                      user = await signInWithGoogle();
+
+                                      print(
+                                          '************************************** Usuario es: $user');
+                                      if (user?.user != null) {
+                                        if (context.mounted) {
+                                          context.pop();
+                                          if (ref.read(
+                                                  primerArranqueProvider) ==
+                                              false) {
+                                            listDeviceConected = await ref
+                                                .read(servicesProvider)
+                                                .getAllDeviceConected();
+                                            if (listDeviceConected.isNotEmpty) {
+                                              for (var element
+                                                  in listDeviceConected) {
+                                                element.conectado = false;
+                                                element.relojAsignado = 0;
+                                                await ref
+                                                    .read(servicesProvider)
+                                                    .editDevice(element);
+                                              }
+                                            }
+                                          }
+                                          if (await userIsRegistered(
+                                              user!.user!.uid)) {
+                                            ref
+                                                .read(primerArranqueProvider
+                                                    .notifier)
+                                                .update((state) => true);
+                                            if (ref.read(cerroSesionProvider)) {
+                                              context.pop();
+                                            } else {
+                                              context.push('/bluetooth');
+                                            }
+                                          } else {
+                                            ref
+                                                .read(primerArranqueProvider
+                                                    .notifier)
+                                                .update((state) => true);
+                                            context.push('/register');
+                                          }
+                                        }
+                                      } else {
+                                        if (context.mounted) {
+                                          showDialogAviso(context, heightScreen,
+                                              widthScreen);
+                                          print(
+                                              '*********************************** Detecto nulo');
+                                          await Future.delayed(
+                                              const Duration(seconds: 3));
+                                          if (context.mounted) {
+                                            context.pop();
+                                          }
+                                        }
+                                        if (context.mounted) {
+                                          context.pop();
+                                        }
+                                      }
+                                    } else {
                                       if (context.mounted) {
                                         context.pop();
                                         if (ref.read(primerArranqueProvider) ==
@@ -235,92 +295,40 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                             }
                                           }
                                         }
-                                        if (await userIsRegistered(
-                                            user!.user!.uid)) {
-                                          ref
-                                              .read(primerArranqueProvider
-                                                  .notifier)
-                                              .update((state) => true);
-                                          if (ref.read(cerroSesionProvider)) {
+                                        ref
+                                            .read(
+                                                primerArranqueProvider.notifier)
+                                            .update((state) => true);
+                                        if (ref.read(cerroSesionProvider)) {
+                                          if (context.mounted) {
                                             context.pop();
-                                          } else {
-                                            context.push('/bluetooth');
                                           }
                                         } else {
-                                          ref
-                                              .read(primerArranqueProvider
-                                                  .notifier)
-                                              .update((state) => true);
-                                          context.push('/register');
-                                        }
-                                      }
-                                    } else {
-                                      if (context.mounted) {
-                                        showDialogAviso(
-                                            context, heightScreen, widthScreen);
-                                        print(
-                                            '*********************************** Detecto nulo');
-                                        await Future.delayed(
-                                            const Duration(seconds: 3));
-                                        if (context.mounted) {
-                                          context.pop();
-                                        }
-                                      }
-                                      if (context.mounted) {
-                                        context.pop();
-                                      }
-                                    }
-                                  } else {
-                                    if (context.mounted) {
-                                      context.pop();
-                                      if (ref.read(primerArranqueProvider) ==
-                                          false) {
-                                        listDeviceConected = await ref
-                                            .read(servicesProvider)
-                                            .getAllDeviceConected();
-                                        if (listDeviceConected.isNotEmpty) {
-                                          for (var element
-                                              in listDeviceConected) {
-                                            element.conectado = false;
-                                            element.relojAsignado = 0;
-                                            await ref
-                                                .read(servicesProvider)
-                                                .editDevice(element);
+                                          if (context.mounted) {
+                                            context.push('/bluetooth');
                                           }
                                         }
                                       }
-                                      ref
-                                          .read(primerArranqueProvider.notifier)
-                                          .update((state) => true);
-                                      if (ref.read(cerroSesionProvider)) {
-                                        if (context.mounted) {
-                                          context.pop();
-                                        }
-                                      } else {
-                                        if (context.mounted) {
-                                          context.push('/bluetooth');
-                                        }
-                                      }
                                     }
-                                  }
-                                },
-                                icon: Image.asset('assets/logo-google-G.png',
-                                    scale: 20),
-                                label: const Text(
-                                  'Inicie sesión con Google',
-                                  style: TextStyle(
-                                      color: Color.fromARGB(255, 50, 102, 175),
-                                      fontWeight: FontWeight.bold),
-                                )),
-                          ),
-                        ],
+                                  },
+                                  icon: Image.asset('assets/logo-google-G.png',
+                                      scale: 20),
+                                  label: const Text(
+                                    'Inicie sesión con Google',
+                                    style: TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 50, 102, 175),
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                bottomNavigationBar:
-                    const SafeArea(child: NavigationBarRedes())),
-          ],
+                  bottomNavigationBar: const NavigationBarRedes()),
+            ],
+          ),
         ),
       ),
     );
