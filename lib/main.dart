@@ -25,6 +25,7 @@ void main() async {
   FlutterForegroundTask.initCommunicationPort();
   runApp(const ProviderScope(child: MyApp()));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 }
 
 class MyApp extends StatelessWidget {
