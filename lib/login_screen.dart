@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/auth_google_services.dart';
+import 'package:flutter_application_1/auth_provider.dart';
 import 'package:flutter_application_1/aviso_error_conexion.dart';
 import 'package:flutter_application_1/ble_services.dart';
 import 'package:flutter_application_1/countdown_provider.dart';
@@ -100,7 +101,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
-    UserCredential? user;
+    UserCredential? userCredential;
+    User? user = FirebaseAuth.instance.currentUser;
 /*     double anchoMin = MediaQuery.of(context).size.width * 0.35;
     double anchoMax = MediaQuery.of(context).size.width * 0.95;
     double altoMin = MediaQuery.of(context).size.height * 0.35;
@@ -182,7 +184,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                   minWidth: widthScreen * 0.95,
                                   maxWidth: widthScreen * 0.95),
                               child: Image.asset(
-                                'assets/10.png',
+                                'assets/parrafo.png',
                                 scale: 18,
                               ),
                             ),
@@ -215,13 +217,12 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                             backgroundColor: Colors.purple[300],
                                           ));
                                         });
-                                    if (FirebaseAuth.instance.currentUser ==
-                                        null) {
-                                      user = await signInWithGoogle();
+                                    if (user == null) {
+                                      userCredential = await signInWithGoogle();
 
                                       print(
                                           '************************************** Usuario es: $user');
-                                      if (user?.user != null) {
+                                      if (userCredential?.user != null) {
                                         if (context.mounted) {
                                           context.pop();
                                           if (ref.read(
@@ -242,7 +243,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                             }
                                           }
                                           if (await userIsRegistered(
-                                              user!.user!.uid)) {
+                                              userCredential!.user!.uid)) {
                                             ref
                                                 .read(primerArranqueProvider
                                                     .notifier)
@@ -313,9 +314,11 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                   },
                                   icon: Image.asset('assets/logo-google-G.png',
                                       scale: 20),
-                                  label: const Text(
-                                    'Inicie sesión con Google',
-                                    style: TextStyle(
+                                  label: Text(
+                                    user == null
+                                        ? 'Iniciar sesión con Google'
+                                        : 'ENTRAR',
+                                    style: const TextStyle(
                                         color:
                                             Color.fromARGB(255, 50, 102, 175),
                                         fontWeight: FontWeight.bold),
