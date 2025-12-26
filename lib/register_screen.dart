@@ -39,7 +39,7 @@ class RegisterScreen extends ConsumerWidget {
     var user = FirebaseAuth.instance.currentUser;
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
           return;
         } else {
