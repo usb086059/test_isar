@@ -29,3 +29,9 @@ final userImageProvider = Provider<String>((ref) {
     error: (err, stack) => 'assets/icons/iconUserNoImage.png',
   );
 });
+
+final userIsAuthenticatedProvider = StateProvider<bool>((ref) {
+  final authState = ref.watch(authStateProvider);
+  final User? user = authState.valueOrNull;
+  return user != null;
+});

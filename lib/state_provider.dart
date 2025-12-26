@@ -86,6 +86,7 @@ final primerArranqueProvider = StateProvider<bool>((ref) => false);
 
 final batteryLevelProvider = StateProvider<String>((ref) => batteryLevels[0]);
 
+// stateProvider para avisar que el usuario uso el boton cerrar sesión
 final cerroSesionProvider = StateProvider<bool>((ref) => false);
 
 final batteryProvider =

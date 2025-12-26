@@ -54,7 +54,7 @@ class BleScreen extends ConsumerWidget {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           print('***************** didPop es true $didPop *************');
           //return;

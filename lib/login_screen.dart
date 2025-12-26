@@ -102,7 +102,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
     UserCredential? userCredential;
-    User? user = FirebaseAuth.instance.currentUser;
+    //User? user = FirebaseAuth.instance.currentUser;
+    final bool userIsAuthenticated = ref.watch(userIsAuthenticatedProvider);
 /*     double anchoMin = MediaQuery.of(context).size.width * 0.35;
     double anchoMax = MediaQuery.of(context).size.width * 0.95;
     double altoMin = MediaQuery.of(context).size.height * 0.35;
@@ -110,7 +111,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
     List<Device> listDeviceConected = [];
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         print('************* didPop es $didPop **************');
         if (didPop) {
           //context.go('/'); //return;
@@ -203,9 +204,9 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                           Colors.transparent)),
                                   onPressed: () async {
                                     print(
-                                        '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Usuario es: ${FirebaseAuth.instance.currentUser}');
+                                        '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> userCredential es: $userCredential');
                                     print(
-                                        '+++++++++++++++++++++++++++++++++++++++ Usuario es: ${user}');
+                                        '+++++++++++++++++++++++++++++++++++++++ Usuario es: $userIsAuthenticated');
                                     showDialog(
                                         barrierDismissible: false,
                                         context: context,
@@ -217,11 +218,11 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                             backgroundColor: Colors.purple[300],
                                           ));
                                         });
-                                    if (user == null) {
+                                    if (!userIsAuthenticated) {
                                       userCredential = await signInWithGoogle();
 
                                       print(
-                                          '************************************** Usuario es: $user');
+                                          '************************************** Usuario es: $userIsAuthenticated');
                                       if (userCredential?.user != null) {
                                         if (context.mounted) {
                                           context.pop();
@@ -249,8 +250,14 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                                     .notifier)
                                                 .update((state) => true);
                                             if (ref.read(cerroSesionProvider)) {
+                                              if (!context.mounted) return;
+                                              // En este punto bleSreen ya existe en el stack. Así que uso context.pop() para volver
+                                              // y no crear copias de bleScreen que sobrecargaría el stack de navegación. Al mismo tiempo
+                                              // esto elimina del stack la copia de loginScreen
                                               context.pop();
                                             } else {
+                                              if (!context.mounted) return;
+                                              // En este punto bleScreen no existe en el stack. Así que uso context.push() para crearlo
                                               context.push('/bluetooth');
                                             }
                                           } else {
@@ -300,14 +307,17 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                             .read(
                                                 primerArranqueProvider.notifier)
                                             .update((state) => true);
+                                        // Cuando cerrarSesionProvider es true, loginScreen tiene una copia en el stack de navegación
                                         if (ref.read(cerroSesionProvider)) {
-                                          if (context.mounted) {
-                                            context.pop();
-                                          }
+                                          if (!context.mounted) return;
+                                          // En este punto bleSrceen ya existe en el stack. Así que uso context.pop() para volver
+                                          // y no crear copias de bleScreen que sobrecargaría el stack de navegación. Al mismo tiempo
+                                          // esto elimina del stack la copia de loginScreen
+                                          context.pop();
                                         } else {
-                                          if (context.mounted) {
-                                            context.push('/bluetooth');
-                                          }
+                                          if (!context.mounted) return;
+                                          // En este punto bleScreen no existe en el stack. Así que uso context.push() para crearlo
+                                          context.push('/bluetooth');
                                         }
                                       }
                                     }
@@ -315,9 +325,9 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                   icon: Image.asset('assets/logo-google-G.png',
                                       scale: 20),
                                   label: Text(
-                                    user == null
-                                        ? 'Iniciar sesión con Google'
-                                        : 'ENTRAR',
+                                    userIsAuthenticated
+                                        ? 'ENTRAR'
+                                        : 'Iniciar sesión con Google',
                                     style: const TextStyle(
                                         color:
                                             Color.fromARGB(255, 50, 102, 175),

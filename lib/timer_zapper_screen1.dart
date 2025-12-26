@@ -45,14 +45,11 @@ class TimerZapperScreen1 extends ConsumerWidget {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           return;
         } else if (timer.estado == 'FIN') {
-          await cerrarTimerScreen(ref);
-          if (context.mounted) {
-            context.pop();
-          }
+          llamarCerrarTimerScreen(ref, context);
         } else {
           context.pop();
         }
@@ -451,6 +448,14 @@ class TimerZapperScreen1 extends ConsumerWidget {
       }
     }
     return listWordsConSaltoDeLinea.join('');
+  }
+
+  Future<void> llamarCerrarTimerScreen(
+      WidgetRef ref, BuildContext context) async {
+    await cerrarTimerScreen(ref);
+    if (context.mounted) {
+      context.pop();
+    }
   }
 
   Future<void> cerrarTimerScreen(WidgetRef ref) async {

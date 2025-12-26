@@ -172,12 +172,16 @@ class EndDrawer extends ConsumerWidget {
                           ref.invalidate(servicesProvider);
                           await Future.delayed(const Duration(seconds: 1));
                           await signOutWithGoogle();
+                          // Poner cerroSesionProvider en true, esto avisa que el usuario uso el
+                          // boton de cerrar sesión
                           ref
                               .read(cerroSesionProvider.notifier)
                               .update((state) => true);
                           if (context.mounted) {
                             Navigator.pop(context);
                             context.pop();
+                            // context.push() creará una copia de loginScreen en el stack de navegación. Esto se gestiona
+                            // en loginScreen monitoreando cerroSesionProvider
                             context.push('/');
                           }
                         },

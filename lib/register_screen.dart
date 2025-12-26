@@ -4,6 +4,7 @@ import 'package:flutter_application_1/auth_google_services.dart';
 //import 'package:flutter_application_1/auth_google_services.dart';
 import 'package:flutter_application_1/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/state_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
