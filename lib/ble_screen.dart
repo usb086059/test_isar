@@ -88,12 +88,12 @@ class BleScreen extends ConsumerWidget {
               ),
               Scaffold(
                   backgroundColor: Colors.transparent,
-                  endDrawer: EndDrawer(
+                  /*  endDrawer: EndDrawer(
                     widthScreen: widthScreen,
                     heightScreen: heightScreen,
                     location: location,
                   ),
-                  endDrawerEnableOpenDragGesture: false,
+                  endDrawerEnableOpenDragGesture: false, */
                   appBar: AppBar(
                     /* leading: IconButton(
                         onPressed: () async {
@@ -127,7 +127,8 @@ class BleScreen extends ConsumerWidget {
                       Stack(children: [
                         Container(
                           padding: const EdgeInsets.all(0),
-                          margin: const EdgeInsets.all(0),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: widthScreen * 0.01),
                           height: heightScreen * 0.1,
                           width: widthScreen * 0.15,
                           decoration: const BoxDecoration(
@@ -140,7 +141,8 @@ class BleScreen extends ConsumerWidget {
                         ),
                         Container(
                           padding: const EdgeInsets.all(0),
-                          margin: const EdgeInsets.all(0),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: widthScreen * 0.01),
                           height: heightScreen * 0.1,
                           width: widthScreen * 0.15,
                           decoration: BoxDecoration(
@@ -156,7 +158,7 @@ class BleScreen extends ConsumerWidget {
                               )),
                         ),
                       ]),
-                      /* SizedBox(
+                      /* /* SizedBox(
                       height: heightScreen * 0.06,
                       width: widthScreen * 0.056,
                     ), */
@@ -192,7 +194,7 @@ class BleScreen extends ConsumerWidget {
                                 )),
                           ),
                         );
-                      })
+                      }) */
                     ],
                   ),
                   body: Container(

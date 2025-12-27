@@ -39,25 +39,11 @@ class RegisterScreen extends ConsumerWidget {
     var user = FirebaseAuth.instance.currentUser;
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           return;
         } else {
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) {
-                return Center(
-                    child: CircularProgressIndicator(
-                  color: const Color.fromARGB(255, 50, 102, 175),
-                  backgroundColor: Colors.purple[300],
-                ));
-              });
-          await signOutWithGoogle();
-          if (!context.mounted) return;
-          context.pop();
-          if (!context.mounted) return;
-          context.pop();
+          cerrarSesion(ref, context);
         }
       },
       child: SafeArea(
@@ -317,37 +303,19 @@ class RegisterScreen extends ConsumerWidget {
                                     children: [
                                       TextButton(
                                           style: ButtonStyle(
-                                              fixedSize:
-                                                  MaterialStatePropertyAll(Size(
-                                                      widthScreen * 0.23,
+                                              fixedSize: WidgetStatePropertyAll(
+                                                  Size(widthScreen * 0.23,
                                                       heightScreen * 0.06)),
                                               side:
-                                                  const MaterialStatePropertyAll(
+                                                  const WidgetStatePropertyAll(
                                                       BorderSide(
                                                           color: Colors.white,
                                                           width: 6)),
                                               backgroundColor:
-                                                  const MaterialStatePropertyAll(
+                                                  const WidgetStatePropertyAll(
                                                       Colors.transparent)),
                                           onPressed: () async {
-                                            showDialog(
-                                                barrierDismissible: false,
-                                                context: context,
-                                                builder: (context) {
-                                                  return Center(
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                    color: const Color.fromARGB(
-                                                        255, 50, 102, 175),
-                                                    backgroundColor:
-                                                        Colors.purple[300],
-                                                  ));
-                                                });
-                                            await signOutWithGoogle();
-                                            if (!context.mounted) return;
-                                            context.pop();
-                                            if (!context.mounted) return;
-                                            context.pop();
+                                            await cerrarSesion(ref, context);
                                           },
                                           child: const Text(
                                             'Volver',
@@ -357,17 +325,16 @@ class RegisterScreen extends ConsumerWidget {
                                           )),
                                       TextButton(
                                           style: ButtonStyle(
-                                              fixedSize:
-                                                  MaterialStatePropertyAll(Size(
-                                                      widthScreen * 0.23,
+                                              fixedSize: WidgetStatePropertyAll(
+                                                  Size(widthScreen * 0.23,
                                                       heightScreen * 0.06)),
                                               side:
-                                                  const MaterialStatePropertyAll(
+                                                  const WidgetStatePropertyAll(
                                                       BorderSide(
                                                           color: Colors.white,
                                                           width: 6)),
                                               backgroundColor:
-                                                  const MaterialStatePropertyAll(
+                                                  const WidgetStatePropertyAll(
                                                       Colors.transparent)),
                                           onPressed: () async {
                                             if (_formKey.currentState!
@@ -409,6 +376,12 @@ class RegisterScreen extends ConsumerWidget {
                                                   telefono,
                                                   pais,
                                                   provincia);
+                                              nombreController.clear();
+                                              apellidoController.clear();
+                                              edadController.clear();
+                                              telefonoController.clear();
+                                              paisController.clear();
+                                              provinciaController.clear();
                                               if (context.mounted) {
                                                 context.pop();
                                                 context.pop();
@@ -436,6 +409,30 @@ class RegisterScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> cerrarSesion(WidgetRef ref, BuildContext context) async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return Center(
+              child: CircularProgressIndicator(
+            color: const Color.fromARGB(255, 50, 102, 175),
+            backgroundColor: Colors.purple[300],
+          ));
+        });
+    nombreController.clear();
+    apellidoController.clear();
+    edadController.clear();
+    telefonoController.clear();
+    paisController.clear();
+    provinciaController.clear();
+    await signOutWithGoogle();
+    if (!context.mounted) return;
+    context.pop();
+    if (!context.mounted) return;
+    context.pop();
   }
 
   InputDecoration formDecoration(String titleLabel) {

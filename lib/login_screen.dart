@@ -189,7 +189,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                 scale: 18,
                               ),
                             ),
-                            const SizedBox(height: 90),
+                            SizedBox(height: userIsAuthenticated ? 55 : 90),
                             Container(
                               padding: const EdgeInsets.only(
                                   left: 12, right: 12, top: 5, bottom: 18),
@@ -200,7 +200,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                           'assets/icons/icono9.png'))),
                               child: FilledButton.tonalIcon(
                                   style: const ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(
+                                      backgroundColor: WidgetStatePropertyAll(
                                           Colors.transparent)),
                                   onPressed: () async {
                                     print(
@@ -225,7 +225,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                           '************************************** Usuario es: $userIsAuthenticated');
                                       if (userCredential?.user != null) {
                                         if (context.mounted) {
-                                          context.pop();
+                                          //context.pop();
                                           if (ref.read(
                                                   primerArranqueProvider) ==
                                               false) {
@@ -251,11 +251,18 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                                 .update((state) => true);
                                             if (ref.read(cerroSesionProvider)) {
                                               if (!context.mounted) return;
-                                              // En este punto bleSreen ya existe en el stack. Así que uso context.pop() para volver
+                                              // Este context.pop() regresa del showDialog que muestra el circularProgres
+                                              context.pop();
+                                              if (!context.mounted) return;
+                                              // Cuando se cierra sesión desde bleScreen,
+                                              // en este punto bleSreen ya existe en el stack. Así que uso context.pop() para volver
                                               // y no crear copias de bleScreen que sobrecargaría el stack de navegación. Al mismo tiempo
                                               // esto elimina del stack la copia de loginScreen
                                               context.pop();
                                             } else {
+                                              if (!context.mounted) return;
+                                              // Este context.pop() regresa del showDialog que muestra el circularProgres
+                                              context.pop();
                                               if (!context.mounted) return;
                                               // En este punto bleScreen no existe en el stack. Así que uso context.push() para crearlo
                                               context.push('/bluetooth');
@@ -265,6 +272,10 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                                 .read(primerArranqueProvider
                                                     .notifier)
                                                 .update((state) => true);
+                                            if (!context.mounted) return;
+                                            // Este context.pop() regresa del showDialog que muestra el circularProgres
+                                            context.pop();
+                                            if (!context.mounted) return;
                                             context.push('/register');
                                           }
                                         }
@@ -286,7 +297,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                       }
                                     } else {
                                       if (context.mounted) {
-                                        context.pop();
+                                        //context.pop();
                                         if (ref.read(primerArranqueProvider) ==
                                             false) {
                                           listDeviceConected = await ref
@@ -310,11 +321,18 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                         // Cuando cerrarSesionProvider es true, loginScreen tiene una copia en el stack de navegación
                                         if (ref.read(cerroSesionProvider)) {
                                           if (!context.mounted) return;
+                                          // Este context.pop() regresa del showDialog que muestra el circularProgres
+                                          context.pop();
+                                          if (!context.mounted) return;
+                                          // Cuando se cierra sesión desde bleScreen,
                                           // En este punto bleSrceen ya existe en el stack. Así que uso context.pop() para volver
                                           // y no crear copias de bleScreen que sobrecargaría el stack de navegación. Al mismo tiempo
                                           // esto elimina del stack la copia de loginScreen
                                           context.pop();
                                         } else {
+                                          if (!context.mounted) return;
+                                          // Este context.pop() regresa del showDialog que muestra el circularProgres
+                                          context.pop();
                                           if (!context.mounted) return;
                                           // En este punto bleScreen no existe en el stack. Así que uso context.push() para crearlo
                                           context.push('/bluetooth');
@@ -326,13 +344,60 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                                       scale: 20),
                                   label: Text(
                                     userIsAuthenticated
-                                        ? 'ENTRAR'
+                                        ? '  ENTRAR  '
                                         : 'Iniciar sesión con Google',
                                     style: const TextStyle(
                                         color:
                                             Color.fromARGB(255, 50, 102, 175),
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1),
                                   )),
+                            ),
+                            const SizedBox(height: 4),
+                            Visibility(
+                              visible: userIsAuthenticated,
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                    left: 0, right: 0, top: 0, bottom: 7),
+                                decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: AssetImage(
+                                            'assets/icons/icono9.png'))),
+                                child: FilledButton.tonalIcon(
+                                    style: const ButtonStyle(
+                                        backgroundColor: WidgetStatePropertyAll(
+                                            Colors.transparent)),
+                                    onPressed: () async {
+                                      print(
+                                          '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> userCredential es: $userCredential');
+                                      print(
+                                          '+++++++++++++++++++++++++++++++++++++++ Usuario es: $userIsAuthenticated');
+                                      showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (context) {
+                                            return Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                              color: const Color.fromARGB(
+                                                  255, 50, 102, 175),
+                                              backgroundColor:
+                                                  Colors.purple[300],
+                                            ));
+                                          });
+                                      await signOutWithGoogle();
+                                      if (!context.mounted) return;
+                                      context.pop();
+                                    },
+                                    label: const Text(
+                                      'Cerrar sesión',
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 50, 102, 175),
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                              ),
                             ),
                           ],
                         ),

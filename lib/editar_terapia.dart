@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/aviso_error_conexion.dart';
 import 'package:flutter_application_1/form_decoration_terapia.dart';
 import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/services.dart';
@@ -39,7 +40,7 @@ Future<dynamic> editarTerapia(
                             maxWidth: widthScreen * 0.75),
                         height: heightScreen * 0.7,
                         width: widthScreen * 0.75,
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             border: Border.all(
@@ -176,7 +177,7 @@ Future<dynamic> editarTerapia(
                                   children: [
                                     TextButton(
                                         style: const ButtonStyle(
-                                            side: MaterialStatePropertyAll(
+                                            side: WidgetStatePropertyAll(
                                                 BorderSide(
                                           color: Colors.white,
                                         ))),
@@ -189,54 +190,88 @@ Future<dynamic> editarTerapia(
                                         )),
                                     TextButton(
                                         style: const ButtonStyle(
-                                            side: MaterialStatePropertyAll(
+                                            side: WidgetStatePropertyAll(
                                                 BorderSide(
                                           color: Colors.white,
                                         ))),
                                         onPressed: () async {
                                           if (formKey.currentState!
                                               .validate()) {
-                                            TerapiaTotal newTerapiaPersonal =
-                                                await ref
-                                                    .watch(terapiaProvider0);
-                                            newTerapiaPersonal.nombre =
-                                                nombreEditarTerapiaController
-                                                    .text
-                                                    .toUpperCase();
-                                            newTerapiaPersonal.frecMin = int.parse(
+                                            // Esconder teclado
+                                            FocusScope.of(context).unfocus();
+                                            // Espera mientras se esconde el teclado
+                                            await Future.delayed(
+                                                const Duration(seconds: 1));
+                                            int? fMin = int.tryParse(
                                                 frecMinimaEditarTerapiaController
                                                     .text);
-                                            newTerapiaPersonal.frecMax = int.parse(
+                                            int? fMax = int.tryParse(
                                                 frecMaximaEditarTerapiaController
                                                     .text);
-                                            newTerapiaPersonal.info =
-                                                descripcionEditarTerapiaController
-                                                    .text;
-                                            newTerapiaPersonal.editable = true;
-                                            await ref
-                                                .watch(servicesProvider)
-                                                .editTerapiaPersonal(
-                                                    newTerapiaPersonal);
-                                            await ref
-                                                .watch(servicesProvider)
-                                                .cargarTerapiaTotal();
-                                            ref
-                                                    .read(terapiaProvider0.notifier)
-                                                    .state =
-                                                await ref
-                                                    .watch(servicesProvider)
-                                                    .getTerapiaSeleccionada(0);
-                                            ref
-                                                .read(indexTerapiaProvider
-                                                    .notifier)
-                                                .state = 0;
-                                            ref
-                                                .read(
-                                                    isComingFromSomeTimerScreen
-                                                        .notifier)
-                                                .state = true;
-                                            if (!context.mounted) return;
-                                            context.pop();
+                                            if (fMin! > fMax!) {
+                                              if (!context.mounted) return;
+                                              showDialog(
+                                                  barrierDismissible: false,
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return const AvisoErrorConexion(
+                                                        title:
+                                                            'Rango de Frecuencia',
+                                                        content:
+                                                            'Frecuencia Máxima debe ser mayor que Frecuencia Mínima');
+                                                  });
+                                              await Future.delayed(
+                                                  const Duration(seconds: 6));
+                                              if (!context.mounted) return;
+                                              context.pop();
+                                            } else {
+                                              TerapiaTotal newTerapiaPersonal =
+                                                  await ref
+                                                      .watch(terapiaProvider0);
+                                              newTerapiaPersonal.nombre =
+                                                  nombreEditarTerapiaController
+                                                      .text
+                                                      .toUpperCase();
+                                              newTerapiaPersonal.frecMin =
+                                                  int.parse(
+                                                      frecMinimaEditarTerapiaController
+                                                          .text);
+                                              newTerapiaPersonal.frecMax =
+                                                  int.parse(
+                                                      frecMaximaEditarTerapiaController
+                                                          .text);
+                                              newTerapiaPersonal.info =
+                                                  descripcionEditarTerapiaController
+                                                      .text;
+                                              newTerapiaPersonal.editable =
+                                                  true;
+                                              await ref
+                                                  .watch(servicesProvider)
+                                                  .editTerapiaPersonal(
+                                                      newTerapiaPersonal);
+                                              await ref
+                                                  .watch(servicesProvider)
+                                                  .cargarTerapiaTotal();
+                                              ref
+                                                      .read(terapiaProvider0
+                                                          .notifier)
+                                                      .state =
+                                                  await ref
+                                                      .watch(servicesProvider)
+                                                      .getTerapiaSeleccionada(
+                                                          0);
+                                              ref
+                                                  .read(indexTerapiaProvider
+                                                      .notifier)
+                                                  .state = 0;
+                                              ref
+                                                  .read(
+                                                      isComingFromSomeTimerScreen
+                                                          .notifier)
+                                                  .state = true;
+                                              if (!context.mounted) return;
+                                              context.pop();
+                                            }
                                           }
                                         },
                                         child: const Text('Guardar',

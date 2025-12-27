@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/aviso_error_conexion.dart';
 import 'package:flutter_application_1/form_decoration_terapia.dart';
 import 'package:flutter_application_1/gradient_services.dart';
 import 'package:flutter_application_1/services.dart';
@@ -188,56 +189,83 @@ Future<dynamic> agregarTerapia(
                                           )),
                                       TextButton(
                                           style: const ButtonStyle(
-                                              side: MaterialStatePropertyAll(
+                                              side: WidgetStatePropertyAll(
                                                   BorderSide(
                                             color: Colors.white,
                                           ))),
                                           onPressed: () async {
                                             if (formKey.currentState!
                                                 .validate()) {
-                                              final TerapiaPersonal
-                                                  newTerapiaPersonal =
-                                                  TerapiaPersonal(
-                                                      nombre:
-                                                          nombreTerapiaController
-                                                              .text
-                                                              .toUpperCase(),
-                                                      frecMin: int.parse(
-                                                          frecMinimaController
-                                                              .text),
-                                                      frecMax: int.parse(
-                                                          frecMaximaController
-                                                              .text),
-                                                      info:
-                                                          descripcionController
-                                                              .text,
-                                                      editable: true);
-                                              await ref
-                                                  .read(servicesProvider)
-                                                  .addTerapiaPersonal(
-                                                      newTerapiaPersonal);
-                                              await ref
-                                                  .read(servicesProvider)
-                                                  .cargarTerapiaTotal();
-                                              ref
-                                                      .read(terapiaProvider0
-                                                          .notifier)
-                                                      .state =
-                                                  await ref
-                                                      .read(servicesProvider)
-                                                      .getTerapiaSeleccionada(
-                                                          0);
-                                              ref
-                                                  .read(indexTerapiaProvider
-                                                      .notifier)
-                                                  .state = 0;
-                                              ref
-                                                  .read(
-                                                      isComingFromSomeTimerScreen
-                                                          .notifier)
-                                                  .state = true;
-                                              if (!context.mounted) return;
-                                              context.pop();
+                                              // Esconder teclado
+                                              FocusScope.of(context).unfocus();
+                                              // Espera mientras se esconde el teclado
+                                              await Future.delayed(
+                                                  const Duration(seconds: 1));
+                                              int? fMin = int.tryParse(
+                                                  frecMinimaController.text);
+                                              int? fMax = int.tryParse(
+                                                  frecMaximaController.text);
+                                              if (fMin! > fMax!) {
+                                                if (!context.mounted) return;
+                                                showDialog(
+                                                    barrierDismissible: false,
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return const AvisoErrorConexion(
+                                                          title:
+                                                              'Rango de Frecuencia',
+                                                          content:
+                                                              'Frecuencia Máxima debe ser mayor que Frecuencia Mínima');
+                                                    });
+                                                await Future.delayed(
+                                                    const Duration(seconds: 6));
+                                                if (!context.mounted) return;
+                                                context.pop();
+                                              } else {
+                                                final TerapiaPersonal
+                                                    newTerapiaPersonal =
+                                                    TerapiaPersonal(
+                                                        nombre:
+                                                            nombreTerapiaController
+                                                                .text
+                                                                .toUpperCase(),
+                                                        frecMin: int.parse(
+                                                            frecMinimaController
+                                                                .text),
+                                                        frecMax: int.parse(
+                                                            frecMaximaController
+                                                                .text),
+                                                        info:
+                                                            descripcionController
+                                                                .text,
+                                                        editable: true);
+                                                await ref
+                                                    .read(servicesProvider)
+                                                    .addTerapiaPersonal(
+                                                        newTerapiaPersonal);
+                                                await ref
+                                                    .read(servicesProvider)
+                                                    .cargarTerapiaTotal();
+                                                ref
+                                                        .read(terapiaProvider0
+                                                            .notifier)
+                                                        .state =
+                                                    await ref
+                                                        .read(servicesProvider)
+                                                        .getTerapiaSeleccionada(
+                                                            0);
+                                                ref
+                                                    .read(indexTerapiaProvider
+                                                        .notifier)
+                                                    .state = 0;
+                                                ref
+                                                    .read(
+                                                        isComingFromSomeTimerScreen
+                                                            .notifier)
+                                                    .state = true;
+                                                if (!context.mounted) return;
+                                                context.pop();
+                                              }
                                             }
                                           },
                                           child: const Text('Guardar',
